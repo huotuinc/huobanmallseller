@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 商户系统
- * Created by Administrator on 2015/8/24.
  */
 
 public interface MerchantSystem {
@@ -73,7 +72,7 @@ public interface MerchantSystem {
      * <b>负责人：</b>
      * @param voiceAble 是否支持语音播报
      * @param phone String(11)
-     * @param type 类型 2：忘记密码 3:绑定手机
+     * @param type 类型 1：忘记密码
      * @param codeType 0文本 1语音
      * @return
      * @throws Exception

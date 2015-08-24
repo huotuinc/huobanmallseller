@@ -15,5 +15,8 @@ public class AppSalesReportModel {
      */
     private Integer monthAmount;
 
+    /**
+     * 本周或本月销售额统计数据
+     */
     private List<AppSalesReportListModel> list;
 }

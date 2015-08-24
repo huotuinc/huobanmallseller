@@ -2,12 +2,13 @@ package com.huotu.huobanmall.model.app;
 
 /**
  * 公共信息
+ * APP端请无视
  * <p>在服务器实例中 它应当是唯一 并且是可维护的</p>
  * Created by Administrator on 2015/8/24.
  */
 public class AppGlobalModel {
     /**
-     * APP端请无视
+     * 服务地址
      */
     private String serverUrl;
     /**

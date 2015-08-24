@@ -24,7 +24,9 @@ public class AppMerchantModel {
      * 店铺logo
      */
     private String logo;
-
+    /**
+     * 手机号
+     */
     private String mobile;
     /**
      * 订单支付成功通知（0关闭,1开启）

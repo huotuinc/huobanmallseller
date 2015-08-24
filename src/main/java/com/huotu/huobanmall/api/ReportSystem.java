@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 统计报表系统
- * Created by Administrator on 2015/8/24.
  */
 public interface ReportSystem {
 
     /**
      * 订单统计报表
      *
-     * @param data
+     * @param data 输出订单统计报表
      * @param type 1本周 2本月
      * @return
      * @throws Exception
@@ -28,19 +27,19 @@ public interface ReportSystem {
 
 
     /**
-     * 购买量排行
+     * 购买量排行（前10条）
      *
-     * @param top
+     * @param top 输出购买量排行列表
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult topBuyAmount(Output<AppTopBuyAmountModel> top) throws Exception;
+    ApiResult topBuyAmount(Output<AppTopBuyAmountModel[]> top) throws Exception;
 
     /**
      * 销售额统计报表
      *
-     * @param data
+     * @param data 输出销售额统计报表
      * @param type 1本周 2本月
      * @return
      * @throws Exception
@@ -50,9 +49,9 @@ public interface ReportSystem {
 
 
     /**
-     * 会员量统计
+     * 会员量统计报表
      *
-     * @param member
+     * @param member 输出会员量统计数据
      * @return
      * @throws Exception
      */

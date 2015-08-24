@@ -17,5 +17,8 @@ public class AppBillReportModel {
      */
     private Integer monthAmount;
 
+    /**
+     * 本周或本月的数据
+     */
     private List<AppBillReportListModel> list;
 }

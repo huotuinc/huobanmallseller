@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 商品系统
- * Created by Administrator on 2015/8/24.
  */
 public interface GoodsSystem {
 
     /**
      * app首页 （统计数据）
      *
-     * @param index
+     * @param index 输出首页统计信息
      * @return
      * @throws Exception
      */
@@ -26,7 +25,7 @@ public interface GoodsSystem {
     /**
      * 商品列表
      *
-     * @param list
+     * @param list 输出商品列表
      * @param type 类型 1销售中 2已下架
      * @return
      * @throws Exception
