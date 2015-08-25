@@ -19,4 +19,28 @@ public class AppGlobalModel {
      * 帮助
      */
     private String helpURL;
+
+    public String getServerUrl() {
+        return serverUrl;
+    }
+
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
+    }
+
+    public String getAboutURL() {
+        return aboutURL;
+    }
+
+    public void setAboutURL(String aboutURL) {
+        this.aboutURL = aboutURL;
+    }
+
+    public String getHelpURL() {
+        return helpURL;
+    }
+
+    public void setHelpURL(String helpURL) {
+        this.helpURL = helpURL;
+    }
 }

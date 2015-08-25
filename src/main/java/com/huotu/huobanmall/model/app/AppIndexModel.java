@@ -55,4 +55,83 @@ public class AppIndexModel {
      */
     private Integer todayNewUserAmount;
 
+    public Integer getGoodsAmount() {
+        return goodsAmount;
+    }
+
+    public void setGoodsAmount(Integer goodsAmount) {
+        this.goodsAmount = goodsAmount;
+    }
+
+    public Integer getDiscributorAmount() {
+        return discributorAmount;
+    }
+
+    public void setDiscributorAmount(Integer discributorAmount) {
+        this.discributorAmount = discributorAmount;
+    }
+
+    public Integer getMemberAmount() {
+        return memberAmount;
+    }
+
+    public void setMemberAmount(Integer memberAmount) {
+        this.memberAmount = memberAmount;
+    }
+
+    public float getTotalSalesAmount() {
+        return totalSalesAmount;
+    }
+
+    public void setTotalSalesAmount(float totalSalesAmount) {
+        this.totalSalesAmount = totalSalesAmount;
+    }
+
+    public Integer getTodayBillAmount() {
+        return todayBillAmount;
+    }
+
+    public void setTodayBillAmount(Integer todayBillAmount) {
+        this.todayBillAmount = todayBillAmount;
+    }
+
+    public float getTodaySalesAmount() {
+        return todaySalesAmount;
+    }
+
+    public void setTodaySalesAmount(float todaySalesAmount) {
+        this.todaySalesAmount = todaySalesAmount;
+    }
+
+    public Integer getTodayDiscributorAmount() {
+        return todayDiscributorAmount;
+    }
+
+    public void setTodayDiscributorAmount(Integer todayDiscributorAmount) {
+        this.todayDiscributorAmount = todayDiscributorAmount;
+    }
+
+    public Integer getSevenBillAmount() {
+        return sevenBillAmount;
+    }
+
+    public void setSevenBillAmount(Integer sevenBillAmount) {
+        this.sevenBillAmount = sevenBillAmount;
+    }
+
+    public float getSevenSalesAmount() {
+        return sevenSalesAmount;
+    }
+
+    public void setSevenSalesAmount(float sevenSalesAmount) {
+        this.sevenSalesAmount = sevenSalesAmount;
+    }
+
+    public Integer getTodayNewUserAmount() {
+        return todayNewUserAmount;
+    }
+
+    public void setTodayNewUserAmount(Integer todayNewUserAmount) {
+        this.todayNewUserAmount = todayNewUserAmount;
+    }
 }

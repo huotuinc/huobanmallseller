@@ -35,4 +35,52 @@ public class AppMemberReportModel {
      * 会员数据
      */
     private List<AppMemberReportListModel> listMember;
+
+    public Integer getWeekPartner() {
+        return weekPartner;
+    }
+
+    public void setWeekPartner(Integer weekPartner) {
+        this.weekPartner = weekPartner;
+    }
+
+    public Integer getWeekMember() {
+        return weekMember;
+    }
+
+    public void setWeekMember(Integer weekMember) {
+        this.weekMember = weekMember;
+    }
+
+    public Integer getMonthPartner() {
+        return monthPartner;
+    }
+
+    public void setMonthPartner(Integer monthPartner) {
+        this.monthPartner = monthPartner;
+    }
+
+    public Integer getMonthMember() {
+        return monthMember;
+    }
+
+    public void setMonthMember(Integer monthMember) {
+        this.monthMember = monthMember;
+    }
+
+    public List<AppMemberReportListModel> getListPartner() {
+        return listPartner;
+    }
+
+    public void setListPartner(List<AppMemberReportListModel> listPartner) {
+        this.listPartner = listPartner;
+    }
+
+    public List<AppMemberReportListModel> getListMember() {
+        return listMember;
+    }
+
+    public void setListMember(List<AppMemberReportListModel> listMember) {
+        this.listMember = listMember;
+    }
 }

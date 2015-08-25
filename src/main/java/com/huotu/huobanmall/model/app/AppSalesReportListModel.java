@@ -16,4 +16,20 @@ public class AppSalesReportListModel {
      * 金额
      */
     private float money;
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public float getMoney() {
+        return money;
+    }
+
+    public void setMoney(float money) {
+        this.money = money;
+    }
 }

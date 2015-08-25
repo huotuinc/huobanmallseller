@@ -52,4 +52,83 @@ public class AppMerchantModel {
      */
     private String token;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getDiscription() {
+        return discription;
+    }
+
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Number getEnableBillNotice() {
+        return enableBillNotice;
+    }
+
+    public void setEnableBillNotice(Number enableBillNotice) {
+        this.enableBillNotice = enableBillNotice;
+    }
+
+    public Number getEnablePartnerNotice() {
+        return enablePartnerNotice;
+    }
+
+    public void setEnablePartnerNotice(Number enablePartnerNotice) {
+        this.enablePartnerNotice = enablePartnerNotice;
+    }
+
+    public String getPushTime() {
+        return pushTime;
+    }
+
+    public void setPushTime(String pushTime) {
+        this.pushTime = pushTime;
+    }
+
+    public String getWelcomeTip() {
+        return welcomeTip;
+    }
+
+    public void setWelcomeTip(String welcomeTip) {
+        this.welcomeTip = welcomeTip;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

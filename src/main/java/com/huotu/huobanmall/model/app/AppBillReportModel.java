@@ -21,4 +21,28 @@ public class AppBillReportModel {
      * 本周或本月的数据
      */
     private List<AppBillReportListModel> list;
+
+    public Integer getWeekAmount() {
+        return weekAmount;
+    }
+
+    public void setWeekAmount(Integer weekAmount) {
+        this.weekAmount = weekAmount;
+    }
+
+    public Integer getMonthAmount() {
+        return monthAmount;
+    }
+
+    public void setMonthAmount(Integer monthAmount) {
+        this.monthAmount = monthAmount;
+    }
+
+    public List<AppBillReportListModel> getList() {
+        return list;
+    }
+
+    public void setList(List<AppBillReportListModel> list) {
+        this.list = list;
+    }
 }
