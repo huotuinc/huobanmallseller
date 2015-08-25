@@ -3,15 +3,16 @@ package com.huotu.huobanmall.model.app;
 import java.util.List;
 
 /**
+ * 销售额统计报表
  * Created by Administrator on 2015/8/24.
  */
 public class AppSalesReportModel {
     /**
-     * 本周
+     * 本周总销售额
      */
     private Integer weekAmount;
     /**
-     *  本月
+     *  本月总销售额
      */
     private Integer monthAmount;
 

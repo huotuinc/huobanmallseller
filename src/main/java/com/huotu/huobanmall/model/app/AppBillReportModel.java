@@ -9,16 +9,16 @@ import java.util.List;
 public class AppBillReportModel {
 
     /**
-     * 本周
+     * 本周总订单量
      */
     private Integer weekAmount;
     /**
-     *  本月
+     *  本月总订单量
      */
     private Integer monthAmount;
 
     /**
-     * 本周或本月的数据
+     * 本周或本月的具体订单量数据
      */
     private List<AppBillReportListModel> list;
 
