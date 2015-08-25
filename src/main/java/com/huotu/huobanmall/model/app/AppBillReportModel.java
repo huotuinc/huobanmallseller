@@ -13,14 +13,19 @@ public class AppBillReportModel {
      */
     private Integer weekAmount;
     /**
-     *  本月总订单量
+     * 本月总订单量
      */
     private Integer monthAmount;
 
     /**
      * 本周或本月的具体订单量数据
      */
-    private List<AppBillReportListModel> list;
+    private List<AppBillReportListModel> listBill;
+
+    /**
+     * 本周或本月商品购买量排行
+     */
+    private List<AppTopBuyAmountModel> listBuy;
 
     public Integer getWeekAmount() {
         return weekAmount;
@@ -38,11 +43,19 @@ public class AppBillReportModel {
         this.monthAmount = monthAmount;
     }
 
-    public List<AppBillReportListModel> getList() {
-        return list;
+    public List<AppBillReportListModel> getListBill() {
+        return listBill;
     }
 
-    public void setList(List<AppBillReportListModel> list) {
-        this.list = list;
+    public void setListBill(List<AppBillReportListModel> listBill) {
+        this.listBill = listBill;
+    }
+
+    public List<AppTopBuyAmountModel> getListBuy() {
+        return listBuy;
+    }
+
+    public void setListBuy(List<AppTopBuyAmountModel> listBuy) {
+        this.listBuy = listBuy;
     }
 }

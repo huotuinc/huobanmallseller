@@ -38,9 +38,9 @@ public class AppMerchantModel {
     private Number enablePartnerNotice;
 
     /**
-     * 推送时间 以"开始时间,结束时间"表示 单位秒 默认0,0（不限制） 如 3600,7200
+     * 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
      */
-    private String pushTime;
+    private boolean noDisturbed;
 
     /**
      * 欢迎提示，包括积分转换信息，来宾转正信息
@@ -51,6 +51,11 @@ public class AppMerchantModel {
      * <b>每次App获得新的Token,旧Token就弃用。</b>
      */
     private String token;
+
+    /**
+     * 权限，控制app端的内容显示 以,隔开 如 11,33,55
+     */
+    private String authority;
 
     public String getName() {
         return name;
@@ -108,13 +113,7 @@ public class AppMerchantModel {
         this.enablePartnerNotice = enablePartnerNotice;
     }
 
-    public String getPushTime() {
-        return pushTime;
-    }
 
-    public void setPushTime(String pushTime) {
-        this.pushTime = pushTime;
-    }
 
     public String getWelcomeTip() {
         return welcomeTip;
@@ -130,5 +129,21 @@ public class AppMerchantModel {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isNoDisturbed() {
+        return noDisturbed;
+    }
+
+    public void setNoDisturbed(boolean noDisturbed) {
+        this.noDisturbed = noDisturbed;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 }

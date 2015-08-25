@@ -26,15 +26,7 @@ public interface ReportSystem {
     ApiResult billReport(Output<AppBillReportModel> data, Integer type) throws Exception;
 
 
-    /**
-     * 购买量排行（前10条）
-     *
-     * @param top 输出购买量排行列表
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    ApiResult topBuyAmount(Output<AppTopBuyAmountModel[]> top) throws Exception;
+
 
     /**
      * 销售额统计报表
