@@ -1,7 +1,7 @@
 package com.huotu.huobanmall.model.app;
 
 /**
- * Created by Administrator on 2015/8/25.
+ * Created by lgh on 2015/8/25.
  */
 public class AppPublicModel {
 

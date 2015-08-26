@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * 销售额统计报表
- * Created by Administrator on 2015/8/24.
+ * Created by lgh on 2015/8/24.
  */
 public class AppSalesReportModel {
     /**

@@ -5,13 +5,16 @@ import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.model.app.AppGlobalModel;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppUpdateModel;
+
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 商户系统
  */
-
+@Controller
+@RequestMapping("/app")
 public interface MerchantSystem {
 
     /**

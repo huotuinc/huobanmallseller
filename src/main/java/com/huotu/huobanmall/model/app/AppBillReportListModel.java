@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * 订单统计列表数据
- * Created by Administrator on 2015/8/24.
+ * Created by lgh on 2015/8/24.
  */
 public class AppBillReportListModel {
 

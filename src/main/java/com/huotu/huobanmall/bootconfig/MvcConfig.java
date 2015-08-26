@@ -1,11 +1,12 @@
 package com.huotu.huobanmall.bootconfig;
 
+import com.huotu.huobanmall.interceptor.ApiResultHandler;
+import com.huotu.huobanmall.interceptor.OutputHandler;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -14,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/8/19.
+ * Created by lgh on 2015/8/19.
  */
 
 @Configuration
@@ -24,6 +25,10 @@ import java.util.List;
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
 
+    /**
+     * 设置servlethandler
+     * @param configurer
+     */
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
@@ -34,14 +39,34 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 //
 //    }
 
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        super.configureMessageConverters(converters);
+//    }
+
+//    @Override
+//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        super.extendMessageConverters(converters);
+//        converters.add(new MappingJackson2HttpMessageConverter());
+//    }
+
+    /**
+     * 设置控制器方法参数化输出
+     * @param argumentResolvers
+     */
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        super.configureMessageConverters(converters);
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new OutputHandler());
     }
 
+    /**
+     * 监听 控制器的ApiResult返回值
+     * @param returnValueHandlers
+     */
     @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        super.extendMessageConverters(converters);
-        converters.add(new MappingJackson2HttpMessageConverter());
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
+        returnValueHandlers.add(new ApiResultHandler());
     }
+
+
 }

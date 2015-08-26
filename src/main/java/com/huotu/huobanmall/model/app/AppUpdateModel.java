@@ -4,7 +4,7 @@ import com.huotu.huobanmall.config.CommonEnum;
 
 /**
  * 更新信息
- * Created by Administrator on 2015/8/24.
+ * Created by lgh on 2015/8/24.
  */
 public class AppUpdateModel {
     private String updateMD5;

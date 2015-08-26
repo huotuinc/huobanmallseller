@@ -2,7 +2,7 @@ package com.huotu.huobanmall.model.app;
 
 /**
  * 商品列表
- * Created by Administrator on 2015/8/24.
+ * Created by lgh on 2015/8/24.
  */
 public class AppGoodListModel {
 
