@@ -87,9 +87,23 @@
             <version>4.1.6.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.4</version>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>huobanmall</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

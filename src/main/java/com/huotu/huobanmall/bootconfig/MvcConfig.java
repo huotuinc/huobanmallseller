@@ -1,7 +1,10 @@
 package com.huotu.huobanmall.bootconfig;
 
 import com.huotu.huobanmall.interceptor.ApiResultHandler;
+import com.huotu.huobanmall.interceptor.CommonInterceptor;
 import com.huotu.huobanmall.interceptor.OutputHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -10,6 +13,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
@@ -27,6 +31,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     /**
      * 设置servlethandler
+     *
      * @param configurer
      */
     @Override
@@ -50,8 +55,23 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 //        converters.add(new MappingJackson2HttpMessageConverter());
 //    }
 
+
+    @Bean
+    CommonInterceptor commonInterceptor (){
+        return new CommonInterceptor();
+    }
+
+    @Autowired
+    private CommonInterceptor commonInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(commonInterceptor).addPathPatterns("/app/*");
+    }
+
     /**
      * 设置控制器方法参数化输出
+     *
      * @param argumentResolvers
      */
     @Override
@@ -61,6 +81,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     /**
      * 监听 控制器的ApiResult返回值
+     *
      * @param returnValueHandlers
      */
     @Override

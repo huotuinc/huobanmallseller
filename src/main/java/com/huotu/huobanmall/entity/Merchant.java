@@ -22,6 +22,11 @@ public class Merchant {
 
 
     /**
+     * 密码
+     */
+    @Column(length = 50)
+    private String password;
+    /**
      * 昵称 显示在app中
      */
     @Column(length = 50)
@@ -158,5 +163,13 @@ public class Merchant {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
