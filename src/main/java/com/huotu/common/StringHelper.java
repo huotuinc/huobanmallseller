@@ -1,6 +1,6 @@
 package com.huotu.common;
 
-import com.huotu.fanmore.exception.WrapException;
+
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,7 +107,7 @@ public class StringHelper {
      * @param <T>
      * @param <X>
      * @return
-     * @throws WrapException
+ 
      */
     public static <T extends X, X> T SupperDataToSub(X parent, Class<X> pcls, Class<T> cls) {
         try {
