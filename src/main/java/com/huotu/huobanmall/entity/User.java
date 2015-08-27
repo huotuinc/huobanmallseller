@@ -7,6 +7,7 @@ import java.util.Date;
  * Created by lgh on 2015/8/26.
  */
 @Entity
+@Table(name = "USERES")
 public class User {
 
     @Id

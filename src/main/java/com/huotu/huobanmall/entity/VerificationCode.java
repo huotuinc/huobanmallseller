@@ -2,7 +2,9 @@ package com.huotu.huobanmall.entity;
 
 
 
-import com.huotu.huobanmall.config.CommonEnum;
+
+import com.huotu.common.model.CodeType;
+import com.huotu.common.model.VerificationType;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,9 +23,9 @@ public class VerificationCode {
     private String mobile;
 
     @Column(nullable = false)
-    private CommonEnum.VerificationType type;
+    private VerificationType type;
 
-    private CommonEnum.CodeType codeType;
+    private CodeType codeType;
 
     @Column(nullable = false,length = 8)
     private String code;
@@ -49,19 +51,19 @@ public class VerificationCode {
         this.mobile = mobile;
     }
 
-    public CommonEnum.VerificationType getType() {
+    public VerificationType getType() {
         return type;
     }
 
-    public void setType(CommonEnum.VerificationType type) {
+    public void setType(VerificationType type) {
         this.type = type;
     }
 
-    public CommonEnum.CodeType getCodeType() {
+    public CodeType getCodeType() {
         return codeType;
     }
 
-    public void setCodeType(CommonEnum.CodeType codeType) {
+    public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
     }
 
