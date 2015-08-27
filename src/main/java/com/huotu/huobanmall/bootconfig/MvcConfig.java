@@ -11,10 +11,10 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.util.List;
 
@@ -90,4 +90,41 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     }
 
 
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        super.configureViewResolvers(registry);
+        registry.viewResolver(viewResolver());
+
+        registry.jsp();
+    }
+
+
+    public ThymeleafViewResolver viewResolver() {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        SpringTemplateEngine engine = new SpringTemplateEngine();
+        ServletContextTemplateResolver rootTemplateResolver = new ServletContextTemplateResolver();
+        rootTemplateResolver.setPrefix("/");
+        rootTemplateResolver.setSuffix(".html");
+        rootTemplateResolver.setCharacterEncoding("UTF-8");
+
+        // start cache
+//        if(env.acceptsProfiles("dev")){
+//            System.out.println("Develement Mode");
+//            rootTemplateResolver.setCacheable(false);
+//        }
+
+        engine.setTemplateResolver(rootTemplateResolver);
+
+        resolver.setTemplateEngine(engine);
+//        resolver.setOrder(99);
+        resolver.setOrder(2147483647 + 10);
+//        resolver.setViewNames(new String[]{"*.html"});
+        resolver.setCharacterEncoding("UTF-8");
+//        resolver.setPrefix("/WEB-INF/views/");
+//        resolver.setSuffix(".jsp");
+//        resolver.setExcludedViewNames(new String[]{
+//                "content/**"
+//        });
+        return resolver;
+    }
 }
