@@ -23,7 +23,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult billReport(Output<AppBillReportModel> data, Integer type) throws Exception;
+    ApiResult orderReport(Output<AppBillReportModel> data, Integer type) throws Exception;
 
 
 
@@ -48,5 +48,5 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult memberReport(Output<AppMemberReportModel> member) throws Exception;
+    ApiResult userReport(Output<AppMemberReportModel> member) throws Exception;
 }

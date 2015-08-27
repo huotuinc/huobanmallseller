@@ -4,7 +4,7 @@ package com.huotu.huobanmall.entity;
 import javax.persistence.*;
 
 /**
- * 商家
+ * 商家 todo 字段长度类型等需要最后跟数据库一致
  * Created by lgh on 2015/8/26.
  */
 @Entity
