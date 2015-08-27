@@ -10,15 +10,18 @@ import java.util.Date;
 @Entity
 public class Order {
 
+    /**
+     * 订单号
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 //    private User owner;
 //
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 //    private Product product;
+
 
     /**
      * 用户
@@ -41,13 +44,16 @@ public class Order {
      */
     private Integer orderStatus;
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    /**
+     * 收货人
+     */
+    private String receiver;
+
+    /**
+     * 返利积分
+     */
+    private Integer score;
 
     public Integer getUserId() {
         return userId;
@@ -79,5 +85,29 @@ public class Order {
 
     public void setOrderStatus(Integer orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }
