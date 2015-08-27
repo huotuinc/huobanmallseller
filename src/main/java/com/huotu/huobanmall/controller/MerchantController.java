@@ -1,6 +1,11 @@
 package com.huotu.huobanmall.controller;
 
+import com.huotu.common.EnumHelper;
+import com.huotu.common.StringHelper;
 import com.huotu.common.SysRegex;
+import com.huotu.common.exceptions.InterrelatedException;
+import com.huotu.common.model.CodeType;
+import com.huotu.common.model.VerificationType;
 import com.huotu.common.service.VerificationService;
 import com.huotu.huobanmall.api.MerchantSystem;
 import com.huotu.huobanmall.api.common.ApiResult;
@@ -15,10 +20,19 @@ import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.model.app.AppUpdateModel;
 import com.huotu.huobanmall.repository.ConfigAppVersionRepository;
 import com.huotu.huobanmall.repository.MerchantRepository;
+import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.service.SystemService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by lgh on 2015/8/19.
@@ -26,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/app")
 public class MerchantController implements MerchantSystem {
+
+    private static Log log = LogFactory.getLog(MerchantController.class);
 
     @Autowired
     private AppGlobalModel appGlobalModel;
@@ -41,6 +57,12 @@ public class MerchantController implements MerchantSystem {
 
     @Autowired
     private SystemService systemService;
+
+    @Autowired
+    private MerchantService merchantService;
+
+    @Autowired
+    private Environment env;
 
     private AppUpdateModel versionChecking(String opertion, String version, String imei) {
         AppUpdateModel result = new AppUpdateModel();
@@ -158,28 +180,91 @@ public class MerchantController implements MerchantSystem {
     @RequestMapping("/login")
     public ApiResult login(Output<AppMerchantModel> user, String username, String password) throws Exception {
 
-        Merchant merchant = new Merchant();
-        merchant.setName("huotu");
-        merchant.setNickName("火图");
+        AppMerchantModel appMerchantModel = merchantService.login(username, password);
+        if (appMerchantModel == null) {
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_USERNAME_PASSWORD);
+        }
 
-        merchantRepository.save(merchant);
-
-
-        AppMerchantModel appMerchantModel = new AppMerchantModel();
-        appMerchantModel.setAuthority("abc");
         user.outputData(appMerchantModel);
-        return ApiResult.resultWith(CommonEnum.AppCode.ERROR_VERIFICATION_CODE_OVERDUE);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @Override
     @RequestMapping("/forgetPassword")
     public ApiResult forgetPassword(String phone, String password, String authcode) throws Exception {
-        return null;
+        Date date;
+        if (env.acceptsProfiles("test")) {
+            date = new Date(PublicParameterHolder.getParameters().getTimestamp());
+        } else
+            date = new Date();
+
+        if (!env.acceptsProfiles("test")) {
+            if (!verificationService.verifyCode(phone, VerificationService.VerificationProject.fanmore, authcode, date, VerificationType.BIND_LOGINPASSWORD)) {
+                return ApiResult.resultWith(CommonEnum.AppCode.ERROR_VERIFICATION_CODE);
+            }
+        }
+
+        Merchant merchant = merchantRepository.findByName(phone);
+        merchant.setPassword(password);
+        merchantRepository.save(merchant);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @Override
     @RequestMapping("/sendSMS")
-    public ApiResult sendSMS(Output<Boolean> voiceAble, String phone, int type, Integer codeType) throws Exception {
-        return null;
+    public ApiResult sendSMS(Output<Boolean> voiceAble, String phone, int type
+            , @RequestParam(required = false) Integer codeType)
+            throws Exception {
+        voiceAble.outputData(verificationService.supportVoice());
+        AppPublicModel pms = PublicParameterHolder.getParameters();
+        VerificationType verificationType = EnumHelper.getEnumType(VerificationType.class, type);
+
+
+        Date date;
+        if (env.acceptsProfiles("test")) {
+            date = new Date(PublicParameterHolder.getParameters().getTimestamp());
+        } else
+            date = new Date();
+
+
+        // **********************************************************
+        // 发送短信前处理
+        if (!SysRegex.IsValidMobileNo(phone)) {
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_MOBILE);
+        }
+
+        // 重置密码的处理
+        if (type == VerificationType.BIND_LOGINPASSWORD.getValue()) {
+            Merchant userA = merchantRepository.findByName(phone);
+
+            if (userA == null) {
+                return ApiResult.resultWith(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME);
+            }
+
+            if (!userA.isEnabled()) {
+                return ApiResult.resultWith(CommonEnum.AppCode.SYSTEM_BAD_ACCOUNT);
+            }
+
+        }
+
+
+        Random rnd = new Random();
+        String code = StringHelper.RandomNum(rnd, 4);
+
+        try {
+            verificationService.sendCode(phone, VerificationService.VerificationProject.fanmore, code, date, verificationType, codeType != null ? EnumHelper.getEnumType(CodeType.class, codeType) : CodeType.text);
+            return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+        } catch (IllegalStateException ex) {
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_VERIFICATION_INTERVAL);
+        } catch (IllegalArgumentException ex) {
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_MOBILE);
+        } catch (NoSuchMethodException ex) {
+            //发送类别不受支持！
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_SEND_MESSAGE_FAIL);
+        } catch (InterrelatedException ex) {
+            //第三方错误！
+            log.error("短信发送失败", ex);
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_SEND_MESSAGE_FAIL);
+        }
     }
 }

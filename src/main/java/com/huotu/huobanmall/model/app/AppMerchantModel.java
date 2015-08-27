@@ -40,7 +40,7 @@ public class AppMerchantModel {
     /**
      * 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
      */
-    private boolean noDisturbed;
+    private Number noDisturbed;
 
     /**
      * 欢迎提示
@@ -131,13 +131,6 @@ public class AppMerchantModel {
         this.token = token;
     }
 
-    public boolean isNoDisturbed() {
-        return noDisturbed;
-    }
-
-    public void setNoDisturbed(boolean noDisturbed) {
-        this.noDisturbed = noDisturbed;
-    }
 
     public String getAuthority() {
         return authority;
@@ -145,5 +138,13 @@ public class AppMerchantModel {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public Number getNoDisturbed() {
+        return noDisturbed;
+    }
+
+    public void setNoDisturbed(Number noDisturbed) {
+        this.noDisturbed = noDisturbed;
     }
 }

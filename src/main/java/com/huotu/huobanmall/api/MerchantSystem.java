@@ -9,6 +9,7 @@ import com.huotu.huobanmall.model.app.AppUpdateModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 商户系统
@@ -20,10 +21,11 @@ public interface MerchantSystem {
     /**
      * 初始化接口
      * <p>如果之前登录的用户没有绑定手机服务端无需返回user</p>
-     *
+     * <p>
      * <b>负责人：</b>
+     *
      * @param global 公共信息
-     * @param user 用户信息
+     * @param user   用户信息
      * @param update 更新信息
      * @return
      * @throws Exception
@@ -38,9 +40,10 @@ public interface MerchantSystem {
 
     /**
      * 登录
-     *
+     * <p>
      * <b>负责人：</b>
-     * @param user 用户信息
+     *
+     * @param user     用户信息
      * @param username 用户名(3-50)
      * @param password 一次MD5运算过的密码以16进制描述，英文小写
      * @return
@@ -55,9 +58,10 @@ public interface MerchantSystem {
 
     /**
      * 忘记密码
-     *
+     * <p>
      * <b>负责人：</b>
-     * @param phone String(11)
+     *
+     * @param phone    String(11)
      * @param password 一次MD5运算过的密码以16进制描述，英文小写
      * @param authcode 验证码
      * @return
@@ -71,20 +75,20 @@ public interface MerchantSystem {
 
     /**
      * 获取验证码
-     *
+     * <p>
      * <b>负责人：</b>
+     *
      * @param voiceAble 是否支持语音播报
-     * @param phone String(11)
-     * @param type 类型 1：忘记密码
-     * @param codeType 0文本 1语音
+     * @param phone     String(11)
+     * @param type      类型 1：忘记密码
+     * @param codeType  0文本 1语音
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult sendSMS(Output<Boolean> voiceAble,String phone,
-                      int type,Integer codeType
+    ApiResult sendSMS(Output<Boolean> voiceAble, String phone,
+                      int type, @RequestParam(required = false) Integer codeType
     ) throws Exception;
-
 
 
 }

@@ -77,6 +77,11 @@ public class Merchant {
     @Column(length = 500)
     private String authority;
 
+    /**
+     * 可用
+     */
+    private boolean enabled;
+
     public Integer getId() {
         return id;
     }
@@ -171,5 +176,13 @@ public class Merchant {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

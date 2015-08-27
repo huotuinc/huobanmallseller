@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface MerchantRepository extends JpaRepository<Merchant, Integer>, JpaSpecificationExecutor<Merchant> {
 
     Merchant findByToken(String token);
+
+    Merchant findByName(String name);
 }
