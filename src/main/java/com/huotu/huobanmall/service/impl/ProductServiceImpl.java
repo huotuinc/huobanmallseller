@@ -1,9 +1,18 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Product;
+import com.huotu.huobanmall.repository.ProductRepository;
 import com.huotu.huobanmall.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * 商品Service层
@@ -12,21 +21,30 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements ProductService{
+    @Autowired
+    ProductRepository productRepository;
 
 
+    /**
+     * Create by shiliting on 2015/8/27
+     * @param merchantId    商户ID
+     * @param status        商品状态
+     * @param pageNo        分页
+     * @param pageSize      每页记录数
+     * @return              商品信息集合
+     */
     @Override
-    public Page<Product> findAll() {
-        return null;
+    public Page<Product> searchProducts(Integer merchantId, Integer status, Integer pageNo, Integer pageSize) {
+        return  productRepository.findAll(new Specification<Product>() {
+            @Override
+            public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.and(
+                        cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                        cb.equal(root.get("status").as(Integer.class),status)
+                );
+            }
+        },new PageRequest(pageNo, pageSize));
     }
 
-    @Override
-    public Product findOneById(Integer productId) {
-        return null;
-    }
-
-    @Override
-    public Product saveOne(Product product) {
-        return null;
-    }
 
 }

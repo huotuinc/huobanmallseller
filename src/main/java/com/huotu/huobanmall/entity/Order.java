@@ -10,12 +10,17 @@ import java.util.Date;
 @Entity
 @Table(name = "ORDERES")
 public class Order {
-
     /**
      * 订单号
      */
     @Id
     private String id;
+
+    /**
+     * 商家ID
+     */
+    @Column
+    private Integer merchantId;
 
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 //    private User owner;
@@ -34,11 +39,6 @@ public class Order {
      */
     private Integer productId;
 
-    /**
-     * 下单时间
-     */
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date time;
 
     /**
      * 订单状态 1 未付款 2已付款 todo 需要根据实际情况调整
@@ -55,6 +55,14 @@ public class Order {
      * 返利积分
      */
     private Integer score;
+
+    /**
+     * 下单时间
+     */
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date time;
+
+
 
     public Integer getUserId() {
         return userId;
@@ -110,5 +118,13 @@ public class Order {
 
     public void setScore(Integer score) {
         this.score = score;
+    }
+
+    public Integer getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
     }
 }
