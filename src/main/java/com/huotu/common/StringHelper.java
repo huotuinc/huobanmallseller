@@ -107,7 +107,7 @@ public class StringHelper {
      * @param <T>
      * @param <X>
      * @return
- 
+
      */
     public static <T extends X, X> T SupperDataToSub(X parent, Class<X> pcls, Class<T> cls) {
         try {
