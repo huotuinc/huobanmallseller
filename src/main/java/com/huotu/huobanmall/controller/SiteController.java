@@ -1,5 +1,7 @@
 package com.huotu.huobanmall.controller;
 
+import com.huotu.huobanmall.api.common.PublicParameterHolder;
+import com.huotu.huobanmall.model.app.AppPublicModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,10 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
-@RequestMapping("/web")
+@RequestMapping("/app")
 public class SiteController {
     @RequestMapping("/saleList")
     public String saleList() {
+        AppPublicModel appPublicModel = PublicParameterHolder.getParameters();
+        appPublicModel.getCurrentUser().getId();
         return "x";
     }
 
