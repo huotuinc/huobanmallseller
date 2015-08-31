@@ -14,12 +14,14 @@ import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.ConfigAppVersion;
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.model.app.AppGlobalModel;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.model.app.AppUpdateModel;
 import com.huotu.huobanmall.repository.ConfigAppVersionRepository;
 import com.huotu.huobanmall.repository.MerchantRepository;
+import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.service.SystemService;
 import org.apache.commons.logging.Log;
@@ -63,6 +65,9 @@ public class MerchantController implements MerchantSystem {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private OperatorRepository operatorRepository;
 
     private AppUpdateModel versionChecking(String opertion, String version, String imei) {
         AppUpdateModel result = new AppUpdateModel();
@@ -202,9 +207,9 @@ public class MerchantController implements MerchantSystem {
             }
         }
 
-        Merchant merchant = merchantRepository.findByName(phone);
-        merchant.setPassword(password);
-        merchantRepository.save(merchant);
+        Operator operator = operatorRepository.findByName(phone);
+        operator.setPassword(password);
+        operatorRepository.save(operator);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -233,13 +238,13 @@ public class MerchantController implements MerchantSystem {
 
         // 重置密码的处理
         if (type == VerificationType.BIND_LOGINPASSWORD.getValue()) {
-            Merchant userA = merchantRepository.findByName(phone);
+            Operator operator = operatorRepository.findByName(phone);
 
-            if (userA == null) {
+            if (operator == null) {
                 return ApiResult.resultWith(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME);
             }
 
-            if (!userA.isEnabled()) {
+            if (!operator.isEnabled()) {
                 return ApiResult.resultWith(CommonEnum.AppCode.SYSTEM_BAD_ACCOUNT);
             }
 

@@ -1,6 +1,7 @@
 package com.huotu.huobanmall.model.app;
 
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Operator;
 
 /**
  * Created by lgh on 2015/8/25.
@@ -12,6 +13,11 @@ public class AppPublicModel {
      * <p>当前用户，如果没有则为空</p>
      */
     private Merchant currentUser;
+
+    /**
+     * 当前操作员 如果是商家管理员，此值为null
+     */
+    private Operator currentOprator;
 //    /**
 //     * 服务端参数
 //     * <p>当前用户设备，必然非空</p>
@@ -146,6 +152,14 @@ public class AppPublicModel {
 
     public void setCurrentUser(Merchant currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public Operator getCurrentOprator() {
+        return currentOprator;
+    }
+
+    public void setCurrentOprator(Operator currentOprator) {
+        this.currentOprator = currentOprator;
     }
 //
 //    public Device getCurrentDevice() {

@@ -28,10 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {MvcConfig.class, RootConfig.class})
-
 @Transactional
 public class MerchantSystemTest extends SpringAppTest {
 
@@ -50,7 +48,7 @@ public class MerchantSystemTest extends SpringAppTest {
         mockMvc.perform(
                 device.getApi("login")
                         .param("username", "lgh")
-                        .param("password", "123456")
+                        .param("password", "e10adc3949ba59abbe56e057f20f883e")
                         .build()
 
         ).andDo(print());

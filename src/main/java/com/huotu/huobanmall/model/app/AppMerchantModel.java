@@ -6,7 +6,7 @@ package com.huotu.huobanmall.model.app;
  */
 public class AppMerchantModel {
     /**
-     * 登录名
+     * 登录名（操作员或商家的登录名）
      */
     private String name;
 
@@ -53,9 +53,14 @@ public class AppMerchantModel {
     private String token;
 
     /**
-     * 权限，控制app端的内容显示 以,隔开 如 11,33,55
+     * 权限，控制app端的内容显示 以,隔开 如 11,33,55 特殊情况：*代表商家管理员权限
      */
     private String authority;
+
+    /**
+     * 0 商家 1 操作员
+     */
+    private boolean isOperator;
 
     public String getName() {
         return name;
@@ -146,5 +151,13 @@ public class AppMerchantModel {
 
     public void setNoDisturbed(Number noDisturbed) {
         this.noDisturbed = noDisturbed;
+    }
+
+    public boolean isOperator() {
+        return isOperator;
+    }
+
+    public void setIsOperator(boolean isOperator) {
+        this.isOperator = isOperator;
     }
 }

@@ -40,11 +40,11 @@ public interface MerchantSystem {
 
     /**
      * 登录
-     * <p>
+     * <p> 先判断商家登录，登录失败，再判断操作员登录
      * <b>负责人：</b>
      *
      * @param user     用户信息
-     * @param username 用户名(3-50)
+     * @param username 用户名(3-50)，商家用户或操作员
      * @param password 一次MD5运算过的密码以16进制描述，英文小写
      * @return
      * @throws Exception
@@ -61,7 +61,7 @@ public interface MerchantSystem {
      * <p>
      * <b>负责人：</b>
      *
-     * @param phone    String(11)
+     * @param phone    String(11) 操作员用户名
      * @param password 一次MD5运算过的密码以16进制描述，英文小写
      * @param authcode 验证码
      * @return
