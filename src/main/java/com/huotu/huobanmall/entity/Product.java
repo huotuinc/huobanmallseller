@@ -1,9 +1,6 @@
 package com.huotu.huobanmall.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * 商品
@@ -19,31 +16,37 @@ public class Product {
     /**
      * 商品标题
      */
+    @Column
     private String title;
 
 
     /**
      * 商家Id
      */
+    @Column
     private Integer merchantId;
     /**
      * 图片地址
      */
+    @Column
     private String pictureUrl;
 
     /**
      * 库存量 -1无限制
      */
+    @Column
     private Integer stock;
 
     /**
      * 商品状态 1 上架 2 下架 3 删除 todo 根据实际情况需要修改
      */
+    @Column
     private Integer status;
 
     /**
      * 商品价格
      */
+    @Column
     private float price;
 
 
@@ -93,5 +96,13 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public Integer getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
     }
 }
