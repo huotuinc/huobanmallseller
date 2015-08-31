@@ -30,22 +30,22 @@ public class OrderServiceImpl implements OrderService{
     /**
      * Created by shiliting on 2015/8/28.
      * 查找订单,按照订单时间降序排序
-     * @param lastOrderTime   显示订单的最后一条的下单时间
+     * @param lastId   显示订单的最后一条的下单时间
      * @param pageSize      一次显示订单的数量
      * @param orderStatus   订单的类型
      * @return
      */
     @Override
-    public Page<Order> searchOrders(Integer merchantId,Date lastOrderTime, Integer pageSize, Integer orderStatus) {
+    public Page<Order> searchOrders(Integer merchantId,String lastId, Integer pageSize, Integer orderStatus) {
         return orderRepository.findAll(new Specification<Order>() {
             @Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 return cb.and(
                         cb.equal(root.get("merchantId").as(Integer.class),merchantId),
                         cb.equal(root.get("orderStatus").as(Integer.class),orderStatus),
-                        cb.lessThan(root.get("time").as(Date.class),lastOrderTime)
+                        cb.lessThan(root.get("id").as(String.class),lastId)
                 );
             }
-        },new PageRequest(0,pageSize,new Sort(Sort.Direction.DESC,"time")));
+        },new PageRequest(0,pageSize,new Sort(Sort.Direction.DESC,"id")));
     }
 }
