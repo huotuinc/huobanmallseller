@@ -38,7 +38,15 @@ public class Order {
      * 产品Id
      */
     private Integer productId;
+    /**
+     * 产品名称
+     */
+    private String productTitle;
 
+    /**
+     * 图片
+     */
+    private  String pictureUrl;
 
     /**
      * 订单状态 1 未付款 2已付款 todo 需要根据实际情况调整
@@ -126,5 +134,21 @@ public class Order {
 
     public void setMerchantId(Integer merchantId) {
         this.merchantId = merchantId;
+    }
+
+    public String getProductTitle() {
+        return productTitle;
+    }
+
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

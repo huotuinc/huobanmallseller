@@ -23,8 +23,8 @@ public class Product {
     /**
      * 商家Id
      */
-    @Column
-    private Integer merchantId;
+    @ManyToOne
+    private Merchant owner;
     /**
      * 图片地址
      */
@@ -98,11 +98,12 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getMerchantId() {
-        return merchantId;
+
+    public Merchant getOwner() {
+        return owner;
     }
 
-    public void setMerchantId(Integer merchantId) {
-        this.merchantId = merchantId;
+    public void setOwner(Merchant owner) {
+        this.owner = owner;
     }
 }
