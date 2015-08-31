@@ -160,19 +160,17 @@ public class MerchantController implements MerchantSystem {
     public ApiResult init(Output<AppGlobalModel> global, Output<AppMerchantModel> user
             , Output<AppUpdateModel> update) throws Exception {
 
-        appGlobalModel.setVoiceSupported(verificationService.supportVoice());
-        global.outputData(appGlobalModel);
-
         AppPublicModel pms = PublicParameterHolder.getParameters();
-
-        update.outputData(versionChecking(pms.getOperation(), pms.getVersion(), pms.getImei()));
-
         Merchant merchant = pms.getCurrentUser();
         if (merchant == null)
             return ApiResult.resultWith(CommonEnum.AppCode.ERROR_USER_LOGIN_FAIL);
 
-        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+        appGlobalModel.setVoiceSupported(verificationService.supportVoice());
+        global.outputData(appGlobalModel);
 
+        update.outputData(versionChecking(pms.getOperation(), pms.getVersion(), pms.getImei()));
+
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
 

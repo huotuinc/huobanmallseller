@@ -72,7 +72,7 @@ public class OrderServiceImplTest extends WebTestBase {
 
         Product product=new Product();
         product.setId(random.nextInt(200));
-        product.setMerchantId(merchantNew.getId());
+//        product.setMerchantId(merchantNew.getId());
         product.setPrice(100);
         product.setStatus(1);
         product.setStock(1000);

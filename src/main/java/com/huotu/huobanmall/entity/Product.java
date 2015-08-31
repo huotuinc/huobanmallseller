@@ -23,7 +23,7 @@ public class Product {
     /**
      * 商家Id
      */
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
     private Merchant owner;
     /**
      * 图片地址
