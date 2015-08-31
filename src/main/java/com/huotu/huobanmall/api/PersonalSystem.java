@@ -27,6 +27,17 @@ public interface PersonalSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST)
-    ApiResult updateProfile(Output<AppMerchantModel> user, int profileType, @RequestParam Object profileData) throws Exception;
+    ApiResult updateMerchantProfile(Output<AppMerchantModel> user, int profileType, @RequestParam Object profileData) throws Exception;
 
+
+    /**
+     * 显示商家信息
+     * <p>
+     * <b>负责人：史利挺</b>
+     * @param user          当前商家的信息
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult getMerchantProfile(Output<AppMerchantModel> user) throws Exception;
 }

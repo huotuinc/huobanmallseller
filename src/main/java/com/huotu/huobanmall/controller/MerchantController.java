@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by lgh on 2015/8/19.

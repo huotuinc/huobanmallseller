@@ -13,11 +13,11 @@ public interface ProductService {
      * Create by shiliting on 2015/8/27
      * @param merchantId    商户ID
      * @param status        商品状态
-     * @param pageNo        分页
+     * @param lastProductId 最后一个显示商品的ID
      * @param pageSize      每页记录数
      * @return              商品信息集合
      */
-    Page<Product> searchProducts(Integer merchantId, Integer status, Integer pageNo, Integer pageSize);
+    Page<Product> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize);
 
 
 }

@@ -11,9 +11,19 @@ public class AppMerchantModel {
     private String name;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 昵称 显示在app中
      */
     private String nickName;
+
+    /**
+     * 店铺名称
+     */
+    private String title;
 
     /**
      * 店铺描述
@@ -31,16 +41,16 @@ public class AppMerchantModel {
     /**
      * 订单支付成功通知（0关闭,1开启）
      */
-    private Number enableBillNotice;
+    private Number enableBillNotice=1;
     /**
      * 新增小伙伴通知（0关闭，1开启）
      */
-    private Number enablePartnerNotice;
+    private Number enablePartnerNotice=1;
 
     /**
      * 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
      */
-    private Number noDisturbed;
+    private Number noDisturbed=0;
 
     /**
      * 欢迎提示
@@ -151,6 +161,22 @@ public class AppMerchantModel {
 
     public void setNoDisturbed(Number noDisturbed) {
         this.noDisturbed = noDisturbed;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isOperator() {

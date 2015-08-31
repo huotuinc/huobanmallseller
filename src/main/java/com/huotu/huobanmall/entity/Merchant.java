@@ -35,6 +35,11 @@ public class Merchant {
 
 
     /**
+     * 店铺名称
+     */
+    @Column
+    private String title;
+    /**
      * 店铺描述
      */
     @Column(length = 200)
@@ -174,5 +179,13 @@ public class Merchant {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

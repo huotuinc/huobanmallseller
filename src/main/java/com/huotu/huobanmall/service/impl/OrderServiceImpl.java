@@ -14,7 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Date;
 
 /**
  * 订单Service层
@@ -30,10 +29,10 @@ public class OrderServiceImpl implements OrderService{
     /**
      * Created by shiliting on 2015/8/28.
      * 查找订单,按照订单时间降序排序
-     * @param lastId   显示订单的最后一条的下单时间
-     * @param pageSize      一次显示订单的数量
-     * @param orderStatus   订单的类型
-     * @return
+     * @param lastId            显示订单的最后一条ID
+     * @param pageSize          一次显示订单的数量
+     * @param orderStatus       订单的类型
+     * @return                  订单集合
      */
     @Override
     public Page<Order> searchOrders(Integer merchantId,String lastId, Integer pageSize, Integer orderStatus) {

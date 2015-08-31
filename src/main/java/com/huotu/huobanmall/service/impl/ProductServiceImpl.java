@@ -6,6 +6,7 @@ import com.huotu.huobanmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,16 +26,9 @@ public class ProductServiceImpl implements ProductService{
     ProductRepository productRepository;
 
 
-    /**
-     * Create by shiliting on 2015/8/27
-     * @param merchantId    商户ID
-     * @param status        商品状态
-     * @param pageNo        分页
-     * @param pageSize      每页记录数
-     * @return              商品信息集合
-     */
+
     @Override
-    public Page<Product> searchProducts(Integer merchantId, Integer status, Integer pageNo, Integer pageSize) {
+    public Page<Product> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize) {
         return  productRepository.findAll(new Specification<Product>() {
             @Override
             public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -43,7 +37,7 @@ public class ProductServiceImpl implements ProductService{
                         cb.equal(root.get("status").as(Integer.class),status)
                 );
             }
-        },new PageRequest(pageNo, pageSize));
+        },new PageRequest(0, pageSize,new Sort(Sort.Direction.DESC,"id")));
     }
 
 

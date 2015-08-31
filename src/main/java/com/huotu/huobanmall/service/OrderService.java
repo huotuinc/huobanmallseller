@@ -16,7 +16,7 @@ public interface OrderService {
      * @param lastId 显示订单的最后一条的下单时间
      * @param pageSize      一次显示订单的数量
      * @param orderStatus   订单的类型
-     * @return
+     * @return              订单信息集合
      */
     Page<Order> searchOrders(Integer merchantId,String lastId,Integer pageSize,Integer orderStatus);
 
