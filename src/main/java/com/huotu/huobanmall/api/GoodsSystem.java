@@ -14,6 +14,7 @@ public interface GoodsSystem {
 
     /**
      * app首页 （统计数据）
+     * <b>负责人：罗国华</b>
      *
      * @param index 输出首页统计信息
      * @return
@@ -24,6 +25,7 @@ public interface GoodsSystem {
 
     /**
      * 商品列表
+     * <b>负责人：史利挺</b>
      *
      * @param list 输出商品列表
      * @param type 类型 1销售中 2已下架
@@ -35,6 +37,7 @@ public interface GoodsSystem {
 
     /**
      * 操作商品
+     * <b>负责人：史利挺</b>
      *
      * @param type  操作类型 1 上架商品 2 下架商品 3 删除商品
      * @param goods 商品Id以,隔开 如 1,2,4

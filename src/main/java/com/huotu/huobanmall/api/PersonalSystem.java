@@ -16,7 +16,7 @@ public interface PersonalSystem {
     /**
      * 更新商家信息
      * <p>
-     * <b>负责人：</b>
+     * <b>负责人：罗国华</b>
      * <p>Base64 采用Mime标准(http://www.ietf.org/rfc/rfc2045.txt)</p>
      *
      * @param user        更新后的商家信息
@@ -33,8 +33,9 @@ public interface PersonalSystem {
     /**
      * 显示商家信息
      * <p>
-     * <b>负责人：史利挺</b>
-     * @param user          当前商家的信息
+     * <b>负责人：罗国华</b>
+     *
+     * @param user 当前商家的信息
      * @return
      * @throws Exception
      */
