@@ -10,10 +10,7 @@ public class AppMerchantModel {
      */
     private String name;
 
-    /**
-     * 密码
-     */
-    private String password;
+
 
     /**
      * 昵称 显示在app中
@@ -171,13 +168,7 @@ public class AppMerchantModel {
         this.title = title;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public boolean isOperator() {
         return isOperator;

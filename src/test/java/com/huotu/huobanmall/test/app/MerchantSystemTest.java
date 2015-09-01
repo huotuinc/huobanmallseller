@@ -43,17 +43,17 @@ public class MerchantSystemTest extends SpringAppTest {
         device = Device.newDevice(DeviceType.Android);
     }
 
-    @Test
-    public void login() throws Exception {
-        mockMvc.perform(
-                device.getApi("login")
-                        .param("username", "lgh")
-                        .param("password", "e10adc3949ba59abbe56e057f20f883e")
-                        .build()
-
-        ).andDo(print());
-
-    }
+//    @Test
+//    public void login() throws Exception {
+//        mockMvc.perform(
+//                device.getApi("login")
+//                        .param("username", "lgh")
+//                        .param("password", "e10adc3949ba59abbe56e057f20f883e")
+//                        .build()
+//
+//        ).andDo(print());
+//
+//    }
 
 
 }
