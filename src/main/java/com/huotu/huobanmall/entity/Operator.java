@@ -27,11 +27,11 @@ public class Operator {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Merchant merchant;
 
-    /**
-     * 昵称 显示在app中
-     */
-    @Column(length = 50)
-    private String nickName;
+//    /**
+//     * 昵称 显示在app中
+//     */
+//    @Column(length = 50)
+//    private String nickName;
 
     /**
      * 权限，控制app端的内容显示 以,隔开 如 11,33,55
@@ -98,13 +98,13 @@ public class Operator {
         this.merchant = merchant;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
+//    public String getNickName() {
+//        return nickName;
+//    }
+//
+//    public void setNickName(String nickName) {
+//        this.nickName = nickName;
+//    }
 
     public String getAuthority() {
         return authority;

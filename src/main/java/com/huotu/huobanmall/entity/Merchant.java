@@ -56,16 +56,16 @@ public class Merchant {
     @Column(length = 11)
     private String mobile;
     /**
-     * 订单支付成功通知（0关闭,1开启）
+     * 订单支付成功通知（0关闭,1默认开启）
      */
     private boolean enableBillNotice;
     /**
-     * 新增小伙伴通知（0关闭，1开启）
+     * 新增小伙伴通知（0关闭，1默认开启）
      */
     private boolean enablePartnerNotice;
 
     /**
-     * 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
+     * 夜间免打扰模式 0 关闭 1 默认开启 （app端维护具体时间22:00-8:00）
      */
     private boolean noDisturbed;
 

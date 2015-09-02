@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -107,7 +110,6 @@ public class StringHelper {
      * @param <T>
      * @param <X>
      * @return
-
      */
     public static <T extends X, X> T SupperDataToSub(X parent, Class<X> pcls, Class<T> cls) {
         try {
@@ -183,12 +185,24 @@ public class StringHelper {
     }
 
 
-    public static Date strToDate(String strDate,String pattern) {
+    public static Date strToDate(String strDate, String pattern) {
         if (!StringUtils.isEmpty(strDate)) {
             SimpleDateFormat formatter = new SimpleDateFormat(pattern);
             return formatter.parse(strDate, new ParsePosition(0));
         }
         return null;
+    }
+
+    public static byte[] toByteArray(Object obj) throws IOException {
+        byte[] bytes = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(obj);
+        oos.flush();
+        bytes = bos.toByteArray();
+        oos.close();
+        bos.close();
+        return bytes;
     }
 
 }

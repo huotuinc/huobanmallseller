@@ -11,7 +11,6 @@ public class AppMerchantModel {
     private String name;
 
 
-
     /**
      * 昵称 显示在app中
      */
@@ -36,18 +35,18 @@ public class AppMerchantModel {
      */
     private String mobile;
     /**
-     * 订单支付成功通知（0关闭,1开启）
+     * 订单支付成功通知（0关闭,1默认开启）
      */
-    private Number enableBillNotice=1;
+    private Number enableBillNotice = 1;
     /**
-     * 新增小伙伴通知（0关闭，1开启）
+     * 新增小伙伴通知（0关闭,1默认开启）
      */
-    private Number enablePartnerNotice=1;
+    private Number enablePartnerNotice = 1;
 
     /**
-     * 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
+     * 夜间免打扰模式 0 关闭1 默认开启  （app端维护具体时间22:00-8:00）
      */
-    private Number noDisturbed=0;
+    private Number noDisturbed = 1;
 
     /**
      * 欢迎提示
@@ -126,7 +125,6 @@ public class AppMerchantModel {
     }
 
 
-
     public String getWelcomeTip() {
         return welcomeTip;
     }
@@ -167,7 +165,6 @@ public class AppMerchantModel {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
 
     public boolean isOperator() {

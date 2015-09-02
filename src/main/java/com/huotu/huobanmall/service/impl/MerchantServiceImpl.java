@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
@@ -11,6 +12,7 @@ import com.huotu.huobanmall.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
 import java.util.UUID;
 
 /**
@@ -73,7 +75,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setIsOperator(false);
                 appMerchantModel.setLogo(operator.getMerchant().getLogo());
-                appMerchantModel.setNickName(operator.getNickName());
+                appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
                 appMerchantModel.setTitle(operator.getMerchant().getTitle());
@@ -123,7 +125,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setIsOperator(false);
                 appMerchantModel.setLogo(operator.getMerchant().getLogo());
-                appMerchantModel.setNickName(operator.getNickName());
+                appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
                 appMerchantModel.setTitle(operator.getMerchant().getTitle());
@@ -138,26 +140,59 @@ public class MerchantServiceImpl implements MerchantService {
      *
      * @param merchant    商家
      * @param operator    操作员
-     * @param profileType 0:店铺名称 1:店铺描述 2:店铺logo 3:昵称 4:订单支付成功通知（0关闭,1开启）
-     *                    5：新增小伙伴通知（0关闭，1开启） 6: 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
+     * @param profileType 0:店铺名称 1:店铺描述 2:店铺logo 3:昵称 4:订单支付成功通知（0关闭,1默认开启）
+     *                    5：新增小伙伴通知（0关闭，1默认开启） 6: 夜间免打扰模式 0 关闭1 默认开启  （app端维护具体时间22:00-8:00）
      * @param profileData 0:String 1:String 2:Base64(Image) 3:String 4:Number 5:Number 6:Number
      */
     @Override
-    public void updateMerchantProfile(Merchant merchant, Operator operator, int profileType, Object profileData) {
+    public void updateMerchantProfile(Merchant merchant, Operator operator, int profileType, Object profileData) throws IOException {
 
-        //商家
-        if (operator == null) {
-            switch (profileType) {
-                case 0:
+        switch (profileType) {
+            case 0:
+                merchant.setTitle(profileData.toString());
+                merchantRepository.saveAndFlush(merchant);
+                break;
+            case 1:
+                merchant.setDiscription(profileData.toString());
+                merchantRepository.saveAndFlush(merchant);
+            case 2:
 
-                    break;
+                byte[] bytes = StringHelper.toByteArray(profileData);
+                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
 
-            }
-        } else {
-            //操作员
+                //保存图片 todo 保存图片并获取地址
+                String logo = "";
+                merchant.setLogo(logo);
+                merchantRepository.saveAndFlush(merchant);
+            case 3:
+                merchant.setNickName(profileData.toString());
+                merchantRepository.saveAndFlush(merchant);
+            case 4:
+                if (operator == null) {
+                    merchant.setEnableBillNotice("1".equals(profileData.toString()));
+                    merchantRepository.saveAndFlush(merchant);
+                } else {
+                    operator.setEnableBillNotice("1".equals(profileData.toString()));
+                    operatorRepository.saveAndFlush(operator);
+                }
+            case 5:
+                if (operator == null) {
+                    merchant.setEnablePartnerNotice("1".equals(profileData.toString()));
+                    merchantRepository.saveAndFlush(merchant);
+                } else {
+                    operator.setEnablePartnerNotice("1".equals(profileData.toString()));
+                    operatorRepository.saveAndFlush(operator);
+                }
+            case 6:
+                if (operator == null) {
+                    merchant.setNoDisturbed("1".equals(profileData.toString()));
+                    merchantRepository.saveAndFlush(merchant);
+                } else {
+                    operator.setEnablePartnerNotice("1".equals(profileData.toString()));
+                    operatorRepository.saveAndFlush(operator);
+                }
         }
-
-
-
     }
+
+
 }

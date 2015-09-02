@@ -44,10 +44,11 @@ public interface ReportSystem {
      * 会员量统计报表
      * <b>：罗国华</b>
      *
-     * @param member 输出会员量统计数据
+     * @param data 输出会员量统计数据
+     * @param type 1本周 2本月
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userReport(Output<AppMemberReportModel> member) throws Exception;
+    ApiResult userReport(Output<AppMemberReportModel> data, Integer type) throws Exception;
 }
