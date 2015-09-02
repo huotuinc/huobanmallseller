@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.service;
 
+import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import org.springframework.data.domain.Page;
 
@@ -12,8 +13,8 @@ public interface OrderService {
     /**
      * Create by shiliting on 2015/28/28
      * 显示订单信息
-     * @param merchantId    商家ID
-     * @param lastId        显示订单的最后一条的下单时间
+     * @param merchantId      商家ID
+     * @param lastId        最后一个显示的订单ID
      * @param pageSize      一次显示订单的数量
      * @param orderStatus   订单的类型
      * @return              订单信息集合
@@ -23,33 +24,35 @@ public interface OrderService {
     /**
      * Create by shiliting on 2015/9/1
      * 计算订单数量
-     * @param merchantId    商家ID
+     * @param merchant    商家
      * @param lastTime      大于设定的时间
      * @return              订单数量
      */
-    Integer countOrderQuantity(Integer merchantId,Date lastTime);
+    Integer countOrderQuantity(Merchant merchant,Date lastTime);
 
     /**
      * Create by shiliting on 2015/9/1
      * 计算订单总数
-     * @param merchantId    商家ID
+     * @param merchant    商家
      * @return              订单数量
      */
-    Integer countOrderQuantity(Integer merchantId);
+    Integer countOrderQuantity(Merchant merchant);
 
     /**
      * Create by shiliting on 2015/9/1
-     * @param merchantId    商家ID
+     * 计算销售额
+     * @param merchant    商家
      * @param lastTime      大于设定的时间
      * @return              销售额
      */
-    float countSale(Integer merchantId,Date lastTime);
+    float countSale(Merchant merchant,Date lastTime);
 
     /**
      * Create by shiliting on 2015/9/1
-     * @param merchantId    商家ID
+     * 计算总销售额
+     * @param merchant    商家
      * @return              销售额
      */
-    float countSale(Integer merchantId);
+    float countSale(Merchant merchant);
 
 }

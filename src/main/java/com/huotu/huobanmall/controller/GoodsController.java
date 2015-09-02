@@ -74,19 +74,19 @@ public class GoodsController implements GoodsSystem {
         //会员数量
         appIndexModel.setMemberAmount(9999);
         //近七日订单量
-        appIndexModel.setSevenBillAmount(orderService.countOrderQuantity(merchant.getId(),sevenDays));
+        appIndexModel.setSevenBillAmount(orderService.countOrderQuantity(merchant,sevenDays));
         //今日订单数
-        appIndexModel.setTodayBillAmount(orderService.countOrderQuantity(merchant.getId(),today));
+        appIndexModel.setTodayBillAmount(orderService.countOrderQuantity(merchant,today));
         //今日新增会员数
         appIndexModel.setTodayNewUserAmount(25);
         //今日销售总额
-        appIndexModel.setTodaySalesAmount(orderService.countSale(merchant.getId(),today));
+        appIndexModel.setTodaySalesAmount(orderService.countSale(merchant,today));
         //总销售额
-        appIndexModel.setTotalSalesAmount(orderService.countSale(merchant.getId()));
+        appIndexModel.setTotalSalesAmount(orderService.countSale(merchant));
         //今日分销商数量
         appIndexModel.setTodayDiscributorAmount(8796);
         //近七日销售额
-        appIndexModel.setSevenSalesAmount(orderService.countSale(merchant.getId(),sevenDays));
+        appIndexModel.setSevenSalesAmount(orderService.countSale(merchant,sevenDays));
         index.outputData(appIndexModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }

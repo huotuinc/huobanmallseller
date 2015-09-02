@@ -25,8 +25,6 @@ public class User {
      */
     private String password;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
-    private Merchant merchant;
 
     /**
      * 注册时间
@@ -38,6 +36,12 @@ public class User {
      * 用户类型  0会员 1小伙伴
      */
     private  Integer type;
+
+    /**
+     * 所属商家
+     */
+    @ManyToOne
+    private Merchant merchant;
 
     public Integer getId() {
         return id;
@@ -69,5 +73,21 @@ public class User {
 
     public void setRegTime(Date regTime) {
         this.regTime = regTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }

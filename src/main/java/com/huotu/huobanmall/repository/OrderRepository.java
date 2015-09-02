@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.repository;
 
+import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import org.luffy.lib.libspring.data.ClassicsRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,8 +18,9 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecificationExecutor<Order>,ClassicsRepository<Order> {
-    List<Order> findByMerchantId(Integer merchantId);
-    List<Order> findByMerchantIdAndTimeGreaterThan(Integer merchantId,Date lastTime);
+
+    List<Order> findByMerchant(Merchant merchant);
+    List<Order> findByMerchantAndTimeGreaterThan(Merchant merchant,Date lastTime);
 
     @Query(value = "select count(order) from Order order where order.time>=?1")
     Integer countByWeekOrMonth(Date startDate);

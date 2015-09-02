@@ -11,26 +11,27 @@ import javax.persistence.*;
 public class Merchant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="SC_UserID")
     private Integer id;
 
 
     /**
      * 登录名
      */
-    @Column(length = 100)
+    @Column(length = 100,name="SC_UserLoginName")
     private String name;
 
 
     /**
      * 密码
      */
-    @Column(length = 50)
+    @Column(length = 50,name="SC_UserLoginPassword")
     private String password;
 
     /**
      * 昵称 显示在app中
      */
-    @Column(length = 50)
+    @Column(length = 50,name = "SC_UserNickName")
     private String nickName;
 
 

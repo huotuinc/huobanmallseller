@@ -17,10 +17,10 @@ public class Order {
     private String id;
 
     /**
-     * 商家ID
+     * 所属商家
      */
-    @Column
-    private Integer merchantId;
+    @ManyToOne
+    private Merchant merchant;
 
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 //    private User owner;
@@ -32,7 +32,7 @@ public class Order {
     /**
      * 用户
      */
-    private Integer userId;
+    private User user;
 
     /**
      * 产品Id
@@ -49,7 +49,7 @@ public class Order {
     private  String pictureUrl;
 
     /**
-     * 订单状态 1 未付款 2已付款 todo 需要根据实际情况调整
+     * 订单状态 1 未付款 2已付款未到货 3到货(完成) todo 需要根据实际情况调整
      */
     private Integer orderStatus;
 
@@ -85,13 +85,6 @@ public class Order {
 
 
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public Integer getProductId() {
         return productId;
@@ -141,13 +134,6 @@ public class Order {
         this.score = score;
     }
 
-    public Integer getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(Integer merchantId) {
-        this.merchantId = merchantId;
-    }
 
     public String getProductTitle() {
         return productTitle;
@@ -179,5 +165,21 @@ public class Order {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

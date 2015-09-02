@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import com.huotu.huobanmall.repository.OrderRepository;
 import com.huotu.huobanmall.service.OrderService;
@@ -35,20 +36,20 @@ public class OrderServiceImpl implements OrderService{
             @Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 if(lastId==null&&orderStatus==null){
-                    return cb.equal(root.get("merchantId").as(Integer.class),merchantId);
+                    return cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId);
                 }else if(lastId==null){
                     return cb.and(
-                            cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                            cb.equal(root.get("merchant").get("id").as(Integer.class),merchantId),
                             cb.equal(root.get("orderStatus").as(Integer.class),orderStatus)
                     );
                 }else if(orderStatus==null){
                     return cb.and(
-                            cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                            cb.equal(root.get("merchant").get("id").as(Integer.class),merchantId),
                             cb.lessThan(root.get("id").as(String.class),lastId)
                     );
                 }else{
                     return cb.and(
-                            cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                            cb.equal(root.get("merchant").get("id").as(Integer.class),merchantId),
                             cb.equal(root.get("orderStatus").as(Integer.class),orderStatus),
                             cb.lessThan(root.get("id").as(String.class),lastId)
                     );
@@ -59,18 +60,18 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Integer countOrderQuantity(Integer merchantId, Date lastTime) {
-        return orderRepository.findByMerchantIdAndTimeGreaterThan(merchantId,lastTime).size();
+    public Integer countOrderQuantity(Merchant merchant, Date lastTime) {
+        return orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime).size();
     }
 
     @Override
-    public Integer countOrderQuantity(Integer merchantId) {
-        return orderRepository.findByMerchantId(merchantId).size();
+    public Integer countOrderQuantity(Merchant merchant) {
+        return orderRepository.findByMerchant(merchant).size();
     }
 
     @Override
-    public float countSale(Integer merchantId, Date lastTime) {
-        List<Order> list=orderRepository.findByMerchantIdAndTimeGreaterThan(merchantId,lastTime);
+    public float countSale(Merchant merchant, Date lastTime) {
+        List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime);
         float sum=0;
         for(Order o:list){
             sum=sum+o.getAmount()*o.getPrice();
@@ -79,8 +80,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public float countSale(Integer merchantId) {
-        List<Order> list=orderRepository.findByMerchantId(merchantId);
+    public float countSale(Merchant merchant) {
+        List<Order> list=orderRepository.findByMerchant(merchant);
         float sum=0;
         for(Order o:list){
             sum=sum+o.getAmount()*o.getPrice();
