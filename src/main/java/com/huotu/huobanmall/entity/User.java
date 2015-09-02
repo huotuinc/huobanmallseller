@@ -25,12 +25,19 @@ public class User {
      */
     private String password;
 
+    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
+    private Merchant merchant;
+
     /**
      * 注册时间
      */
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date regTime;
 
+    /**
+     * 用户类型  0会员 1小伙伴
+     */
+    private  Integer type;
 
     public Integer getId() {
         return id;

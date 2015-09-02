@@ -21,7 +21,7 @@ public class Product {
 
 
     /**
-     * 商家Id
+     * 商家
      */
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
     private Merchant owner;

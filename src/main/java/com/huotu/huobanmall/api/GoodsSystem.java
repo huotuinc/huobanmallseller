@@ -33,7 +33,7 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult goodsList(Output<AppGoodListModel[]> list, Integer type) throws Exception;
+    ApiResult goodsList(Output<AppGoodListModel[]> list, Integer type,Integer lastProductId) throws Exception;
 
     /**
      * 操作商品

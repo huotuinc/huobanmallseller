@@ -64,6 +64,19 @@ public class Order {
      */
     private Integer score;
 
+
+    /**
+     * 商品数量
+     */
+    private  Integer amount;
+    /**
+     * 商品价格
+     */
+    private  float price;
+
+
+
+
     /**
      * 下单时间
      */
@@ -150,5 +163,21 @@ public class Order {
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 }

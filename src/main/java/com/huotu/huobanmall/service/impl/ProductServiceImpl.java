@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.repository.ProductRepository;
 import com.huotu.huobanmall.service.ProductService;
@@ -26,18 +27,39 @@ public class ProductServiceImpl implements ProductService{
     ProductRepository productRepository;
 
 
-
     @Override
     public Page<Product> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize) {
         return  productRepository.findAll(new Specification<Product>() {
             @Override
             public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                return cb.and(
-                        cb.equal(root.get("merchantId").as(Integer.class),merchantId),
-                        cb.equal(root.get("status").as(Integer.class),status)
-                );
+                if(status==null&&lastProductId==null){
+                    return cb.equal(root.get("merchantId").as(Integer.class),merchantId);
+                }
+                else if(status==null){
+                    return cb.and(
+                            cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                            cb.greaterThan(root.get("id").as(Integer.class), lastProductId)
+                    );
+                }else if(lastProductId==null){
+                    return cb.and(
+                            cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                            cb.equal(root.get("status").as(Integer.class),status)
+                    );
+                }else{
+                    return cb.and(
+                            cb.equal(root.get("merchantId").as(Integer.class),merchantId),
+                            cb.equal(root.get("status").as(Integer.class),status),
+                            cb.greaterThan(root.get("id").as(Integer.class),lastProductId)
+                    );
+                }
+
             }
         },new PageRequest(0, pageSize,new Sort(Sort.Direction.DESC,"id")));
+    }
+
+    @Override
+    public Integer countByMerchant(Merchant merchant) {
+        return productRepository.findByOwner(merchant).size();
     }
 
 
