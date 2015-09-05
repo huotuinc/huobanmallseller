@@ -32,6 +32,7 @@ public class Order {
     /**
      * 用户
      */
+    @ManyToOne
     private User user;
 
     /**

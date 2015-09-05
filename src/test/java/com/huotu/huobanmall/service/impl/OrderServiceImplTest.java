@@ -154,11 +154,9 @@ public class OrderServiceImplTest extends WebTestBase {
         Assert.assertEquals("测试订单总数量",expected,orders);
 
         orders=orderService.countOrderQuantity(merchantNew,today);
-//        orders=orderRepository.countByWeekOrMonth(today,merchantNew);
         Assert.assertEquals("测试今日订单数量",todayNum,orders);
 
         orders=orderService.countOrderQuantity(merchantNew,sevenDays);
-//        orders=orderRepository.countByWeekOrMonth(sevenDays,merchantNew);
         Assert.assertEquals("测试近七日订单数量",sevendays,orders);
 
 
@@ -169,95 +167,6 @@ public class OrderServiceImplTest extends WebTestBase {
 
     @Test
     public void testCountOrderQuantity() throws Exception {
-        //      准备测试环境
-        Random random=new Random();
-        Merchant merchant=new Merchant();
-        merchant.setId(random.nextInt(200));
-        merchant.setName("wy");
-        merchant.setEnabled(true);
-        merchant.setPassword("654321");
-        merchant.setNickName("nicheng");
-        Merchant merchantNew=merchantRepository.save(merchant);     //新建一个商家
-
-        User user=new User();
-        user.setId(random.nextInt(200));
-        user.setUsername("shiliting");
-        user.setPassword("123456");
-        user.setRegTime(new Date());
-        user.setMerchant(merchant);
-        User userNew=userRepository.save(user);                     //新建一个用户
-
-        Product product=new Product();
-        product.setId(random.nextInt(200));
-        product.setOwner(merchant);
-        product.setPrice(100);
-        product.setStatus(1);
-        product.setStock(1000);
-        Product productNew=productRepository.save(product);                            //新建一个商品
-
-        Order order;
-        for(int i=0;i<10;i++){
-            order=new Order();
-            order.setId(String.valueOf(100-i));
-            order.setOrderStatus(1);
-            order.setMerchant(merchant);
-            order.setUser(user);
-            order.setTime(new Date());
-            order.setProductId(productNew.getId());
-            order.setScore(1);
-            order.setPrice(10);
-            order.setAmount(2);
-            order.setReceiver("史利挺");
-            orderRepository.save(order);
-        }
-
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND,0);
-        date.set(Calendar.MINUTE,0);
-        //今天
-        Date today=date.getTime();
-        date.set(Calendar.DATE,-5);
-        //近七日
-        Date sevenDays=new Date(date.getTime().getTime()+3);
-        //更久
-        Date oldTime=new Date(date.getTime().getTime()-3);
-        for(int i=0;i<20;i++){
-            order=new Order();
-            order.setId(String.valueOf(100-i));
-            order.setOrderStatus(1);
-            order.setMerchant(merchant);
-            order.setUser(user);
-            order.setTime(sevenDays);
-            order.setProductId(productNew.getId());
-            order.setScore(1);
-            order.setPrice(10);
-            order.setAmount(2);
-            order.setReceiver("史利挺");
-            orderRepository.save(order);
-        }
-        for(int i=0;i<5;i++){
-            order=new Order();
-            order.setId(String.valueOf(100-i));
-            order.setOrderStatus(1);
-            order.setMerchant(merchant);
-            order.setUser(user);
-            order.setTime(oldTime);
-            order.setProductId(productNew.getId());
-            order.setScore(1);
-            order.setPrice(10);
-            order.setAmount(2);
-            order.setReceiver("史利挺");
-            orderRepository.save(order);
-        }
-//      准备测试环境END
-        Integer orders=orderService.countOrderQuantity(merchantNew);
-        Integer expected=35;
-        Assert.assertEquals("测试订单数量",35,orderRepository.findAll().size());
-
-//        Assert.assertEquals("测试订单数量",expected,orders);
-
 
     }
 
