@@ -125,7 +125,7 @@ public class OrderControllerTest extends SpringAppTest {
             order.setUser(user);
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
             order.setProductId(productNew.getId());
-            order.setScore(99);
+            order.setScore(100);
             order.setPrice(25);
             order.setAmount(10);
             order.setReceiver("史利挺");

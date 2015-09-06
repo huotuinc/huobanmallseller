@@ -96,6 +96,15 @@ public class GoodsControllerTest extends SpringAppTest {
         user.setRegTime(new Date());
         user.setMerchant(mockMerchant);
         User userNew=userRepository.save(user);                     //新建一个用户
+        user=new User();
+        user.setId(random.nextInt(200));
+        user.setType(0);
+        user.setUsername("shiliting");
+        user.setPassword("123456");
+        user.setRegTime(sevenDays);
+        user.setMerchant(mockMerchant);         //新建一个用户
+
+
 
         Product product=new Product();
         product.setId(random.nextInt(200));
@@ -104,6 +113,13 @@ public class GoodsControllerTest extends SpringAppTest {
         product.setStatus(1);
         product.setStock(1000);
         Product productNew=productRepository.save(product);                            //新建一个商品
+
+        product=new Product();
+        product.setId(random.nextInt(200));
+        product.setOwner(mockMerchant);
+        product.setPrice(100);
+        product.setStatus(1);
+        product.setStock(1000);         //新建一个商品
 
         Order order;
         for(int i=0;i<20;i++){
@@ -123,7 +139,7 @@ public class GoodsControllerTest extends SpringAppTest {
                     wancheng++;
                     oldDays++;
             }
-            order.setOrderStatus(k);
+            order.setOrderStatus(3);
             order.setMerchant(mockMerchant);
             order.setUser(user);
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
