@@ -9,7 +9,6 @@ import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
 import com.huotu.huobanmall.model.app.AppIndexModel;
-import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
 import com.huotu.huobanmall.repository.ProductRepository;
@@ -21,7 +20,6 @@ import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +53,7 @@ public class GoodsController implements GoodsSystem {
     @Override
     @RequestMapping("/index")
     public ApiResult index(Output<AppIndexModel> index) throws Exception {
+        //获取当前商家信息
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
@@ -70,21 +69,21 @@ public class GoodsController implements GoodsSystem {
         //商品数量
         appIndexModel.setGoodsAmount(productService.countByMerchant(merchant));
         //分销商数量
-        appIndexModel.setDiscributorAmount(50);
+        appIndexModel.setDiscributorAmount(userService.countUserNumber(merchant,2));
         //会员数量
-        appIndexModel.setMemberAmount(9999);
+        appIndexModel.setMemberAmount(userService.countUserNumber(merchant,0));
         //近七日订单量
         appIndexModel.setSevenBillAmount(orderService.countOrderQuantity(merchant,sevenDays));
         //今日订单数
         appIndexModel.setTodayBillAmount(orderService.countOrderQuantity(merchant,today));
         //今日新增会员数
-        appIndexModel.setTodayNewUserAmount(25);
+        appIndexModel.setTodayNewUserAmount(userService.countUserNumber(merchant,0,today));
         //今日销售总额
         appIndexModel.setTodaySalesAmount(orderService.countSale(merchant,today));
         //总销售额
         appIndexModel.setTotalSalesAmount(orderService.countSale(merchant));
-        //今日分销商数量
-        appIndexModel.setTodayDiscributorAmount(8796);
+        //今日新增分销商数量
+        appIndexModel.setTodayDiscributorAmount(userService.countUserNumber(merchant,2,today));
         //近七日销售额
         appIndexModel.setSevenSalesAmount(orderService.countSale(merchant,sevenDays));
         index.outputData(appIndexModel);
@@ -94,9 +93,10 @@ public class GoodsController implements GoodsSystem {
     @Override
     @RequestMapping("/goodsList")
     public ApiResult goodsList(Output<AppGoodListModel[]> list,
-                               @RequestParam(required = false) Integer type,Integer lastProductId) throws Exception {
-        AppPublicModel appPublicModel = PublicParameterHolder.getParameters();
-        Merchant merchant=merchantRepository.findOne(appPublicModel.getCurrentUser().getId());
+                               Integer type,Integer lastProductId) throws Exception {
+        //获取当前商家信息
+        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+        //获取商家的商品信息集合
         List<Product> lists=productService.searchProducts(merchant.getId(),type,lastProductId,PAGE_SIZE).getContent();
         AppGoodListModel[] appGoodListModels=new AppGoodListModel[lists.size()];
         for(int i=0;i<lists.size();i++){

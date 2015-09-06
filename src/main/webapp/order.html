@@ -6,5 +6,32 @@
 </head>
 <body>
 <label th:text="'订单管理'">订单管理</label>
+<table width="100%">
+    <tr>
+        <th style="width:80px">订单号</th>
+        <th style="width:80px;">支付类型</th>
+        <th style="width:100px">商品图片</th>
+        <th style="width:100px">商品数量</th>
+        <th style="width:100px">商品价格</th>
+        <th style="width:100px">订单标题</th>
+        <th style="width:100px">收货人</th>
+        <th style="width:100px">下单时间</th>
+        <th style="width:100px">返回积分</th>
+
+
+    </tr>
+
+    <tr th:each="g:${orderList}">
+        <td th:text="${g.id}">01</td>
+        <td th:text="${g.orderStatus}">粉猫</td>
+        <td th:text="${g.pictureUrl}">www.fanmore.com</td>
+        <td th:text="${g.amount}">01</td>
+        <td th:text="${g.price}">粉猫</td>
+        <td th:text="${g.productTitle}">www.fanmore.com</td>
+        <td th:text="${g.receiver}">01</td>
+        <td th:text="${g.time}">粉猫</td>
+        <td th:text="${g.score}">www.fanmore.com</td>
+    </tr>
+</table>
 </body>
 </html>

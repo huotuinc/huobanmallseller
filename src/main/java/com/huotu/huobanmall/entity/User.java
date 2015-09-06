@@ -33,7 +33,7 @@ public class User {
     private Date regTime;
 
     /**
-     * 用户类型  0会员 1小伙伴
+     * 用户类型  0会员 1小伙伴 2分销商
      */
     private  Integer type;
 

@@ -14,32 +14,31 @@ import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 /**
- * Created by Administrator on 2015/9/1.
+ * Created by Administrator on 2015/9/5.
  */
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {MvcConfig.class, RootConfig.class})
 @Transactional
-public class GoodsControllerTest extends SpringAppTest {
+public class OrderControllerTest extends SpringAppTest {
     @Autowired
     private MerchantRepository merchantRepository;
     @Autowired
@@ -48,12 +47,11 @@ public class GoodsControllerTest extends SpringAppTest {
     ProductRepository productRepository;
     @Autowired
     OrderRepository orderRepository;
+
     private String mockMerchantName;
     private String mockMerchantPassword;
     private Device device;
     private Merchant mockMerchant;
-
-
 
     @Before
     public void prepareDevice() {
@@ -66,8 +64,8 @@ public class GoodsControllerTest extends SpringAppTest {
     }
 
     @Test
-    public void testIndex() throws Exception {
-        //准备测试环境
+    public void testOrderList() throws Exception {
+        //      准备测试环境
         Random random=new Random();
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
@@ -90,7 +88,6 @@ public class GoodsControllerTest extends SpringAppTest {
         Integer oldDays=0;
         User user=new User();
         user.setId(random.nextInt(200));
-        user.setType(0);
         user.setUsername("shiliting");
         user.setPassword("123456");
         user.setRegTime(new Date());
@@ -134,19 +131,18 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setReceiver("史利挺");
             orderRepository.save(order);
         }
-        //准备测试环境END
+//      准备测试环境END
         mockMvc.perform(
-                device.getApi("index")
-                        .build()).andDo(print());
-    }
-
-    @Test
-    public void testGoodsList() throws Exception {
-
-    }
-
-    @Test
-    public void testOperGoods() throws Exception {
+                device.getApi("orderList")
+                        .build()
+        ).andDo(print());
+        Map<String, Object>map= mockMvc.perform(
+                device.getApi("orderList")
+                        .param("orderStatus", "1")
+                        .build()
+        ).andReturn().getModelAndView().getModel();
+        Page<Order> page=(Page<Order>)map.get("orderList");
+        Assert.assertEquals("待付款数量是否一致：",(long)daifukuan,page.getTotalElements());
 
     }
 }
