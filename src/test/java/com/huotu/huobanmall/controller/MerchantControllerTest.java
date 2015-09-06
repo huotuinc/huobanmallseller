@@ -5,6 +5,7 @@ import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.repository.MerchantRepository;
+import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
@@ -50,6 +51,9 @@ public class MerchantControllerTest extends SpringAppTest {
     private String mockMerchantName;
     private String mockMerchantPassword;
 
+    @Autowired
+    private MerchantService merchantService;
+
     @Before
     public void prepareDevice() {
         device = Device.newDevice(DeviceType.Android);
@@ -83,7 +87,7 @@ public class MerchantControllerTest extends SpringAppTest {
 
     @Test
     public void testForgetPassword() throws Exception {
-
+        merchantService.getAppMerchantModel(true,1);
     }
 
     @Test
