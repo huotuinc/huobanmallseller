@@ -69,7 +69,7 @@ public class GoodsController implements GoodsSystem {
         //商品数量
         appIndexModel.setGoodsAmount(productService.countByMerchant(merchant));
         //分销商数量
-        appIndexModel.setDiscributorAmount(userService.countUserNumber(merchant,2));
+        appIndexModel.setDiscributorAmount(userService.countUserNumber(merchant,1));
         //会员数量
         appIndexModel.setMemberAmount(userService.countUserNumber(merchant,0));
         //近七日订单量
@@ -83,7 +83,7 @@ public class GoodsController implements GoodsSystem {
         //总销售额
         appIndexModel.setTotalSalesAmount(orderService.countSale(merchant));
         //今日新增分销商数量
-        appIndexModel.setTodayDiscributorAmount(userService.countUserNumber(merchant,2,today));
+        appIndexModel.setTodayDiscributorAmount(userService.countUserNumber(merchant,1,today));
         //近七日销售额
         appIndexModel.setSevenSalesAmount(orderService.countSale(merchant,sevenDays));
         index.outputData(appIndexModel);
