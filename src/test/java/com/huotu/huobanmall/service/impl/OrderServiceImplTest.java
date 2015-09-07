@@ -6,7 +6,7 @@ import com.huotu.huobanmall.entity.Order;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.ProductRepository;
+import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.service.OrderService;
 import com.huotu.huobanmall.test.TestWebConfig;
@@ -46,7 +46,7 @@ public class OrderServiceImplTest extends WebTestBase {
     @Autowired
     MerchantRepository merchantRepository;
     @Autowired
-    ProductRepository productRepository;
+    GoodsRepository productRepository;
 
 
 

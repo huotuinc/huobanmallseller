@@ -1,13 +1,7 @@
 package com.huotu.huobanmall.service.impl;
 
-import com.huotu.huobanmall.entity.Goods;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.User;
-import com.huotu.huobanmall.repository.MerchantRepository;
-import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.ProductRepository;
-import com.huotu.huobanmall.repository.UserRepository;
+import com.huotu.huobanmall.entity.*;
+import com.huotu.huobanmall.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -31,11 +25,13 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
 
     @Autowired
-    private ProductRepository productRepository;
+    private GoodsRepository productRepository;
 
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private ShopRepository shopRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -45,15 +41,21 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 merchant.setName("huotu");
                 merchant.setPassword("e10adc3949ba59abbe56e057f20f883e");
                 merchant.setEnableBillNotice(true);
-                merchant.setTitle("伙伴商城");
                 merchant.setToken("");
-                merchant.setDiscription("");
                 merchant.setMobile("18368893860");
                 merchant.setEnabled(true);
                 merchant.setEnablePartnerNotice(true);
-                merchant.setLogo("");
+
                 merchant.setNickName("伙伴商城abc");
                 merchant = merchantRepository.save(merchant);
+
+
+                Shop shop = new Shop();
+                shop.setMerchant(merchant);
+                shop.setTitle("伙伴商城");
+                shop.setDiscription("");
+                shop.setLogo("");
+                shopRepository.save(shop);
 
                 User user = new User();
                 user.setUsername("liuchen");
@@ -95,13 +97,12 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 Order order = new Order();
                 order.setId("201505061223033843");
                 order.setMerchant(merchant);
-                order.setUser(user);
-                order.setProductId(product.getId());
+                order.setUserId(user.getId());
+                order.setUserType(0);
+                order.setTitle("购买abcd1");
                 order.setPrice(product.getPrice());
                 order.setAmount(1);
                 order.setOrderStatus(1);
-                order.setProductTitle(product.getTitle());
-                order.setScore(10);
                 order.setReceiver("zhangsan");
                 order.setTime(new Date());
                 orderRepository.save(order);
@@ -109,13 +110,13 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 order = new Order();
                 order.setId("201505061723033841");
                 order.setMerchant(merchant);
-                order.setUser(user);
-                order.setProductId(product.getId());
+                order.setUserId(user.getId());
+                order.setUserType(1);
+                order.setTitle("购买abcd2");
                 order.setPrice(product.getPrice());
                 order.setAmount(1);
-                order.setOrderStatus(1);
-                order.setProductTitle(product.getTitle());
-                order.setScore(10);
+                order.setOrderStatus(0);
+
                 order.setReceiver("zhangsan");
                 order.setTime(new Date());
                 orderRepository.save(order);

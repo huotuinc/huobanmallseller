@@ -11,11 +11,11 @@ import com.huotu.huobanmall.model.app.AppGoodListModel;
 import com.huotu.huobanmall.model.app.AppIndexModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.ProductRepository;
+import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.service.OrderService;
-import com.huotu.huobanmall.service.ProductService;
+import com.huotu.huobanmall.service.GoodsService;
 import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +34,7 @@ import java.util.List;
 public class GoodsController implements GoodsSystem {
     public static final int PAGE_SIZE=10;
     @Autowired
-    ProductService productService;
+    GoodsService productService;
     @Autowired
     MerchantService merchantService;
     @Autowired
@@ -44,7 +44,7 @@ public class GoodsController implements GoodsSystem {
     @Autowired
     MerchantRepository merchantRepository;
     @Autowired
-    ProductRepository productRepository;
+    GoodsRepository productRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired

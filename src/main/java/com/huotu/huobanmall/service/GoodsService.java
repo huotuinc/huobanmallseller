@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 /**
  * Created by Shiliting on 2015/8/27.
  */
-public interface ProductService {
+public interface GoodsService {
 
 
     /**

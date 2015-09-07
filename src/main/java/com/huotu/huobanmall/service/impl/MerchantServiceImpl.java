@@ -4,10 +4,12 @@ import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
+import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
+import com.huotu.huobanmall.repository.ShopRepository;
 import com.huotu.huobanmall.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class MerchantServiceImpl implements MerchantService {
     @Autowired
     private OperatorRepository operatorRepository;
 
+    @Autowired
+    private ShopRepository shopRepository;
+
     public String createToken() {
         return UUID.randomUUID().toString().replace("-", "");
     }
@@ -39,6 +44,8 @@ public class MerchantServiceImpl implements MerchantService {
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
             if (password.equals(merchant.getPassword())) {
+                Shop shop = shopRepository.findByMerchant(merchant);
+
                 String token = createToken();
 
                 AppMerchantModel appMerchantModel = new AppMerchantModel();
@@ -46,15 +53,16 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setWelcomeTip("welcome");
                 appMerchantModel.setAuthority("*");
                 appMerchantModel.setToken(merchant.getToken());
-                appMerchantModel.setDiscription(merchant.getDiscription());
+                appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setIsOperator(false);
-                appMerchantModel.setLogo(merchant.getLogo());
+                appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
-                appMerchantModel.setTitle(merchant.getTitle());
+                appMerchantModel.setTitle(shop.getTitle());
+
 
                 merchant.setToken(token);
                 merchantRepository.save(merchant);
@@ -64,21 +72,22 @@ public class MerchantServiceImpl implements MerchantService {
             Operator operator = operatorRepository.findByName(username);
             if (operator != null && password.equals(operator.getPassword())) {
                 String token = createToken();
+                Shop shop = shopRepository.findByMerchant(operator.getMerchant());
 
                 AppMerchantModel appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(operator.getName());
                 appMerchantModel.setWelcomeTip("welcome");
                 appMerchantModel.setAuthority(operator.getAuthority());
                 appMerchantModel.setToken(operator.getToken());
-                appMerchantModel.setDiscription(operator.getMerchant().getDiscription());
+                appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setIsOperator(false);
-                appMerchantModel.setLogo(operator.getMerchant().getLogo());
+                appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
-                appMerchantModel.setTitle(operator.getMerchant().getTitle());
+                appMerchantModel.setTitle(shop.getTitle());
 
                 operator.setToken(token);
                 operatorRepository.save(operator);
@@ -96,39 +105,43 @@ public class MerchantServiceImpl implements MerchantService {
         if (!isOperator) {
             Merchant merchant = merchantRepository.findOne(id);
             if (merchant != null) {
+                Shop shop = shopRepository.findByMerchant(merchant);
+
                 appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(merchant.getName());
                 appMerchantModel.setWelcomeTip("welcome");
                 appMerchantModel.setAuthority("*");
                 appMerchantModel.setToken(merchant.getToken());
-                appMerchantModel.setDiscription(merchant.getDiscription());
+                appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setIsOperator(false);
-                appMerchantModel.setLogo(merchant.getLogo());
+                appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
-                appMerchantModel.setTitle(merchant.getTitle());
+                appMerchantModel.setTitle(shop.getTitle());
                 return appMerchantModel;
             }
         } else {
             Operator operator = operatorRepository.findOne(id);
             if (operator != null) {
+                Shop shop = shopRepository.findByMerchant(operator.getMerchant());
+
                 appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(operator.getName());
                 appMerchantModel.setWelcomeTip("welcome");
                 appMerchantModel.setAuthority(operator.getAuthority());
                 appMerchantModel.setToken(operator.getToken());
-                appMerchantModel.setDiscription(operator.getMerchant().getDiscription());
+                appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setIsOperator(false);
-                appMerchantModel.setLogo(operator.getMerchant().getLogo());
+                appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
-                appMerchantModel.setTitle(operator.getMerchant().getTitle());
+                appMerchantModel.setTitle(shop.getTitle());
                 return appMerchantModel;
             }
         }
@@ -140,21 +153,22 @@ public class MerchantServiceImpl implements MerchantService {
      *
      * @param merchant    商家
      * @param operator    操作员
+     * @param shop        店铺
      * @param profileType 0:店铺名称 1:店铺描述 2:店铺logo 3:昵称 4:订单支付成功通知（0关闭,1默认开启）
-     *                    5：新增小伙伴通知（0关闭，1默认开启） 6: 夜间免打扰模式 0 关闭1 默认开启  （app端维护具体时间22:00-8:00）
+     *                    5：新增小伙伴通知（0关闭，1默认开启） 6: 夜间免打扰模式 0 关闭 1 默认开启 （app端维护具体时间22:00-8:00）
      * @param profileData 0:String 1:String 2:Base64(Image) 3:String 4:Number 5:Number 6:Number
      */
     @Override
-    public void updateMerchantProfile(Merchant merchant, Operator operator, int profileType, Object profileData) throws IOException {
+    public void updateMerchantProfile(Merchant merchant, Operator operator, Shop shop, int profileType, Object profileData) throws IOException {
 
         switch (profileType) {
             case 0:
-                merchant.setTitle(profileData.toString());
-                merchantRepository.saveAndFlush(merchant);
+                shop.setTitle(profileData.toString());
+                shopRepository.saveAndFlush(shop);
                 break;
             case 1:
-                merchant.setDiscription(profileData.toString());
-                merchantRepository.saveAndFlush(merchant);
+                shop.setDiscription(profileData.toString());
+                shopRepository.saveAndFlush(shop);
             case 2:
 
                 byte[] bytes = StringHelper.toByteArray(profileData);
@@ -162,8 +176,8 @@ public class MerchantServiceImpl implements MerchantService {
 
                 //保存图片 todo 保存图片并获取地址
                 String logo = "";
-                merchant.setLogo(logo);
-                merchantRepository.saveAndFlush(merchant);
+                shop.setLogo(logo);
+                shopRepository.saveAndFlush(shop);
             case 3:
                 merchant.setNickName(profileData.toString());
                 merchantRepository.saveAndFlush(merchant);

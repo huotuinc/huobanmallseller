@@ -167,6 +167,14 @@ public class AppPublicModel {
     public void setCurrentOprator(Operator currentOprator) {
         this.currentOprator = currentOprator;
     }
+
+    public Shop getCurrentShop() {
+        return currentShop;
+    }
+
+    public void setCurrentShop(Shop currentShop) {
+        this.currentShop = currentShop;
+    }
 //
 //    public Device getCurrentDevice() {
 //        return currentDevice;

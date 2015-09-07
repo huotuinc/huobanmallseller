@@ -2,8 +2,8 @@ package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.repository.ProductRepository;
-import com.huotu.huobanmall.service.ProductService;
+import com.huotu.huobanmall.repository.GoodsRepository;
+import com.huotu.huobanmall.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,9 +22,9 @@ import javax.persistence.criteria.Root;
  */
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class GoodsServiceImpl implements GoodsService {
     @Autowired
-    ProductRepository productRepository;
+    GoodsRepository productRepository;
 
 
     @Override

@@ -6,9 +6,11 @@ import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
+import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
+import com.huotu.huobanmall.repository.ShopRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -36,6 +38,9 @@ public class CommonInterceptor implements HandlerInterceptor {
 
     @Autowired
     private OperatorRepository operatorRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
 
 //    @Autowired
 //    private DeviceService deviceService;
@@ -118,15 +123,18 @@ public class CommonInterceptor implements HandlerInterceptor {
         String token = StringUtils.isEmpty(request.getParameter("token")) ? "" : request.getParameter("token");
 
         Merchant merchant = merchantRepository.findByToken(token);
-        if (merchant != null)
+        if (merchant != null) {
             model.setCurrentUser(merchant);
-        else {
+            model.setCurrentShop(shopRepository.findByMerchant(merchant));
+        } else {
             Operator operator = operatorRepository.findByToken(token);
             if (operator != null) {
                 model.setCurrentOprator(operator);
                 model.setCurrentUser(operator.getMerchant());
+                model.setCurrentShop(shopRepository.findByMerchant(operator.getMerchant()));
             }
         }
+
 
         String version = StringUtils.isEmpty(request.getParameter("version")) ? "" : request.getParameter("version");
         // String loginCode =

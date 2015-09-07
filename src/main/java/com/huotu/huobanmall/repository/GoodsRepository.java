@@ -13,6 +13,6 @@ import java.util.List;
  */
 
 @Repository
-public interface ProductRepository extends JpaRepository<Goods, Integer>, JpaSpecificationExecutor<Goods> {
+public interface GoodsRepository extends JpaRepository<Goods, Integer>, JpaSpecificationExecutor<Goods> {
     List<Goods> findByOwner(Merchant merchant);
 }

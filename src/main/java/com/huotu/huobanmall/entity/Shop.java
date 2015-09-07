@@ -3,7 +3,7 @@ package com.huotu.huobanmall.entity;
 import javax.persistence.*;
 
 /**
- * 店铺 todo new
+ * 店铺 todo new 店铺会不会不存在 跟商家不匹配
  * 备注：对应表Mall_UserBaseConfig  实体MallUserBaseConfigModel
  * Created by lgh on 2015/9/6.
  */

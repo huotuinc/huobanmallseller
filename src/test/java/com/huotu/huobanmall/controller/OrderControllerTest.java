@@ -9,7 +9,7 @@ import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.ProductRepository;
+import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
@@ -44,7 +44,7 @@ public class OrderControllerTest extends SpringAppTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ProductRepository productRepository;
+    GoodsRepository productRepository;
     @Autowired
     OrderRepository orderRepository;
 
