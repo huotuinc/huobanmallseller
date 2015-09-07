@@ -15,12 +15,12 @@ public interface OrderService {
      * Create by shiliting on 2015/28/28
      * 显示订单信息
      * @param merchantId     所属商家ID
-     * @param lastId        最后一个显示的订单ID
+     * @param time        最后一个显示的下单时间
      * @param pageSize      一次显示订单的数量
      * @param orderStatus   订单的类型
      * @return              订单信息集合
      */
-    Page<Order> searchOrders(Integer merchantId,String lastId,Integer pageSize,Integer orderStatus);
+    Page<Order> searchOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus);
 
     /**
      * Create by shiliting on 2015/9/1

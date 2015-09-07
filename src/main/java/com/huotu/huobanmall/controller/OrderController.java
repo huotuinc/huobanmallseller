@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,9 +33,9 @@ public class OrderController {
 
     @RequestMapping("/orderList")
     public String orderList(@RequestParam(required = false)Integer orderStatus,
-                     @RequestParam(required = false) String lastId,Model model){
+                     @RequestParam(required = false) Date lastOrderTime,Model model){
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastId,PAGE_SIZE,orderStatus);
+        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastOrderTime,PAGE_SIZE,orderStatus);
         model.addAttribute("orderList",pages);
         return "order";
     }

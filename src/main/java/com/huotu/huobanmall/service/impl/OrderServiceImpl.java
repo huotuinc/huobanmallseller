@@ -31,13 +31,13 @@ public class OrderServiceImpl implements OrderService{
 
 
     @Override
-    public Page<Order> searchOrders(Integer merchantId,String lastId, Integer pageSize, Integer orderStatus) {
+    public Page<Order> searchOrders(Integer merchantId,Date time, Integer pageSize, Integer orderStatus) {
         return orderRepository.findAll(new Specification<Order>() {
             @Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                if(lastId==null&&orderStatus==null){
+                if(time==null&&orderStatus==null){
                     return cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId);
-                }else if(lastId==null){
+                }else if(time==null){
                     return cb.and(
                             cb.equal(root.get("merchant").get("id").as(Integer.class),merchantId),
                             cb.equal(root.get("orderStatus").as(Integer.class),orderStatus)
@@ -45,18 +45,18 @@ public class OrderServiceImpl implements OrderService{
                 }else if(orderStatus==null){
                     return cb.and(
                             cb.equal(root.get("merchant").get("id").as(Integer.class),merchantId),
-                            cb.lessThan(root.get("id").as(String.class),lastId)
+                            cb.lessThan(root.get("time").as(Date.class),time)
                     );
                 }else{
                     return cb.and(
                             cb.equal(root.get("merchant").get("id").as(Integer.class),merchantId),
                             cb.equal(root.get("orderStatus").as(Integer.class),orderStatus),
-                            cb.lessThan(root.get("id").as(String.class),lastId)
+                            cb.lessThan(root.get("time").as(Date.class),time)
                     );
                 }
 
             }
-        },new PageRequest(0,pageSize,new Sort(Sort.Direction.DESC,"id")));
+        },new PageRequest(0,pageSize,new Sort(Sort.Direction.DESC,"time")));
     }
 
     @Override

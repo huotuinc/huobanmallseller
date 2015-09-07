@@ -118,10 +118,10 @@ public class OrderServiceImplTest extends WebTestBase {
             }
             order.setOrderStatus(k);
             order.setMerchant(merchant);
-            order.setUser(user);
+            order.setUserId(user.getId());
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
-            order.setProductId(productNew.getId());
-            order.setScore(99);
+//            order.setProductId(productNew.getId());
+//            order.setScore(99);
             order.setPrice(25);
             order.setAmount(10);
             order.setReceiver("史利挺");
@@ -129,7 +129,7 @@ public class OrderServiceImplTest extends WebTestBase {
         }
 //      准备测试环境END
         Assert.assertEquals("是否添加了20条订单",20,orderRepository.count());
-        Page<Order> pages=orderService.searchOrders(merchantNew.getId(),"999",6,null);
+        Page<Order> pages=orderService.searchOrders(merchantNew.getId(),new Date(),6,null);
         Assert.assertEquals("测试查询出来的的订单总数量是否正确",daifukuan+daishouhuo+wancheng,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的数量是否正确", 6, pages.getNumberOfElements());
         pages=orderService.searchOrders(merchantNew.getId(),null,5,null);
@@ -138,13 +138,13 @@ public class OrderServiceImplTest extends WebTestBase {
         pages=orderService.searchOrders(merchantNew.getId(),null,5,1);
         Assert.assertEquals("测试查询出来的的待付款的订单总数量是否正确",daifukuan,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的代付款数量是否正确", daifukuan > 5 ? 5 : daifukuan, pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),"9999",5,1);
+        pages=orderService.searchOrders(merchantNew.getId(),new Date(),5,1);
         Assert.assertEquals("测试查询出来的待付款的订单总数量是否正确",daifukuan,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的代付款数量是否正确", daifukuan > 5 ? 5 : daifukuan, pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),"9999",4,2);
+        pages=orderService.searchOrders(merchantNew.getId(),new Date(),4,2);
         Assert.assertEquals("测试查询出来的待收货的订单总数量是否正确",daishouhuo,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的待收货数量是否正确",daishouhuo>4?4:daishouhuo,pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),"9999",3,3);
+        pages=orderService.searchOrders(merchantNew.getId(),new Date(),3,3);
         Assert.assertEquals("测试查询出来的完成的订单总数量是否正确",wancheng,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的完成的数量是否正确",wancheng>3?3:wancheng,pages.getNumberOfElements());
 
