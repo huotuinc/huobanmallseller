@@ -27,7 +27,7 @@ public class Goods {
      * 商家
      */
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
-    @Column(name = "Customer_Id")
+    @JoinColumn(name = "Customer_Id")
     private Merchant owner;
     /**
      * 图片地址

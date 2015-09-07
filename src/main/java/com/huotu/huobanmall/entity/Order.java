@@ -22,7 +22,7 @@ public class Order {
      * 所属商家
      */
     @ManyToOne
-    @Column(name = "Customer_Id")
+    @JoinColumn(name = "Customer_Id")
     private Merchant merchant;
 
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})

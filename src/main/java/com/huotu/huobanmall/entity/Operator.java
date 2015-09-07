@@ -30,7 +30,7 @@ public class Operator {
      * 所属商户
      */
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @Column(name = "CustomerID")
+    @JoinColumn(name = "CustomerID")
     private Merchant merchant;
 
 //    /**

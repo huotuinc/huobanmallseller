@@ -21,7 +21,7 @@ public class Shop {
      * 所属商家 todo 不能一一对应需要处理
      */
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    @Column(name = "CustomerID")
+    @JoinColumn(name = "CustomerID")
     private Merchant merchant;
 
     /**
