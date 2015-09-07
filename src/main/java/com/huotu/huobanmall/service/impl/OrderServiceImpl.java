@@ -93,4 +93,14 @@ public class OrderServiceImpl implements OrderService{
         }
         return sum;
     }
+
+    @Override
+    public List<Object[]> countUserScoreList(Merchant merchant) {
+        return orderRepository.countUserScore();
+    }
+
+    @Override
+    public List<Object[]> countUserExpenditureList(Merchant merchant) {
+        return orderRepository.countUserExpenditure();
+    }
 }

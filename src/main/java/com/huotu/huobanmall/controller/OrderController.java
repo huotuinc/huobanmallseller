@@ -31,16 +31,29 @@ public class OrderController {
     OrderRepository orderRepository;
 
     @RequestMapping("/orderList")
-    String orderList(@RequestParam(required = false)Integer orderStatus,
+    public String orderList(@RequestParam(required = false)Integer orderStatus,
                      @RequestParam(required = false) String lastId,Model model){
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        List<Order> list=orderRepository.findAll();
         Page<Order> pages=orderService.searchOrders(merchant.getId(),lastId,PAGE_SIZE,orderStatus);
         model.addAttribute("orderList",pages);
         return "order";
     }
 
+    @RequestMapping("/userScoreList")
+    public String userScoreList(Model model){
+        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+        List<Object[]> list=orderService.countUserScoreList(merchant);
+        model.addAttribute("userScoreList",list);
+        return "x";
+    }
 
+    @RequestMapping("/userExpenditureList")
+    public String userExpenditureList(Model model){
+        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+        List<Object[]> list=orderService.countUserExpenditureList(merchant);
+        model.addAttribute("userExpenditureList",list);
+        return "x";
+    }
 
 
 }

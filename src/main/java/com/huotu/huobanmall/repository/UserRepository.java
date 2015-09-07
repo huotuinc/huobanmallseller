@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     List<User> findByMerchantAndTypeAndRegTimeGreaterThan(Merchant merchant,Integer type,Date date);
 
 
+
+
+
 }
