@@ -4,7 +4,9 @@ import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.repository.MerchantRepository;
+import com.huotu.huobanmall.repository.ShopRepository;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
@@ -48,6 +50,9 @@ public class MerchantControllerTest extends SpringAppTest {
     @Autowired
     private MerchantRepository merchantRepository;
 
+    @Autowired
+    private ShopRepository shopRepository;
+
     private String mockMerchantName;
     private String mockMerchantPassword;
 
@@ -60,7 +65,7 @@ public class MerchantControllerTest extends SpringAppTest {
         Random random = new Random();
         mockMerchantName = StringHelper.RandomNo(random, 15);
         mockMerchantPassword = UUID.randomUUID().toString().replace("-", "");
-        mockMerchant = generateMerchantWithToken(merchantRepository, mockMerchantName, mockMerchantPassword);
+        mockMerchant = generateMerchantWithToken(merchantRepository,shopRepository, mockMerchantName, mockMerchantPassword);
         device.setToken(mockMerchant.getToken());
     }
 

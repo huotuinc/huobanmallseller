@@ -44,7 +44,7 @@ public class PersonalController implements PersonalSystem {
             throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
-        merchantService.updateMerchantProfile(apm.getCurrentUser(), apm.getCurrentOprator(), profileType, profileData);
+        merchantService.updateMerchantProfile(apm.getCurrentUser(), apm.getCurrentOprator(),apm.getCurrentShop(), profileType, profileData);
 
         if (apm.getCurrentOprator() == null) {
             user.outputData(merchantService.getAppMerchantModel(false, apm.getCurrentUser().getId()));
