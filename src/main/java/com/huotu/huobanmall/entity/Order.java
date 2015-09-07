@@ -5,21 +5,24 @@ import java.util.Date;
 
 /**
  * 订单
+ * 说明：对应表 Mall_Orders 实体 OrdersModel
  * Created by lgh on 2015/8/26.
  */
 @Entity
-@Table(name = "ORDERES")
+@Table(name = "Mall_Orders")
 public class Order {
     /**
-     * 订单号
+     *  订单号(yyyyMMdd+8位随机数)  todo 订单号格式
      */
     @Id
+    @Column(name = "Order_Id")
     private String id;
 
     /**
      * 所属商家
      */
     @ManyToOne
+    @Column(name = "Customer_Id")
     private Merchant merchant;
 
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
@@ -30,77 +33,105 @@ public class Order {
 
 
     /**
-     * 用户
+     * 用户 todo new
      */
-    @ManyToOne
-    private User user;
+    @Column(name = "Member_Id")
+    private Integer userId;
 
     /**
-     * 产品Id
+     * 用户类型 0普通会员1小伙伴
      */
-    private Integer productId;
-    /**
-     * 产品名称
-     */
-    private String productTitle;
+    @Column(name = "Rel_UserType")
+    private Integer userType;
 
     /**
-     * 图片
+     * 订单名称
      */
-    private  String pictureUrl;
+    @Column(name = "Tostr")
+    private String title;
+
+//    /**
+//     * 图片 需要从商品表获取
+//     */
+//    private String pictureUrl;
 
     /**
-     * 订单状态 1 未付款 2已付款未到货 3到货(完成) todo 需要根据实际情况调整
+     * 订单状态 0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
      */
+    @Column(name = "Pay_Status")
     private Integer orderStatus;
 
 
     /**
      * 收货人
      */
+    @Column(name = "Ship_Name")
     private String receiver;
 
-    /**
-     * 返利积分
-     */
-    private Integer score;
+//    /**
+//     * 返利积分
+//     */
+//    private Integer score;
 
 
     /**
      * 商品数量
      */
-    private  Integer amount;
+    @Column(name = "Itemnum")
+    private Integer amount;
     /**
-     * 商品价格
+     * 订单总金额
      */
-    private  float price;
-
-
+    @Column(name = "Final_Amount")
+    private float price;
 
 
     /**
-     * 下单时间
+     * 下单时间 按照此排序
      */
     @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "Createtime")
     private Date time;
 
 
-
-
-    public Integer getProductId() {
-        return productId;
+    public String getId() {
+        return id;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Date getTime() {
-        return time;
+    public Merchant getMerchant() {
+        return merchant;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getOrderStatus() {
@@ -111,45 +142,12 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getReceiver() {
         return receiver;
     }
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-
-    public String getProductTitle() {
-        return productTitle;
-    }
-
-    public void setProductTitle(String productTitle) {
-        this.productTitle = productTitle;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
     }
 
     public Integer getAmount() {
@@ -168,19 +166,11 @@ public class Order {
         this.price = price;
     }
 
-    public Merchant getMerchant() {
-        return merchant;
+    public Date getTime() {
+        return time;
     }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

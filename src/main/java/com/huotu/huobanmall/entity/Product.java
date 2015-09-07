@@ -4,6 +4,8 @@ import javax.persistence.*;
 
 /**
  * 商品
+ *
+ * 说明：对应表Mall_Goods 实体GoodsModel
  * Created by lgh on 2015/8/26.
  */
 @Entity
@@ -11,6 +13,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Goods_Id")
     private Integer id;
 
     /**
@@ -24,17 +27,18 @@ public class Product {
      * 商家
      */
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
+    @Column(name = "Customer_Id")
     private Merchant owner;
     /**
      * 图片地址
      */
-    @Column
+    @Column(name = "Image_Default")
     private String pictureUrl;
 
     /**
      * 库存量 -1无限制
      */
-    @Column
+    @Column(name = "Store")
     private Integer stock;
 
     /**
@@ -46,7 +50,7 @@ public class Product {
     /**
      * 商品价格
      */
-    @Column
+    @Column(name = "Price")
     private float price;
 
 

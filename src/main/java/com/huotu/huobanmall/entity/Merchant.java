@@ -5,68 +5,62 @@ import javax.persistence.*;
 
 /**
  * 商家 todo 字段长度类型等需要最后跟数据库一致
+ * 说明：对应表 Swt_CustomerManage 实体类UserInfoModel
  * Created by lgh on 2015/8/26.
  */
 @Entity
+@Table(name = "Swt_CustomerManage")
 public class Merchant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="SC_UserID")
+    @Column(name = "SC_UserID")
     private Integer id;
 
 
     /**
      * 登录名
      */
-    @Column(length = 100,name="SC_UserLoginName")
+    @Column(name = "SC_UserLoginName")
     private String name;
 
 
     /**
      * 密码
      */
-    @Column(length = 50,name="SC_UserLoginPassword")
+    @Column(name = "SC_UserLoginPassword")
     private String password;
+    /**
+     * 所属商户
+     */
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Merchant merchant;
 
     /**
-     * 昵称 显示在app中
+     * 昵称
      */
-    @Column(length = 50,name = "SC_UserNickName")
+    @Column(name = "SC_UserNickName")
     private String nickName;
 
 
     /**
-     * 店铺名称
-     */
-    @Column
-    private String title;
-    /**
-     * 店铺描述
-     */
-    @Column(length = 200)
-    private String discription;
-
-    /**
-     * 店铺logo
-     */
-    @Column(length = 100)
-    private String logo;
-    /**
      * 手机号
      */
-    @Column(length = 11)
+    @Column(name = "SC_PhoneNumber")
     private String mobile;
     /**
      * 订单支付成功通知（0关闭,1默认开启）
+     * todo new
      */
     private boolean enableBillNotice;
     /**
      * 新增小伙伴通知（0关闭，1默认开启）
+     * todo new
      */
     private boolean enablePartnerNotice;
 
     /**
      * 夜间免打扰模式 0 关闭 1 默认开启 （app端维护具体时间22:00-8:00）
+     * todo new
      */
     private boolean noDisturbed;
 
@@ -74,16 +68,17 @@ public class Merchant {
     /**
      * 身份验证 服务端负责生成 负责验证；app端只需要保存 传递
      * <b>每次App获得新的Token,旧Token就弃用。</b>
+     * todo new
      */
-    @Column(length = 32)
+    @Column(length = 32,name = "AppToken")
     private String token;
-
 
 
     /**
      * 可用
      */
     private boolean enabled;
+
 
     public Integer getId() {
         return id;
@@ -101,28 +96,28 @@ public class Merchant {
         this.name = name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
     public String getNickName() {
         return nickName;
     }
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
-    }
-
-    public String getDiscription() {
-        return discription;
-    }
-
-    public void setDiscription(String discription) {
-        this.discription = discription;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
     }
 
     public String getMobile() {
@@ -165,28 +160,11 @@ public class Merchant {
         this.token = token;
     }
 
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }
