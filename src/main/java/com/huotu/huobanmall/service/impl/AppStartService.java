@@ -56,7 +56,6 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 shop.setDiscription("");
                 shop.setLogo("");
                 shopRepository.save(shop);
-
                 User user = new User();
                 user.setUsername("liuchen");
                 user.setPassword("e10adc3949ba59abbe56e057f20f883e");
