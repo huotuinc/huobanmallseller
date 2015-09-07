@@ -5,8 +5,8 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
 import com.huotu.huobanmall.model.app.AppIndexModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
@@ -97,10 +97,10 @@ public class GoodsController implements GoodsSystem {
         //获取当前商家信息
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
         //获取商家的商品信息集合
-        List<Product> lists=productService.searchProducts(merchant.getId(),type,lastProductId,PAGE_SIZE).getContent();
+        List<Goods> lists=productService.searchProducts(merchant.getId(),type,lastProductId,PAGE_SIZE).getContent();
         AppGoodListModel[] appGoodListModels=new AppGoodListModel[lists.size()];
         for(int i=0;i<lists.size();i++){
-            Product product=lists.get(i);
+            Goods product=lists.get(i);
             appGoodListModels[i].setTitle(product.getTitle());
             appGoodListModels[i].setPictureUrl(product.getPictureUrl());
             appGoodListModels[i].setPrice(product.getPrice());
@@ -115,7 +115,7 @@ public class GoodsController implements GoodsSystem {
     public ApiResult operGoods(Integer type, String goods) throws Exception {
         String[] products=goods.split(",");
         for(int i=0;i<products.length;i++){
-            Product product=productRepository.findOne(Integer.parseInt(products[i]));
+            Goods product=productRepository.findOne(Integer.parseInt(products[i]));
             product.setStatus(type);
         }
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);

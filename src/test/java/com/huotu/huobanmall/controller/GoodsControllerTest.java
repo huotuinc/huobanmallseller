@@ -3,9 +3,9 @@ package com.huotu.huobanmall.controller;
 import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
@@ -106,15 +106,15 @@ public class GoodsControllerTest extends SpringAppTest {
 
 
 
-        Product product=new Product();
+        Goods product=new Goods();
         product.setId(random.nextInt(200));
         product.setOwner(mockMerchant);
         product.setPrice(100);
         product.setStatus(1);
         product.setStock(1000);
-        Product productNew=productRepository.save(product);                            //新建一个商品
+        Goods productNew=productRepository.save(product);                            //新建一个商品
 
-        product=new Product();
+        product=new Goods();
         product.setId(random.nextInt(200));
         product.setOwner(mockMerchant);
         product.setPrice(100);

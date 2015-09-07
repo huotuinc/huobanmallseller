@@ -5,7 +5,7 @@ import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Product;
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
@@ -94,13 +94,13 @@ public class OrderControllerTest extends SpringAppTest {
         user.setMerchant(mockMerchant);
         User userNew=userRepository.save(user);                     //新建一个用户
 
-        Product product=new Product();
+        Goods product=new Goods();
         product.setId(random.nextInt(200));
         product.setOwner(mockMerchant);
         product.setPrice(100);
         product.setStatus(1);
         product.setStock(1000);
-        Product productNew=productRepository.save(product);                            //新建一个商品
+        Goods productNew=productRepository.save(product);                            //新建一个商品
 
         Order order;
         for(int i=0;i<20;i++){
@@ -184,13 +184,13 @@ public class OrderControllerTest extends SpringAppTest {
         user1.setRegTime(new Date());
         user1.setMerchant(mockMerchant);
 
-        Product product=new Product();
+        Goods product=new Goods();
         product.setId(random.nextInt(200));
         product.setOwner(mockMerchant);
         product.setPrice(100);
         product.setStatus(1);
         product.setStock(1000);
-        Product productNew=productRepository.save(product);                            //新建一个商品
+        Goods productNew=productRepository.save(product);                            //新建一个商品
 
         Order order;
         for(int i=0;i<20;i++){

@@ -1,15 +1,14 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
 import com.huotu.huobanmall.repository.ProductRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
@@ -64,7 +63,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 user.setType(0);
                 user = userRepository.save(user);
 
-                Product product = new Product();
+                Goods product = new Goods();
                 product.setTitle("商品1");
                 product.setOwner(merchant);
                 product.setPictureUrl("");
@@ -73,7 +72,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 product.setStock(1000);
                 productRepository.save(product);
 
-                product = new Product();
+                product = new Goods();
                 product.setTitle("商品(下架)");
                 product.setOwner(merchant);
                 product.setPictureUrl("");
@@ -83,7 +82,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 product = productRepository.save(product);
 
 
-                product = new Product();
+                product = new Goods();
                 product.setTitle("商品(库存量无限制)");
                 product.setOwner(merchant);
                 product.setPictureUrl("");

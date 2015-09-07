@@ -29,7 +29,7 @@ public class Order {
 //    private User owner;
 //
 //    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-//    private Product product;
+//    private Goods product;
 
 
     /**

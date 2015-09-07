@@ -1,8 +1,8 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
@@ -90,13 +90,13 @@ public class OrderServiceImplTest extends WebTestBase {
         user.setMerchant(merchant);
         User userNew=userRepository.save(user);                     //新建一个用户
 
-        Product product=new Product();
+        Goods product=new Goods();
         product.setId(random.nextInt(200));
         product.setOwner(merchant);
         product.setPrice(100);
         product.setStatus(1);
         product.setStock(1000);
-        Product productNew=productRepository.save(product);                            //新建一个商品
+        Goods productNew=productRepository.save(product);                            //新建一个商品
 
         Order order;
         for(int i=0;i<20;i++){

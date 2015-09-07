@@ -1,7 +1,7 @@
 package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Product;
+import com.huotu.huobanmall.entity.Goods;
 import org.springframework.data.domain.Page;
 
 /**
@@ -19,7 +19,7 @@ public interface ProductService {
      * @param pageSize      每页记录数
      * @return              商品信息集合
      */
-    Page<Product> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize);
+    Page<Goods> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize);
 
     /**
      * Create by shiliting on 2015/9/1

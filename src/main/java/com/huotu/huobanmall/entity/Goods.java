@@ -9,7 +9,7 @@ import javax.persistence.*;
  * Created by lgh on 2015/8/26.
  */
 @Entity
-public class Product {
+public class Goods {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Product {
     /**
      * 商品标题
      */
-    @Column
+    @Column(name = "Name")
     private String title;
 
 
@@ -44,7 +44,7 @@ public class Product {
     /**
      * 商品状态 1 上架 2 下架 3 删除 todo 根据实际情况需要修改
      */
-    @Column
+    @Column(name = "Marketable")
     private Integer status;
 
     /**
@@ -68,6 +68,14 @@ public class Product {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Merchant getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Merchant owner) {
+        this.owner = owner;
     }
 
     public String getPictureUrl() {
@@ -100,14 +108,5 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-
-    public Merchant getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Merchant owner) {
-        this.owner = owner;
     }
 }

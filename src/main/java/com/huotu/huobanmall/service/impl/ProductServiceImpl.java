@@ -1,7 +1,7 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Product;
 import com.huotu.huobanmall.repository.ProductRepository;
 import com.huotu.huobanmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public Page<Product> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize) {
-        return  productRepository.findAll(new Specification<Product>() {
+    public Page<Goods> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize) {
+        return  productRepository.findAll(new Specification<Goods>() {
             @Override
-            public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Goods> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 if(status==null&&lastProductId==null){
                     return cb.equal(root.get("merchantId").as(Integer.class),merchantId);
                 }
