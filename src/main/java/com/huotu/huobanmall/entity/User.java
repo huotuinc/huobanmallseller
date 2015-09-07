@@ -20,7 +20,7 @@ public class User {
     /**
      * 用户名
      */
-    @Column(nullable = false,name = "UB_UserLoginName")
+    @Column(nullable = false, name = "UB_UserLoginName")
     private String username;
 
     /**
@@ -41,12 +41,12 @@ public class User {
      * 用户类型  0表示普通会员，1表示小伙伴(分销商)，-1表示超级小伙伴
      */
     @Column(name = "UB_UserType")
-    private  Integer type;
+    private Integer type;
 
     /**
      * 所属商家
      */
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Merchant merchant;
 
     public Integer getId() {

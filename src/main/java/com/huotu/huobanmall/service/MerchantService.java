@@ -24,6 +24,15 @@ public interface MerchantService {
     AppMerchantModel getAppMerchantModel(boolean isOperator, Integer id) throws Exception;
 
     /**
+     * 返回app商家信息
+     * @param operator 操作员
+     * @param merchant 商家
+     * @return
+     * @throws Exception
+     */
+    AppMerchantModel getAppMerchantModel(Operator operator, Merchant merchant) throws Exception;
+
+    /**
      * 修改商家信息
      *
      * @param merchant    商家

@@ -92,7 +92,7 @@ public class MerchantControllerTest extends SpringAppTest {
 
     @Test
     public void testForgetPassword() throws Exception {
-        merchantService.getAppMerchantModel(true,1);
+//        merchantService.getAppMerchantModel(true,1);
     }
 
     @Test

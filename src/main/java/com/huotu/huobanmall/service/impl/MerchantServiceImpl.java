@@ -148,6 +148,51 @@ public class MerchantServiceImpl implements MerchantService {
         return null;
     }
 
+    @Override
+    public AppMerchantModel getAppMerchantModel(Operator operator, Merchant merchant) throws Exception {
+        AppMerchantModel appMerchantModel = null;
+        if (operator == null) {
+            if (merchant != null) {
+                Shop shop = shopRepository.findByMerchant(merchant);
+
+                appMerchantModel = new AppMerchantModel();
+                appMerchantModel.setName(merchant.getName());
+                appMerchantModel.setWelcomeTip("welcome");
+                appMerchantModel.setAuthority("*");
+                appMerchantModel.setToken(merchant.getToken());
+                appMerchantModel.setDiscription(shop.getDiscription());
+                appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
+                appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
+                appMerchantModel.setIsOperator(false);
+                appMerchantModel.setLogo(shop.getLogo());
+                appMerchantModel.setNickName(merchant.getNickName());
+                appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
+                appMerchantModel.setMobile(merchant.getMobile());
+                appMerchantModel.setTitle(shop.getTitle());
+                return appMerchantModel;
+            }
+        } else {
+            Shop shop = shopRepository.findByMerchant(merchant);
+
+            appMerchantModel = new AppMerchantModel();
+            appMerchantModel.setName(operator.getName());
+            appMerchantModel.setWelcomeTip("welcome");
+            appMerchantModel.setAuthority(operator.getAuthority());
+            appMerchantModel.setToken(operator.getToken());
+            appMerchantModel.setDiscription(shop.getDiscription());
+            appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
+            appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
+            appMerchantModel.setIsOperator(false);
+            appMerchantModel.setLogo(shop.getLogo());
+            appMerchantModel.setNickName(merchant.getNickName());
+            appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
+            appMerchantModel.setMobile(operator.getName());
+            appMerchantModel.setTitle(shop.getTitle());
+            return appMerchantModel;
+        }
+        return null;
+    }
+
     /**
      * 修改商家信息
      *

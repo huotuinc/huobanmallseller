@@ -52,6 +52,9 @@ public class PersonalController implements PersonalSystem {
             user.outputData(merchantService.getAppMerchantModel(true, apm.getCurrentOprator().getId()));
         }
 
+//        user.outputData(merchantService.getAppMerchantModel(apm.getCurrentOprator(),apm.getCurrentUser()));
+
+
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -59,10 +62,13 @@ public class PersonalController implements PersonalSystem {
     @RequestMapping("/getMerchantProfile")
     public ApiResult getMerchantProfile(Output<AppMerchantModel> user) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        if (apm.getCurrentOprator() == null)
-            user.outputData(merchantService.getAppMerchantModel(false, apm.getCurrentUser().getId()));
-        else
-            user.outputData(merchantService.getAppMerchantModel(true, apm.getCurrentOprator().getId()));
+//        if (apm.getCurrentOprator() == null)
+//            user.outputData(merchantService.getAppMerchantModel(false, apm.getCurrentUser().getId()));
+//        else
+//            user.outputData(merchantService.getAppMerchantModel(true, apm.getCurrentOprator().getId()));
+
+        user.outputData(merchantService.getAppMerchantModel(apm.getCurrentOprator(),apm.getCurrentUser()));
+
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
