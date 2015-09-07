@@ -52,7 +52,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setName(merchant.getName());
                 appMerchantModel.setWelcomeTip("welcome");
                 appMerchantModel.setAuthority("*");
-                appMerchantModel.setToken(merchant.getToken());
+                appMerchantModel.setToken(token);
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
@@ -78,7 +78,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setName(operator.getName());
                 appMerchantModel.setWelcomeTip("welcome");
                 appMerchantModel.setAuthority(operator.getAuthority());
-                appMerchantModel.setToken(operator.getToken());
+                appMerchantModel.setToken(token);
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);

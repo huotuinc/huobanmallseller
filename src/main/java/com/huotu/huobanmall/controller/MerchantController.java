@@ -32,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Random;
 
@@ -180,6 +181,7 @@ public class MerchantController implements MerchantSystem {
 
     @Override
     @RequestMapping("/login")
+    @Transactional
     public ApiResult login(Output<AppMerchantModel> user, String username, String password) throws Exception {
 
         AppMerchantModel appMerchantModel = merchantService.login(username, password);
