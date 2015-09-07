@@ -28,8 +28,8 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
     //TODO返利积分的规则有待确定
     //TODO显示前几条数据
 
-    @Query(value = "select order.user.username,sum(order.score) from Order order where order.orderStatus<>1 group by order.user.username order by sum(order.score) desc")
-    List<Object[]> countUserScore();
-    @Query(value = "select order.user.username,sum(order.amount*order.price) from Order order where order.orderStatus=3 group by order.user.username order by sum(order.amount*order.price) desc")
-    List<Object[]> countUserExpenditure();
+//    @Query(value = "select order.user.username,sum(order.score) from Order order where order.orderStatus<>1 group by order.user.username order by sum(order.score) desc")
+//    List<Object[]> countUserScore();
+//    @Query(value = "select order.user.username,sum(order.amount*order.price) from Order order where order.orderStatus=3 group by order.user.username order by sum(order.amount*order.price) desc")
+//    List<Object[]> countUserExpenditure();
 }
