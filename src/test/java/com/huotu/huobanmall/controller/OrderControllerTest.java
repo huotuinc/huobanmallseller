@@ -7,10 +7,7 @@ import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.User;
-import com.huotu.huobanmall.repository.MerchantRepository;
-import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.GoodsRepository;
-import com.huotu.huobanmall.repository.UserRepository;
+import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
@@ -52,6 +49,7 @@ public class OrderControllerTest extends SpringAppTest {
     private String mockMerchantPassword;
     private Device device;
     private Merchant mockMerchant;
+    private ShopRepository shopRepository;
 
     @Before
     public void prepareDevice() {
@@ -59,7 +57,7 @@ public class OrderControllerTest extends SpringAppTest {
         Random random = new Random();
         mockMerchantName = StringHelper.RandomNo(random, 15);
         mockMerchantPassword = UUID.randomUUID().toString().replace("-", "");
-        mockMerchant = generateMerchantWithToken(merchantRepository, mockMerchantName, mockMerchantPassword);
+        mockMerchant = generateMerchantWithToken(merchantRepository, shopRepository,mockMerchantName, mockMerchantPassword);
         device.setToken(mockMerchant.getToken());
     }
 
@@ -122,10 +120,11 @@ public class OrderControllerTest extends SpringAppTest {
             }
             order.setOrderStatus(k);
             order.setMerchant(mockMerchant);
-            order.setUser(user);
+//            order.setUser(user);
+            order.setUserId(user.getId());
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
-            order.setProductId(productNew.getId());
-            order.setScore(100);
+//            order.setProductId(productNew.getId());
+//            order.setScore(100);
             order.setPrice(25);
             order.setAmount(10);
             order.setReceiver("史利挺");
@@ -212,10 +211,11 @@ public class OrderControllerTest extends SpringAppTest {
             }
             order.setOrderStatus(k);
             order.setMerchant(mockMerchant);
-            order.setUser(user);
+//            order.setUser(user);
+            order.setUserId(user.getId());
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
-            order.setProductId(productNew.getId());
-            order.setScore(100);
+//            order.setProductId(productNew.getId());
+//            order.setScore(100);
             order.setPrice(25);
             order.setAmount(10);
             order.setReceiver("史利挺");
@@ -225,10 +225,11 @@ public class OrderControllerTest extends SpringAppTest {
         order.setId("10");
         order.setOrderStatus(3);
         order.setMerchant(mockMerchant);
-        order.setUser(user1);
+//        order.setUser(user1);
+        order.setUserId(user1.getId());
         order.setTime(new Date());
-        order.setProductId(productNew.getId());
-        order.setScore(1000);
+//        order.setProductId(productNew.getId());
+//        order.setScore(1000);
         order.setPrice(10);
         order.setAmount(10);
         order.setReceiver("wwyy");

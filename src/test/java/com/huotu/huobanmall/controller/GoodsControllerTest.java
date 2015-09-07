@@ -7,10 +7,7 @@ import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import com.huotu.huobanmall.entity.User;
-import com.huotu.huobanmall.repository.MerchantRepository;
-import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.GoodsRepository;
-import com.huotu.huobanmall.repository.UserRepository;
+import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
@@ -52,6 +49,7 @@ public class GoodsControllerTest extends SpringAppTest {
     private String mockMerchantPassword;
     private Device device;
     private Merchant mockMerchant;
+    private ShopRepository shopRepository;
 
 
 
@@ -61,7 +59,7 @@ public class GoodsControllerTest extends SpringAppTest {
         Random random = new Random();
         mockMerchantName = StringHelper.RandomNo(random, 15);
         mockMerchantPassword = UUID.randomUUID().toString().replace("-", "");
-        mockMerchant = generateMerchantWithToken(merchantRepository, mockMerchantName, mockMerchantPassword);
+        mockMerchant = generateMerchantWithToken(merchantRepository,shopRepository, mockMerchantName, mockMerchantPassword);
         device.setToken(mockMerchant.getToken());
     }
 
@@ -141,10 +139,11 @@ public class GoodsControllerTest extends SpringAppTest {
             }
             order.setOrderStatus(3);
             order.setMerchant(mockMerchant);
-            order.setUser(user);
+            order.setUserId(user.getId());
+//            order.setUser(user);
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
-            order.setProductId(productNew.getId());
-            order.setScore(99);
+//            order.setProductId(productNew.getId());
+//            order.setScore(99);
             order.setPrice(25);
             order.setAmount(10);
             order.setReceiver("史利挺");
