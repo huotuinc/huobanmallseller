@@ -3,18 +3,19 @@ package com.huotu.huobanmall.controller;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
+import com.huotu.huobanmall.entity.Rebate;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
 import com.huotu.huobanmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by lgh on 2015/8/27.
@@ -41,18 +42,18 @@ public class OrderController {
     }
 
     @RequestMapping("/userScoreList")
-    public String userScoreList(Model model){
+    public String userScoreList(Integer pageSize,Model model){
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        List<Object[]> list=orderService.countUserScoreList(merchant);
-        model.addAttribute("userScoreList",list);
+        Page<Rebate> page=orderService.countUserScoreList(merchant,new PageRequest(0,pageSize));
+        model.addAttribute("userScoreList",page);
         return "x";
     }
 
     @RequestMapping("/userExpenditureList")
-    public String userExpenditureList(Model model){
+    public String userExpenditureList(Integer pageSize,Model model){
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        List<Object[]> list=orderService.countUserExpenditureList(merchant);
-        model.addAttribute("userExpenditureList",list);
+        Page<Object[]> page=orderService.countUserExpenditureList(merchant,new PageRequest(0, pageSize));
+        model.addAttribute("userExpenditureList",page);
         return "x";
     }
 

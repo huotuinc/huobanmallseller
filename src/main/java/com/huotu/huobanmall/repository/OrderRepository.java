@@ -3,6 +3,8 @@ package com.huotu.huobanmall.repository;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import org.luffy.lib.libspring.data.ClassicsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -25,11 +27,11 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
     @Query(value = "select count(order) from Order order where order.time>=?1")
     Integer countByWeekOrMonth(Date startDate);
 
-    //TODO返利积分的规则有待确定
-    //TODO显示前几条数据
+    //TODO 返利积分的规则有待确定
+    //TODO 显示前几条数据
 
 //    @Query(value = "select order.user.username,sum(order.score) from Order order where order.orderStatus<>1 group by order.user.username order by sum(order.score) desc")
 //    List<Object[]> countUserScore();
-//    @Query(value = "select order.user.username,sum(order.amount*order.price) from Order order where order.orderStatus=3 group by order.user.username order by sum(order.amount*order.price) desc")
-//    List<Object[]> countUserExpenditure();
+    @Query(value = "select o.userId,sum(o.price) from Order o where o.orderStatus=1 and o.merchant=?1 group by o.userId order by sum(o.price) desc")
+    Page<Object[]> countUserExpenditure(Merchant merchant,Pageable pageable);
 }

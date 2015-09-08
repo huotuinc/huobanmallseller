@@ -128,7 +128,7 @@ public class OrderServiceImplTest extends WebTestBase {
             orderRepository.save(order);
         }
 //      准备测试环境END
-        Assert.assertEquals("是否添加了20条订单",20,orderRepository.count());
+        Assert.assertEquals("是否添加了20条订单",20,orderRepository.findByMerchant(merchantNew).size());
         Page<Order> pages=orderService.searchOrders(merchantNew.getId(),new Date(),6,null);
         Assert.assertEquals("测试查询出来的的订单总数量是否正确",daifukuan+daishouhuo+wancheng,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的数量是否正确", 6, pages.getNumberOfElements());
