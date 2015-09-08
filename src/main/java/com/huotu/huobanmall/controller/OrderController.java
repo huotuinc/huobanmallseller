@@ -24,7 +24,7 @@ import java.util.Date;
 @Controller
 @RequestMapping("/app")
 public class OrderController {
-    public static final int PAGE_SIZE=10;
+//    public static final int PAGE_SIZE=10;
     @Autowired
     MerchantRepository merchantRepository;
     @Autowired
@@ -34,9 +34,9 @@ public class OrderController {
 
     @RequestMapping("/orderList")
     public String orderList(@RequestParam(required = false)Integer orderStatus,
-                     @RequestParam(required = false) Date lastOrderTime,Model model){
+                            @RequestParam(required = false) Date lastOrderTime,Integer pageSize,Model model){
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastOrderTime,PAGE_SIZE,orderStatus);
+        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastOrderTime,pageSize,orderStatus);
         model.addAttribute("orderList",pages);
         return "order";
     }
