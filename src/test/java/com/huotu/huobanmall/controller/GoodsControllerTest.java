@@ -49,6 +49,7 @@ public class GoodsControllerTest extends SpringAppTest {
     private String mockMerchantPassword;
     private Device device;
     private Merchant mockMerchant;
+    @Autowired
     private ShopRepository shopRepository;
 
 
@@ -125,7 +126,7 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setId(String.valueOf(100-i));
             int k=random.nextInt(3)+1;
             switch (k){
-                case 1:
+                case 0:
                     daifukuan++;
                     todayNum++;
                     break;
@@ -133,11 +134,11 @@ public class GoodsControllerTest extends SpringAppTest {
                     daishouhuo++;
                     sevendays++;
                     break;
-                case 3:
+                case 1:
                     wancheng++;
                     oldDays++;
             }
-            order.setOrderStatus(3);
+            order.setOrderStatus(1);
             order.setMerchant(mockMerchant);
             order.setUserId(user.getId());
 //            order.setUser(user);

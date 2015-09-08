@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService{
         float sum=0;
         for(Order o:list){
             if(o.getOrderStatus()==3) {
-                sum = sum + o.getAmount() * o.getPrice();
+                sum = sum +  o.getPrice();
             }
         }
         return sum;
@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService{
         float sum=0;
         for(Order o:list){
             if(o.getOrderStatus()==3){
-                sum=sum+o.getAmount()*o.getPrice();
+                sum=sum+o.getPrice();
             }
 
         }
