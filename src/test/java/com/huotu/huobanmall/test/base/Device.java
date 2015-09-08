@@ -40,16 +40,16 @@ public class Device {
     /**
      * 提供一种便捷的方式 迅速校验HTTP结果是否符合粉猫项目的一般规范
      *
-     * @param code 期望的错误码
+     * @param appCode 期望的错误码
      * @return
      */
-    public static ResultMatcher fanmoreStatus(final CommonEnum.AppCode code) {
+    public static ResultMatcher huobanmallStatus(CommonEnum.AppCode appCode) {
         return new ResultMatcher() {
             @Override
             public void match(MvcResult result) throws Exception {
                 status().isOk().match(result);
                 jsonPath("$.systemResultCode").value(CommonEnum.AppCode.SUCCESS.getValue()).match(result);
-                jsonPath("$.resultCode").value(code.getValue()).match(result);
+                jsonPath("$.resultCode").value(appCode.getValue()).match(result);
             }
         };
     }

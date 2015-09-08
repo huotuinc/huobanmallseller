@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
 /**
@@ -34,6 +35,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     private ShopRepository shopRepository;
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
             if (merchantRepository.count() == 0) {
@@ -117,6 +119,90 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 order.setOrderStatus(0);
 
                 order.setReceiver("zhangsan");
+                order.setTime(new Date());
+                orderRepository.save(order);
+
+
+                merchant = new Merchant();
+                merchant.setName("huoban");
+                merchant.setPassword("e10adc3949ba59abbe56e057f20f883e");
+                merchant.setEnableBillNotice(true);
+                merchant.setToken("");
+                merchant.setMobile("18368893861");
+                merchant.setEnabled(true);
+                merchant.setEnablePartnerNotice(true);
+
+                merchant.setNickName("伙伴商城b");
+                merchant = merchantRepository.save(merchant);
+
+
+                shop = new Shop();
+                shop.setMerchant(merchant);
+                shop.setTitle("伙伴商城b");
+                shop.setDiscription("");
+                shop.setLogo("");
+                shopRepository.save(shop);
+                user = new User();
+                user.setUsername("luohaibo");
+                user.setPassword("e10adc3949ba59abbe56e057f20f883e");
+                user.setMerchant(merchant);
+                user.setRegTime(new Date());
+                user.setType(0);
+                user = userRepository.save(user);
+
+                product = new Goods();
+                product.setTitle("商品b");
+                product.setOwner(merchant);
+                product.setPictureUrl("");
+                product.setPrice(100);
+                product.setStatus(1);
+                product.setStock(1000);
+                productRepository.save(product);
+
+                product = new Goods();
+                product.setTitle("商品b(下架)");
+                product.setOwner(merchant);
+                product.setPictureUrl("");
+                product.setPrice(100);
+                product.setStatus(2);
+                product.setStock(1000);
+                product = productRepository.save(product);
+
+
+                product = new Goods();
+                product.setTitle("商品b(库存量无限制)");
+                product.setOwner(merchant);
+                product.setPictureUrl("");
+                product.setPrice(100);
+                product.setStatus(1);
+                product.setStock(-1);
+                product = productRepository.save(product);
+
+
+                order = new Order();
+                order.setId("201506061223033843");
+                order.setMerchant(merchant);
+                order.setUserId(user.getId());
+                order.setUserType(0);
+                order.setTitle("购买abcd1");
+                order.setPrice(product.getPrice());
+                order.setAmount(1);
+                order.setOrderStatus(1);
+                order.setReceiver("lisi");
+                order.setTime(new Date());
+                orderRepository.save(order);
+
+                order = new Order();
+                order.setId("201506061723033841");
+                order.setMerchant(merchant);
+                order.setUserId(user.getId());
+                order.setUserType(1);
+                order.setTitle("购买abcd2");
+                order.setPrice(product.getPrice());
+                order.setAmount(1);
+                order.setOrderStatus(0);
+
+                order.setReceiver("lis");
                 order.setTime(new Date());
                 orderRepository.save(order);
 
