@@ -2,10 +2,11 @@ package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
+import com.huotu.huobanmall.entity.Rebate;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Shiliting on 2015/8/27.
@@ -62,7 +63,7 @@ public interface OrderService {
      * @param merchant      所属商家
      * @return              会员积分列表
      */
-    List<Object[]> countUserScoreList(Merchant merchant);
+    Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable);
 
     /**
      * Create by shiliting on 2015/9/6
@@ -70,7 +71,7 @@ public interface OrderService {
      * @param merchant      所属商家
      * @return              会员消费额列表
      */
-    List<Object[]> countUserExpenditureList(Merchant merchant);
+    Page<Object[]> countUserExpenditureList(Merchant merchant,Pageable pageable);
 
 
 

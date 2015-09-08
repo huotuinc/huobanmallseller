@@ -2,11 +2,14 @@ package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
+import com.huotu.huobanmall.entity.Rebate;
 import com.huotu.huobanmall.repository.OrderRepository;
+import com.huotu.huobanmall.repository.RebateRepository;
 import com.huotu.huobanmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,8 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService{
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    RebateRepository rebateRepository;
 
 
 
@@ -95,14 +100,13 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<Object[]> countUserScoreList(Merchant merchant) {
-//        return orderRepository.countUserScore();
-          return null;
+    public Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable) {
+        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,1,pageable);
+//          return null;
     }
 
     @Override
-    public List<Object[]> countUserExpenditureList(Merchant merchant) {
-//        return orderRepository.countUserExpenditure();
-        return null;
+    public Page<Object[]> countUserExpenditureList(Merchant merchant,Pageable pageable) {
+        return orderRepository.countUserExpenditure(merchant,pageable);
     }
 }

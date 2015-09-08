@@ -3,10 +3,7 @@ package com.huotu.huobanmall.controller;
 import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Goods;
-import com.huotu.huobanmall.entity.User;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
@@ -44,11 +41,14 @@ public class OrderControllerTest extends SpringAppTest {
     GoodsRepository productRepository;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    RebateRepository rebateRepository;
 
     private String mockMerchantName;
     private String mockMerchantPassword;
     private Device device;
     private Merchant mockMerchant;
+    @Autowired
     private ShopRepository shopRepository;
 
     @Before
@@ -146,7 +146,7 @@ public class OrderControllerTest extends SpringAppTest {
     }
 
     @Test
-    public void testUserScoreList() throws Exception {
+    public void testUserScoreList() throws Exception {  //TODO 该单元测试需要修改
         //      准备测试环境
         Random random=new Random();
         Calendar date = Calendar.getInstance();
@@ -216,43 +216,68 @@ public class OrderControllerTest extends SpringAppTest {
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
 //            order.setProductId(productNew.getId());
 //            order.setScore(100);
-            order.setPrice(25);
+            order.setPrice(5000);
             order.setAmount(10);
             order.setReceiver("史利挺");
             orderRepository.save(order);
         }
+
+        Rebate rebate=new Rebate();
+        rebate.setUserId(user.getId());
+        rebate.setMerchant(mockMerchant);
+        rebate.setId(1);
+        rebate.setScore(rebate.getScore()==null?99990:rebate.getScore()+100);
+        rebate.setStatus(1);
+        rebate.setTime(new Date());
+        rebateRepository.save(rebate);
+
+
         order=new Order();
         order.setId("10");
         order.setOrderStatus(3);
         order.setMerchant(mockMerchant);
-//        order.setUser(user1);
         order.setUserId(user1.getId());
         order.setTime(new Date());
-//        order.setProductId(productNew.getId());
-//        order.setScore(1000);
-        order.setPrice(10);
+        order.setPrice(10000);
         order.setAmount(10);
         order.setReceiver("wwyy");
         orderRepository.save(order);
+
+
+        Rebate rebate1=new Rebate();
+        rebate1.setUserId(user1.getId());
+        rebate1.setMerchant(mockMerchant);
+        rebate1.setId(2);
+        rebate1.setScore(rebate1.getScore()==null?1000:rebate1.getScore()+1000);
+        rebate1.setStatus(1);
+        rebate1.setTime(new Date());
+        rebateRepository.save(rebate1);
 //      准备测试环境END
 
 
         Map<String, Object> map=mockMvc.perform(
                 device.getApi("userScoreList")
+                        .param("pageSize","2")
                         .build()
         ).andReturn().getModelAndView().getModel();
-        List<Object[]> list=(List<Object[]>)map.get("userScoreList");
+        Page<Rebate>  page=( Page<Rebate> )map.get("userScoreList");
         List<User> list1=userRepository.findAll();
 
 
 
-        Assert.assertEquals("返利积分用户个数测试:",list1.size(),list.size());
+        Assert.assertEquals("返利积分用户个数测试:", 2, page.getTotalPages() > 1 ? 2 : page.getTotalElements());
+        Assert.assertEquals("返利积分top1测试",99990,(int)page.getContent().get(0).getScore());
+        Assert.assertEquals("返利积分top2测试",1000,(int)page.getContent().get(1).getScore());
 
 
-        mockMvc.perform(
+        map=mockMvc.perform(
                 device.getApi("userExpenditureList")
+                        .param("pageSize","10")
                         .build()
-        ).andDo(print());
+        ).andReturn().getModelAndView().getModelMap();
+        Page<Object[]>pageR=( Page<Object[]> )map.get("userExpenditureList");
+        long n=pageR.getTotalElements();
+        Assert.assertEquals("会员数量测试", 2, pageR.getTotalPages() > 1 ? 10 : pageR.getTotalElements());
 
     }
 
