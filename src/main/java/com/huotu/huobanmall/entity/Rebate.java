@@ -9,6 +9,7 @@ import java.util.Date;
  * Created by lgh on 2015/9/7.
  */
 @Entity
+@Cacheable(value = false)
 @Table(name = "Hot_UserTempIntegral_History")
 public class Rebate {
 

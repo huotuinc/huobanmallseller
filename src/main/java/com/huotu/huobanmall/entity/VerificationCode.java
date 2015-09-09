@@ -13,6 +13,7 @@ import java.util.Date;
  * 验证码
  */
 @Entity
+@Cacheable(value = false)
 @Table(indexes = {@Index(columnList = "mobile"),@Index(columnList = "sendTime")})
 public class VerificationCode {
     @Id

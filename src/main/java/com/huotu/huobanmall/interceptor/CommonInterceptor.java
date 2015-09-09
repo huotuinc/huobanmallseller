@@ -122,19 +122,20 @@ public class CommonInterceptor implements HandlerInterceptor {
         long timestamp = StringUtils.isEmpty(request.getParameter("timestamp")) ? 0 : Long.parseLong(request.getParameter("timestamp"));
         String token = StringUtils.isEmpty(request.getParameter("token")) ? "" : request.getParameter("token");
 
-        Merchant merchant = merchantRepository.findByToken(token);
-        if (merchant != null) {
-            model.setCurrentUser(merchant);
-            model.setCurrentShop(shopRepository.findByMerchant(merchant));
-        } else {
-            Operator operator = operatorRepository.findByToken(token);
-            if (operator != null) {
-                model.setCurrentOprator(operator);
-                model.setCurrentUser(operator.getMerchant());
-                model.setCurrentShop(shopRepository.findByMerchant(operator.getMerchant()));
+        if(!StringUtils.isEmpty(token)) {
+            Merchant merchant = merchantRepository.findByToken(token);
+            if (merchant != null) {
+                model.setCurrentUser(merchant);
+                model.setCurrentShop(shopRepository.findByMerchant(merchant));
+            } else {
+                Operator operator = operatorRepository.findByToken(token);
+                if (operator != null) {
+                    model.setCurrentOprator(operator);
+                    model.setCurrentUser(operator.getMerchant());
+                    model.setCurrentShop(shopRepository.findByMerchant(operator.getMerchant()));
+                }
             }
         }
-
 
         String version = StringUtils.isEmpty(request.getParameter("version")) ? "" : request.getParameter("version");
         // String loginCode =

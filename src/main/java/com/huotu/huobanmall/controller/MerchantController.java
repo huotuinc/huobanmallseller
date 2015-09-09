@@ -213,8 +213,12 @@ public class MerchantController implements MerchantSystem {
         }
 
         Operator operator = operatorRepository.findByName(phone);
+        if (operator == null)
+            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME);
+
         operator.setPassword(password);
         operatorRepository.save(operator);
+
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 

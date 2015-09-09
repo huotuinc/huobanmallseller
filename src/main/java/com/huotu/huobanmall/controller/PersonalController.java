@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
+ * 个性化系统
  * Created by lgh on 2015/8/27.
  * Update by shiliting on 2015/8/31
  */

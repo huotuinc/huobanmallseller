@@ -9,6 +9,7 @@ import javax.persistence.*;
  * Created by lgh on 2015/8/26.
  */
 @Entity
+@Cacheable(value = false)
 @Table(name = "Swt_CustomerManage")
 public class Merchant {
     @Id

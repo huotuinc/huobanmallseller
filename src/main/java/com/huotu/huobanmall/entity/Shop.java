@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 
 @Entity
+@Cacheable(value = false)
 @Table(name = "Mall_UserBaseConfig")
 public class Shop {
 

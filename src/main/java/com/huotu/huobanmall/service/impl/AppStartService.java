@@ -34,6 +34,9 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private ShopRepository shopRepository;
 
+    @Autowired
+    private OperatorRepository operatorRepository;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -51,6 +54,17 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 merchant.setNickName("伙伴商城abc");
                 merchant = merchantRepository.save(merchant);
 
+
+                Operator operator = new Operator();
+                operator.setPassword("e10adc3949ba59abbe56e057f20f883e");
+                operator.setName("18368893860");
+                operator.setMerchant(merchant);
+                operator.setAuthority("11,22,33");
+                operator.setEnableBillNotice(true);
+                operator.setEnablePartnerNotice(true);
+                operator.setIsEnabled(true);
+                operator.setNoDisturbed(true);
+                operatorRepository.save(operator);
 
                 Shop shop = new Shop();
                 shop.setMerchant(merchant);
@@ -207,6 +221,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 orderRepository.save(order);
 
             }
+
+
 
         }
     }

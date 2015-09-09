@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.util.DigestUtils;
 
 import javax.transaction.Transactional;
 
@@ -77,13 +78,14 @@ public class MerchantControllerTest extends SpringAppTest {
 
     @Test
     public void testInit() throws Exception {
-        mockMvc.perform(get("/init")
-        ).andExpect(jsonPath("$.resultCode").value(CommonEnum.AppCode.ERROR_USER_LOGIN_FAIL));
+//        mockMvc.perform(get("/init"))
+//                .andDo(print())
+//                .andExpect(jsonPath("$.resultCode").value(CommonEnum.AppCode.ERROR_USER_LOGIN_FAIL));
 
 
-//        mockMvc.perform(device.getApi("init")
-//                        .build()
-//        ).andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS));
+        mockMvc.perform(device.getApi("init")
+                        .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS));
     }
 
     @Test
@@ -93,13 +95,42 @@ public class MerchantControllerTest extends SpringAppTest {
                         .param("username", mockMerchantName)
                         .param("password", mockMerchantPassword)
                         .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS));
 
-        ).andDo(print());
+        //token已经失效
+        mockMvc.perform(
+                device.getApi("login")
+                        .param("username", mockMerchantName)
+                        .param("password", mockMerchantPassword)
+                        .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.ERROR_USER_TOKEN_FAIL));
+
+        //创建新设备请求 密码错误
+        device = Device.newDevice(DeviceType.Android);
+        Random random = new Random();
+        mockMerchantName = StringHelper.RandomNo(random, 15);
+        mockMerchantPassword = UUID.randomUUID().toString().replace("-", "");
+        mockMerchant = generateMerchantWithToken(merchantRepository, shopRepository, mockMerchantName, mockMerchantPassword);
+        device.setToken(mockMerchant.getToken());
+        mockMvc.perform(
+                device.getApi("login")
+                        .param("username", mockMerchantName)
+                        .param("password", UUID.randomUUID().toString())
+                        .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.ERROR_WRONG_USERNAME_PASSWORD));
     }
 
     @Test
     public void testForgetPassword() throws Exception {
-//        merchantService.getAppMerchantModel(true,1);
+        mockMvc.perform(
+                device.getApi("forgetPassword")
+                        .param("phone", mockMerchantName)
+                        .param("password", DigestUtils.md5DigestAsHex("123456".getBytes()))
+                        .param("authcode", "123456")
+                        .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME));
+
+        //todo 需要模拟操作员
     }
 
     @Test

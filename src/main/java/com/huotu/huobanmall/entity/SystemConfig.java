@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.entity;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
  * 系统配置
  */
 @Entity
+@Cacheable(value = false)
 public class SystemConfig {
     @Id
     @Column(length = 50)

@@ -7,6 +7,7 @@ import java.util.Date;
  * APP版本配置
  */
 @Entity
+@Cacheable(value = false)
 public class ConfigAppVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

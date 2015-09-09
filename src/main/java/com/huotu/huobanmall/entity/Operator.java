@@ -8,6 +8,7 @@ import javax.persistence.*;
  * Created by lgh on 2015/8/31.
  */
 @Entity
+@Cacheable(value = false)
 @Table(name = "Mall_Manager")
 public class Operator {
 

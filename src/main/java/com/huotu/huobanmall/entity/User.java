@@ -9,6 +9,7 @@ import java.util.Date;
  * Created by lgh on 2015/8/26.
  */
 @Entity
+@Cacheable(value = false)
 @Table(name = "Hot_UserBaseInfo")
 public class User {
 
