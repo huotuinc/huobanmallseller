@@ -234,7 +234,7 @@ public class OrderControllerTest extends SpringAppTest {
 
         order=new Order();
         order.setId("10");
-        order.setOrderStatus(3);
+        order.setOrderStatus(1);
         order.setMerchant(mockMerchant);
         order.setUserId(user1.getId());
         order.setTime(new Date());
@@ -276,7 +276,6 @@ public class OrderControllerTest extends SpringAppTest {
                         .build()
         ).andReturn().getModelAndView().getModelMap();
         Page<Object[]>pageR=( Page<Object[]> )map.get("userExpenditureList");
-        long n=pageR.getTotalElements();
         Assert.assertEquals("会员数量测试", 2, pageR.getTotalPages() > 1 ? 10 : pageR.getTotalElements());
 
     }
