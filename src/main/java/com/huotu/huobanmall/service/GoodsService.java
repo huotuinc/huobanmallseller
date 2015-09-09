@@ -13,13 +13,13 @@ public interface GoodsService {
     /**
      * Create by shiliting on 2015/8/27
      * 查找商品
-     * @param merchantId    商户ID
+     * @param merchant      商户
      * @param status        商品状态
      * @param lastProductId 最后一个显示商品的ID
      * @param pageSize      每页记录数
      * @return              商品信息集合
      */
-    Page<Goods> searchProducts(Integer merchantId, Integer status, Integer lastProductId, Integer pageSize);
+    Page<Goods> searchProducts(Merchant merchant, Integer status, Integer lastProductId, Integer pageSize);
 
     /**
      * Create by shiliting on 2015/9/1

@@ -97,7 +97,7 @@ public class GoodsController implements GoodsSystem {
         //获取当前商家信息
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
         //获取商家的商品信息集合
-        List<Goods> lists=productService.searchProducts(merchant.getId(),type,lastProductId,PAGE_SIZE).getContent();
+        List<Goods> lists=productService.searchProducts(merchant,type,lastProductId,PAGE_SIZE).getContent();
         AppGoodListModel[] appGoodListModels=new AppGoodListModel[lists.size()];
         for(int i=0;i<lists.size();i++){
             Goods product=lists.get(i);
