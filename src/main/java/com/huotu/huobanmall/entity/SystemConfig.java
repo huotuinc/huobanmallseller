@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * 系统配置
+ * 系统配置 todo 对应数据库
  */
 @Entity
 @Cacheable(value = false)

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * APP版本配置
+ * APP版本配置 todo 对应数据库
  */
 @Entity
 @Cacheable(value = false)

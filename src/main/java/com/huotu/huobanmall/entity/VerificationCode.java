@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 验证码
+ * 验证码 todo 对应数据库
  */
 @Entity
 @Cacheable(value = false)

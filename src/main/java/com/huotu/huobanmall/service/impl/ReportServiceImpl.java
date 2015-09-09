@@ -50,7 +50,7 @@ public class ReportServiceImpl implements ReportService {
         List<AppBillReportListModel> listBill = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
         hql.append("select FUNC('DATE_FORMAT',order.time,'%Y-%m-%d') time,count(order) number " +
-                " from Order order where order.merchantId=:merchantId and order.time>:time group by time order by time");
+                " from Order order where order.merchant.id=:merchantId and order.time>:time group by time order by time");
         List list = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId", merchantId);
             query.setParameter("time", startTime);
@@ -71,7 +71,7 @@ public class ReportServiceImpl implements ReportService {
         List<AppTopBuyAmountModel> listBuy = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
         hql.append("select order.productId,order.productTitle,count(order) number " +
-                " from Order order where order.merchantId=:merchantId and order.time>:time group by order.productId,order.productTitle order by number");
+                " from OrderItems items where items.merchant.id=:merchantId and items.time>:time group by items.productId,order.productTitle order by number");
         List list = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId", merchantId);
             query.setParameter("time", startTime);

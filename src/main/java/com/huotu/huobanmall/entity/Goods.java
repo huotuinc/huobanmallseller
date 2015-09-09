@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 /**
  * 商品
- *
+ * 一个商品包含多个货品 product
  * 说明：对应表Mall_Goods 实体GoodsModel
  * Created by lgh on 2015/8/26.
  */
