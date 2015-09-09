@@ -4,7 +4,7 @@ package com.huotu.huobanmall.model.app;
  * app首页 （统计数据）
  * Created by lgh on 2015/8/24.
  */
-public class AppIndexModel {
+public class AppOtherInfoModel {
     /**
      * 商品数量
      */

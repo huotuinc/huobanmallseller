@@ -21,10 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -158,6 +155,37 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testGoodsList() throws Exception {
+        //准备测试环境
+        Random random=new Random();
+
+
+
+
+        Goods product=new Goods();
+        product.setId(random.nextInt(200));
+        product.setOwner(mockMerchant);
+        product.setPrice(100);
+        product.setStatus(1);
+        product.setStock(1000);
+        Goods productNew=productRepository.save(product);                            //新建一个商品
+
+        product=new Goods();
+        product.setId(random.nextInt(200));
+        product.setOwner(mockMerchant);
+        product.setPrice(200);
+        product.setStatus(1);
+        product.setStock(9999);
+        productRepository.save(product);
+
+        //准备测试环境END
+
+        mockMvc.perform(
+                device.getApi("goodsList")
+                        .build());
+
+
+
+
 
     }
 

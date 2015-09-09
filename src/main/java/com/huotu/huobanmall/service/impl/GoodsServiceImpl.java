@@ -38,7 +38,7 @@ public class GoodsServiceImpl implements GoodsService {
                 else if(status==null){
                     return cb.and(
                             cb.equal(root.get("owner").as(Merchant.class),merchant),
-                            cb.greaterThan(root.get("id").as(Integer.class), lastProductId)
+                            cb.lessThan(root.get("id").as(Integer.class), lastProductId)
                     );
                 }else if(lastProductId==null){
                     return cb.and(
@@ -49,7 +49,7 @@ public class GoodsServiceImpl implements GoodsService {
                     return cb.and(
                             cb.equal(root.get("owner").as(Merchant.class),merchant),
                             cb.equal(root.get("status").as(Integer.class),status),
-                            cb.greaterThan(root.get("id").as(Integer.class),lastProductId)
+                            cb.lessThan(root.get("id").as(Integer.class),lastProductId)
                     );
                 }
 

@@ -3,25 +3,25 @@ package com.huotu.huobanmall.api;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
-import com.huotu.huobanmall.model.app.AppIndexModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 商品系统
  */
 public interface GoodsSystem {
 
-    /**
-     * app首页 （统计数据）
-     * <b>负责人：罗国华</b>
-     *
-     * @param index 输出首页统计信息
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    ApiResult index(Output<AppIndexModel> index) throws Exception;
+//    /**
+//     * app首页 （统计数据）
+//     * <b>负责人：罗国华</b>
+//     *
+//     * @param index 输出首页统计信息
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult otherInfo(Output<AppOtherInfoModel> index) throws Exception;
 
     /**
      * 商品列表
@@ -33,7 +33,7 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult goodsList(Output<AppGoodListModel[]> list, Integer type,Integer lastProductId) throws Exception;
+    ApiResult goodsList(Output<AppGoodListModel[]> list, Integer type, @RequestParam(required = false)Integer lastProductId) throws Exception;
 
     /**
      * 操作商品
@@ -46,5 +46,17 @@ public interface GoodsSystem {
      */
     @RequestMapping(method = RequestMethod.POST)
     ApiResult operGoods(Integer type, String goods) throws Exception;
+
+//    /**
+//     * todo 需要修改
+//     * 返回今日新增数据
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult newToday(Output<AppGoodListModel[]> list) throws Exception;
+//
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult otherInfo(Output<AppGoodListModel[]> list) throws Exception;
 
 }
