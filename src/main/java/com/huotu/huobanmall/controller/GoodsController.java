@@ -121,6 +121,11 @@ public class GoodsController implements GoodsSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
+    @Override
+    public ApiResult newToday(Output<Float> totalSales, Output<Float> todaySales, Output<Integer[]> orderHour, Output<Integer[]> orderAmount, Output<Integer[]> memberHour, Output<Integer[]> memberAmount, Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount) throws Exception {
+        return null;
+    }
+
 //    @Override
 //    public ApiResult newToday(Output<AppGoodListModel[]> list) throws Exception {
 //        return null;
