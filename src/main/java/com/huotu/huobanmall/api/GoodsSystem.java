@@ -33,7 +33,7 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult goodsList(Output<AppGoodListModel[]> list, Integer type, @RequestParam(required = false)Integer lastProductId) throws Exception;
+    ApiResult goodsList(Output<AppGoodListModel[]> list, Integer type, @RequestParam(required = false) Integer lastProductId) throws Exception;
 
     /**
      * 操作商品
@@ -47,16 +47,22 @@ public interface GoodsSystem {
     @RequestMapping(method = RequestMethod.POST)
     ApiResult operGoods(Integer type, String goods) throws Exception;
 
-//    /**
-//     * todo 需要修改
-//     * 返回今日新增数据
-//     * @return
-//     * @throws Exception
-//     */
-//    @RequestMapping(method = RequestMethod.GET)
-//    ApiResult newToday(Output<AppGoodListModel[]> list) throws Exception;
-//
+    /**
+     * todo 需要修改
+     * 返回今日新增数据
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult newToday(Output<Float> totalSales, Output<Float> todaySales
+            , Output<Integer[]> orderHour, Output<Integer[]> orderAmount
+            , Output<Integer[]> memberHour, Output<Integer[]> memberAmount
+            , Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount
+    ) throws Exception;
+
 //    @RequestMapping(method = RequestMethod.GET)
 //    ApiResult otherInfo(Output<AppGoodListModel[]> list) throws Exception;
+
 
 }

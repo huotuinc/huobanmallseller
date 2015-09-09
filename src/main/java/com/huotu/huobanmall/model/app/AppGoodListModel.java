@@ -7,6 +7,11 @@ package com.huotu.huobanmall.model.app;
 public class AppGoodListModel {
 
     /**
+     * 商品Id
+     */
+    private Integer goodsId;
+
+    /**
      * 图片地址
      */
     private String pictureUrl;
@@ -56,5 +61,13 @@ public class AppGoodListModel {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
     }
 }
