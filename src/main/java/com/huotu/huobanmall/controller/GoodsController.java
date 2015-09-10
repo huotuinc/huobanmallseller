@@ -8,10 +8,7 @@ import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
 import com.huotu.huobanmall.repository.*;
-import com.huotu.huobanmall.service.GoodsService;
-import com.huotu.huobanmall.service.MerchantService;
-import com.huotu.huobanmall.service.OrderService;
-import com.huotu.huobanmall.service.UserService;
+import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lgh on 2015/8/27.
@@ -52,6 +50,7 @@ public class GoodsController implements GoodsSystem {
     @Autowired
     CountTodayPartnerRepository countTodayPartnerRepository;
     @Autowired
+    CountService countService;
 
 
 //    @Override
@@ -124,6 +123,7 @@ public class GoodsController implements GoodsSystem {
         for(int i=0;i<products.length;i++){
             Goods product=productRepository.findOne(Integer.parseInt(products[i]));
             product.setStatus(type);
+            productRepository.save(product);
         }
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -153,52 +153,47 @@ public class GoodsController implements GoodsSystem {
         date.set(Calendar.MINUTE,0);
         //今天
         Date today=date.getTime();
-        Integer[] hours=new Integer[nowHour/3];
-        int k=0;
-        for(int i=3;i<=nowHour;i+=3){  //设置x轴数据(每三小时的数据)
-            hours[k]=i;
-            k++;
-        }
+        Integer[] hoursOrder=new Integer[nowHour/3];
+        Integer[] hoursMember=new Integer[nowHour/3];
+        Integer[] hoursPartner=new Integer[nowHour/3];
         Integer[] orders=new Integer[nowHour/3];
-        Integer[] partners=new Integer[nowHour/3];
         Integer[] members=new Integer[nowHour/3];
-        List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantIdAndHourLessThanEqualOrderByHourAsc(merchant.getId(), nowHour);
-        List<CountTodayMember>listMerber=countTodayMemberRepository.findByMerchantIdAndHourLessThanEqualOrderByHourAsc(merchant.getId(), nowHour);
-        List<CountTodayPartner>listPartner=countTodayPartnerRepository.findByMerchantIdAndHourLessThanEqualOrderByHourAsc(merchant.getId(),nowHour);
-
-        for(int i=0;i<nowHour/3*3;i++){
-            CountTodayOrder countTodayOrder=listOrder.get(i);
-            CountTodayPartner countTodayPartner=listPartner.get(i);
-            CountTodayMember countTodayMember=listMerber.get(i);
-            int p=i/3;
-            if(orders[p]==null){
-                orders[p]=countTodayOrder.getAmount();
-            }else{
-                orders[p]=orders[p]+countTodayOrder.getAmount();
-            }
-
-            if(partners[p]==null){
-                partners[p]=countTodayPartner.getAmount();
-            }else{
-                partners[p]=partners[p]+countTodayPartner.getAmount();
-            }
-
-            if(members[p]==null){
-                members[p]=countTodayMember.getAmount();
-            }else{
-                members[p]=members[p]+countTodayMember.getAmount();
-            }
-
+        Integer[] partners=new Integer[nowHour/3];
+        int n=0;
+        Map<Integer,Integer> map=countService.todayOrder(merchant,nowHour);
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            hoursOrder[n]=entry.getKey();
+            orders[n]=entry.getValue();
+            n++;
         }
-        orderHour.outputData(hours);
-        memberHour.outputData(hours);
-        partnerHour.outputData(hours);
+
+        n=0;
+        map=countService.todayMember(merchant, nowHour);
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            hoursMember[n]=entry.getKey();
+            members[n]=entry.getValue();
+            n++;
+        }
+        n=0;
+        map=countService.todayPartner(merchant, nowHour);
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            hoursPartner[n]=entry.getKey();
+            partners[n]=entry.getValue();
+            n++;
+        }
+
+        orderHour.outputData(hoursOrder);
+        memberHour.outputData(hoursMember);
+        partnerHour.outputData(hoursPartner);
         orderAmount.outputData(orders);
         memberAmount.outputData(members);
         partnerAmount.outputData(partners);
         todaySales.outputData(orderService.countSale(merchant,today));
         totalSales.outputData(orderService.countSale(merchant));
-        return null;
+        todayOrderAmount.outputData(orderService.countOrderQuantity(merchant,today));
+        todayMemberAmount.outputData(userService.countUserNumber(merchant,0,today));
+        todayPartnerAmount.outputData(userService.countUserNumber(merchant,1,today));
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
 //    @Override

@@ -2,7 +2,6 @@ package com.huotu.huobanmall.service.impl;
 
 import com.huotu.common.DateHelper;
 import com.huotu.huobanmall.entity.*;
-import com.huotu.huobanmall.model.app.AppBillReportListModel;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.CountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.*;
 
 @Service
 public class CountServiceImpl implements CountService {
-
     @Autowired
     private CountDayMemberRepository countDayMemberRepository;
 
@@ -44,16 +42,47 @@ public class CountServiceImpl implements CountService {
 
 
     @Override
-    public List<AppBillReportListModel> todayOrder(Merchant merchant) {
-        return null;
+    public Map<Integer,Integer> todayOrder(Merchant merchant,Integer nowHour) {
+        Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
+        List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
+
+        for(int i=0;i<nowHour;i++){
+            if(i>=listOrder.size()){
+                break;
+            }
+            CountTodayOrder countTodayOrder=listOrder.get(i);
+            int p=i/3;
+            if(map.get(p)==null){
+                map.put(p,countTodayOrder.getAmount());
+            }else{
+                map.put(p,map.get(p)+countTodayOrder.getAmount());
+            }
+
+        }
+        return map;
     }
 
     @Override
-    public List<AppBillReportListModel> weekOrder(Merchant merchant) {
-        return null;
+    public Map<Integer, Integer> todayMember(Merchant merchant,Integer nowHour) {
+        Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
+        List<CountTodayMember> listMember = countTodayMemberRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
+
+        for (int i = 0; i < nowHour; i++) {
+            if (i >= listMember.size()) {
+                break;
+            }
+            CountTodayMember countTodayMember = listMember.get(i);
+            int p = i / 3;
+            if (map.get(p) == null) {
+                map.put(p, countTodayMember.getAmount());
+            } else {
+                map.put(p, map.get(p) + countTodayMember.getAmount());
+            }
+
+        }
+        return map;
+
     }
-
-
     @Override
     public Map<Date, Integer> getWeekOrder(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
@@ -166,4 +195,25 @@ public class CountServiceImpl implements CountService {
         }
         return result;
     }
+
+    @Override
+    public Map<Integer, Integer> todayPartner(Merchant merchant,Integer nowHour) {
+        Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
+        List<CountTodayPartner> listPartner=countTodayPartnerRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
+        for(int i=0;i<nowHour;i++){
+            if(i>=listPartner.size()){
+                break;
+            }
+            CountTodayPartner countTodayPartner=listPartner.get(i);
+            int p=i/3;
+            if(map.get(p)==null){
+                map.put(p,countTodayPartner.getAmount());
+            }else{
+                map.put(p,map.get(p)+countTodayPartner.getAmount());
+            }
+        }
+        return map;
+    }
+
+
 }

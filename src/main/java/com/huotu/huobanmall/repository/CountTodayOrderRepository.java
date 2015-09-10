@@ -14,5 +14,5 @@ import java.util.List;
 
 @Repository
 public interface CountTodayOrderRepository extends JpaRepository<CountTodayOrder, CountTodayOrderPK>, JpaSpecificationExecutor<CountTodayOrder> {
-    List<CountTodayOrder> findByMerchantIdAndHourLessThanEqualOrderByHourAsc(Integer merchantId,Integer hour);
+    List<CountTodayOrder> findByMerchantIdAndHourLessThanEqual(Integer merchantId,Integer hour);
 }

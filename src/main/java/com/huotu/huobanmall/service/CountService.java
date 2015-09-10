@@ -1,10 +1,8 @@
 package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.model.app.AppBillReportListModel;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,9 +11,15 @@ import java.util.Map;
 public interface CountService {
 
 
-    List<AppBillReportListModel> todayOrder(Merchant merchant);
 
-    List<AppBillReportListModel> weekOrder(Merchant merchant);
+    Map<Integer,Integer> todayOrder(Merchant merchant,Integer hour);
+
+    Map<Integer,Integer> todayMember(Merchant merchant,Integer hour);
+
+    Map<Integer,Integer> todayPartner(Merchant merchant,Integer hour);
+
+
+
 
 
     /**

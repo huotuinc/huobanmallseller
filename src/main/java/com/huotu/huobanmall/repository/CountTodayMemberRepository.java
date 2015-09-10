@@ -11,5 +11,5 @@ import java.util.List;
  * Created by lgh on 2015/9/10.
  */
 public interface CountTodayMemberRepository extends JpaSpecificationExecutor<CountTodayMember>, JpaRepository<CountTodayMember, CountTodayMemberPK> {
-    List<CountTodayMember> findByMerchantIdAndHourLessThanEqualOrderByHourAsc(Integer merchantId,Integer hour);
+    List<CountTodayMember> findByMerchantIdAndHourLessThanEqual(Integer merchantId,Integer hour);
 }
