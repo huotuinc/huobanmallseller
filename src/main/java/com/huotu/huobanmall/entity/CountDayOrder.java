@@ -1,5 +1,7 @@
 package com.huotu.huobanmall.entity;
 
+import com.huotu.huobanmall.entity.pk.CountDayOrderPK;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -9,6 +11,7 @@ import java.util.Date;
  * Created by lgh on 2015/9/9.
  */
 @Entity
+@IdClass(CountDayOrderPK.class)
 @Cacheable(value = false)
 public class CountDayOrder {
 

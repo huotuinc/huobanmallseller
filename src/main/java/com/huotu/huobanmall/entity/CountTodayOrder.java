@@ -1,5 +1,7 @@
 package com.huotu.huobanmall.entity;
 
+import com.huotu.huobanmall.entity.pk.CountTodayOrderPK;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +10,7 @@ import javax.persistence.*;
  * Created by lgh on 2015/9/9.
  */
 @Entity
+@IdClass(CountTodayOrderPK.class)
 @Cacheable(value = false)
 public class CountTodayOrder {
 

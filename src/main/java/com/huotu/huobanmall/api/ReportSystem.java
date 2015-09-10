@@ -14,15 +14,44 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public interface ReportSystem {
 
-    /**
-     * 订单统计报表
-     * <b>：罗国华</b>
-     *
-     * @param data 输出订单统计报表
-     * @param type 1本周 2本月
-     * @return
-     * @throws Exception
-     */
+//    /**
+//     * 订单统计报表
+//     * <b>：罗国华</b>
+//     *
+//     * @param data 输出订单统计报表
+//     * @param type 1本周 2本月
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult orderReport(Output<AppBillReportModel> data, Integer type) throws Exception;
+//
+//
+//    /**
+//     * 销售额统计报表
+//     * <b>：罗国华</b>
+//     *
+//     * @param data 输出销售额统计报表
+//     * @param type 1本周 2本月
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult salesReport(Output<AppSalesReportModel> data, Integer type) throws Exception;
+//
+//
+//    /**
+//     * 会员量统计报表
+//     * <b>：罗国华</b>
+//     *
+//     * @param data 输出会员量统计数据
+//     * @param type 1本周 2本月
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult userReport(Output<AppMemberReportModel> data, Integer type) throws Exception;
+
     @RequestMapping(method = RequestMethod.GET)
     ApiResult orderReport(Output<AppBillReportModel> data, Integer type) throws Exception;
 
