@@ -89,6 +89,17 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 product.setStock(1000);
                 productRepository.save(product);
 
+                for(int i=0;i<29;i++){
+                    product = new Goods();
+                    product.setTitle("商品"+i+"(上架)");
+                    product.setOwner(merchant);
+                    product.setPictureUrl("");
+                    product.setPrice(i*10);
+                    product.setStatus(1);
+                    product.setStock(i*100);
+                    productRepository.save(product);
+                }
+
                 product = new Goods();
                 product.setTitle("商品(下架)");
                 product.setOwner(merchant);

@@ -19,8 +19,7 @@ public class CountDayOrder {
      * 商家
      */
     @Id
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    private Merchant merchant;
+    private Integer merchantId;
 
     /**
      * 日期
@@ -34,12 +33,13 @@ public class CountDayOrder {
      */
     private Integer amount;
 
-    public Merchant getMerchant() {
-        return merchant;
+
+    public Integer getMerchantId() {
+        return merchantId;
     }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
     }
 
     public Date getDate() {
