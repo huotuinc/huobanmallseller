@@ -1,8 +1,9 @@
 package com.huotu.huobanmall.service;
 
-import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
-import org.springframework.data.domain.Page;
+import com.huotu.huobanmall.model.app.AppBillReportListModel;
+
+import java.util.List;
 
 /**
  * Created by Shiliting on 2015/8/27.
@@ -11,8 +12,8 @@ public interface CountService {
 
 
 
-    Page<Goods> searchProducts(Merchant merchant, Integer status, Integer lastProductId, Integer pageSize);
+    List<AppBillReportListModel> todayOrder(Merchant merchant);
 
+    List<AppBillReportListModel> weekOrder(Merchant merchant);
 
-    Integer countByMerchant(Merchant merchant);
 }

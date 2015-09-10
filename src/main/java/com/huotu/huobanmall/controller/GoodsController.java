@@ -51,6 +51,8 @@ public class GoodsController implements GoodsSystem {
     CountTodayMemberRepository countTodayMemberRepository;
     @Autowired
     CountTodayPartnerRepository countTodayPartnerRepository;
+    @Autowired
+
 
 //    @Override
 //    @RequestMapping("/index")
