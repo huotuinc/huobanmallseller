@@ -1,5 +1,7 @@
 package com.huotu.huobanmall.entity;
 
+import com.huotu.huobanmall.entity.pk.CountTodayPartnerPK;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +10,7 @@ import javax.persistence.*;
  * Created by lgh on 2015/9/9.
  */
 @Entity
+@IdClass(CountTodayPartnerPK.class)
 @Cacheable(value = false)
 public class CountTodayPartner {
 
@@ -15,8 +18,7 @@ public class CountTodayPartner {
      * 商家
      */
     @Id
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    private Merchant merchant;
+    private Integer merchantId;
 
     /**
      * 小时 如 1,2,3,4
@@ -29,12 +31,12 @@ public class CountTodayPartner {
      */
     private Integer amount;
 
-    public Merchant getMerchant() {
-        return merchant;
+    public Integer getMerchantId() {
+        return merchantId;
     }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
     }
 
     public Integer getHour() {
