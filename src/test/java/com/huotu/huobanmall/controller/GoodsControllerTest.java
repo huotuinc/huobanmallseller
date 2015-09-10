@@ -193,4 +193,12 @@ public class GoodsControllerTest extends SpringAppTest {
     public void testOperGoods() throws Exception {
 
     }
+
+    @Test
+    public void testNewToday() throws Exception {
+        mockMvc.perform(
+                device.getApi("newToday")
+                        .build());
+
+    }
 }

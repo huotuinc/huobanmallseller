@@ -21,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,6 +102,7 @@ public class GoodsController implements GoodsSystem {
         for(int i=0;i<lists.size();i++){
             AppGoodListModel appGoodListModel=new AppGoodListModel();
             Goods product=lists.get(i);
+            appGoodListModel.setGoodsId(product.getId());
             appGoodListModel.setTitle(product.getTitle());
             appGoodListModel.setPictureUrl(product.getPictureUrl());
             appGoodListModel.setStock(product.getStock());
@@ -122,7 +125,31 @@ public class GoodsController implements GoodsSystem {
     }
 
     @Override
+    @RequestMapping("/newToday")
     public ApiResult newToday(Output<Float> totalSales, Output<Float> todaySales, Output<Integer[]> orderHour, Output<Integer[]> orderAmount, Output<Integer[]> memberHour, Output<Integer[]> memberAmount, Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount) throws Exception {
+        //获取当前商家信息
+        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.SECOND,0);
+        date.set(Calendar.MINUTE,0);
+        //今天
+        Date today=date.getTime();
+//        List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, today);
+
+
+
+
+
+
+        todaySales.outputData(orderService.countSale(merchant,today));
+        totalSales.outputData(orderService.countSale(merchant));
+
+
+
         return null;
     }
 
