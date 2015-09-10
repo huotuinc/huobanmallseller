@@ -11,17 +11,26 @@ import java.util.Map;
 public interface CountService {
 
 
+    /**
+     * 获取当天订单数据
+     * @param merchant
+     * @return
+     */
+    Map<Integer,Integer> todayOrder(Merchant merchant);
 
-    Map<Integer,Integer> todayOrder(Merchant merchant,Integer hour);
+    /**
+     * 获取当天会员数据
+     * @param merchant
+     * @return
+     */
+    Map<Integer,Integer> todayMember(Merchant merchant);
 
-    Map<Integer,Integer> todayMember(Merchant merchant,Integer hour);
-
-    Map<Integer,Integer> todayPartner(Merchant merchant,Integer hour);
-
-
-
-
-
+    /**
+     * 获取分销商的数据(小伙伴)
+     * @param merchant
+     * @return
+     */
+    Map<Integer,Integer> todayPartner(Merchant merchant);
     /**
      * 获取本周订单量
      *

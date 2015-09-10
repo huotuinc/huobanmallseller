@@ -42,7 +42,10 @@ public class CountServiceImpl implements CountService {
 
 
     @Override
-    public Map<Integer,Integer> todayOrder(Merchant merchant,Integer nowHour) {
+    public Map<Integer,Integer> todayOrder(Merchant merchant) {
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
         List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
 
@@ -63,7 +66,10 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
-    public Map<Integer, Integer> todayMember(Merchant merchant,Integer nowHour) {
+    public Map<Integer, Integer> todayMember(Merchant merchant) {
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
         List<CountTodayMember> listMember = countTodayMemberRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
 
@@ -87,7 +93,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Integer> getWeekOrder(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
-        List<CountDayOrder> list = countDayOrderRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayOrder countDayOrder : list) {
             result.put(countDayOrder.getDate(), countDayOrder.getAmount());
         }
@@ -98,7 +104,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Integer> getMonthOrder(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisMonthBegin();
-        List<CountDayOrder> list = countDayOrderRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayOrder countDayOrder : list) {
             result.put(countDayOrder.getDate(), countDayOrder.getAmount());
         }
@@ -109,7 +115,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Integer> getWeekMember(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
-        List<CountDayMember> list = countDayMemberRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDayMember> list = countDayMemberRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayMember countDayMember : list) {
             result.put(countDayMember.getDate(), countDayMember.getAmount());
         }
@@ -120,7 +126,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Integer> getMonthMember(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisMonthBegin();
-        List<CountDayMember> list = countDayMemberRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDayMember> list = countDayMemberRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayMember countDayMember : list) {
             result.put(countDayMember.getDate(), countDayMember.getAmount());
         }
@@ -131,7 +137,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Integer> getWeekPartner(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
-        List<CountDayPartner> list = countDayPartnerRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDayPartner> list = countDayPartnerRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayPartner countDayPartner : list) {
             result.put(countDayPartner.getDate(), countDayPartner.getAmount());
         }
@@ -142,7 +148,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Integer> getMonthPartner(Merchant merchant) {
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisMonthBegin();
-        List<CountDayPartner> list = countDayPartnerRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDayPartner> list = countDayPartnerRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayPartner countDayPartner : list) {
             result.put(countDayPartner.getDate(), countDayPartner.getAmount());
         }
@@ -178,7 +184,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Float> getWeekSales(Merchant merchant) {
         Map<Date, Float> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
-        List<CountDaySales> list = countDaySalesRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDaySales> list = countDaySalesRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDaySales countDaySales : list) {
             result.put(countDaySales.getDate(), countDaySales.getMoney());
         }
@@ -189,7 +195,7 @@ public class CountServiceImpl implements CountService {
     public Map<Date, Float> getMonthSales(Merchant merchant) {
         Map<Date, Float> result = new TreeMap<>();
         Date date = DateHelper.getThisMonthBegin();
-        List<CountDaySales> list = countDaySalesRepository.findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(merchant.getId(), date);
+        List<CountDaySales> list = countDaySalesRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDaySales countDaySales : list) {
             result.put(countDaySales.getDate(), countDaySales.getMoney());
         }
@@ -197,7 +203,10 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
-    public Map<Integer, Integer> todayPartner(Merchant merchant,Integer nowHour) {
+    public Map<Integer, Integer> todayPartner(Merchant merchant) {
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
         List<CountTodayPartner> listPartner=countTodayPartnerRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
         for(int i=0;i<nowHour;i++){

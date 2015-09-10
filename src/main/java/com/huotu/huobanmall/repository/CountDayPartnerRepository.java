@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface CountDayPartnerRepository extends JpaRepository<CountDayPartner, CountDayPartnerPK>, JpaSpecificationExecutor<CountDayPartner> {
 
-    List<CountDayPartner> findAllByMerchantIdAndDateGreaterThanEqualsOrderByDate(Integer merchantId,Date date);
+    List<CountDayPartner> findByMerchantIdAndDateGreaterThanEqualOrderByDate(Integer merchantId, Date date);
 }

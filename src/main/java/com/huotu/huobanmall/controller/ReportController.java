@@ -5,19 +5,13 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.model.app.AppBillReportModel;
-import com.huotu.huobanmall.model.app.AppMemberReportModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
-import com.huotu.huobanmall.model.app.AppSalesReportModel;
-import com.huotu.huobanmall.repository.CountDayOrderRepository;
 import com.huotu.huobanmall.service.CountService;
-import com.huotu.huobanmall.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
-import java.util.IntSummaryStatistics;
 import java.util.Map;
 
 /**
@@ -38,6 +32,7 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> weekTimes, Output<Integer[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Integer[]> monthAmounts) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
+
 
 
         Map<Date, Integer> mapWeek = countService.getWeekOrder(apm.getCurrentUser());
