@@ -66,6 +66,9 @@ public interface GoodsSystem {
             , Output<Integer[]> orderHour, Output<Integer[]> orderAmount
             , Output<Integer[]> memberHour, Output<Integer[]> memberAmount
             , Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount
+            , Output<Integer>   todayOrderAmount
+            , Output<Integer>   todayMemberAmount
+            , Output<Integer>   todayPartnerAmount
     ) throws Exception;
 
 //    @RequestMapping(method = RequestMethod.GET)

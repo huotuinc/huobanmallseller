@@ -5,13 +5,9 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.entity.Goods;
-import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
-import com.huotu.huobanmall.repository.GoodsRepository;
-import com.huotu.huobanmall.repository.MerchantRepository;
-import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.UserRepository;
+import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.GoodsService;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.service.OrderService;
@@ -49,6 +45,12 @@ public class GoodsController implements GoodsSystem {
     UserRepository userRepository;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    CountTodayOrderRepository countTodayOrderRepository;
+    @Autowired
+    CountTodayMemberRepository countTodayMemberRepository;
+    @Autowired
+    CountTodayPartnerRepository countTodayPartnerRepository;
 
 //    @Override
 //    @RequestMapping("/index")
@@ -126,30 +128,74 @@ public class GoodsController implements GoodsSystem {
 
     @Override
     @RequestMapping("/newToday")
-    public ApiResult newToday(Output<Float> totalSales, Output<Float> todaySales, Output<Integer[]> orderHour, Output<Integer[]> orderAmount, Output<Integer[]> memberHour, Output<Integer[]> memberAmount, Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount) throws Exception {
+    public ApiResult newToday(Output<Float> totalSales,
+                              Output<Float> todaySales,
+                              Output<Integer[]> orderHour,
+                              Output<Integer[]> orderAmount,
+                              Output<Integer[]> memberHour,
+                              Output<Integer[]> memberAmount,
+                              Output<Integer[]> partnerHour,
+                              Output<Integer[]> partnerAmount,
+                              Output<Integer>   todayOrderAmount,
+                              Output<Integer>   todayMemberAmount,
+                              Output<Integer>   todayPartnerAmount
+
+    ) throws Exception {
         //获取当前商家信息
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
         int nowHour=date.get(Calendar.HOUR_OF_DAY);
-
         date.set(Calendar.HOUR_OF_DAY, 0);
         date.set(Calendar.SECOND,0);
         date.set(Calendar.MINUTE,0);
         //今天
         Date today=date.getTime();
-//        List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, today);
+        Integer[] hours=new Integer[nowHour/3];
+        int k=0;
+        for(int i=3;i<=nowHour;i+=3){  //设置x轴数据(每三小时的数据)
+            hours[k]=i;
+            k++;
+        }
+        Integer[] orders=new Integer[nowHour/3];
+        Integer[] partners=new Integer[nowHour/3];
+        Integer[] members=new Integer[nowHour/3];
+        List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantIdAndHourLessThanEqualOrderByHourAsc(merchant.getId(), nowHour);
+        List<CountTodayMember>listMerber=countTodayMemberRepository.findByMerchantIdAndHourLessThanEqualOrderByHourAsc(merchant.getId(), nowHour);
+        List<CountTodayPartner>listPartner=countTodayPartnerRepository.findByMerchantIdAndHourLessThanEqualOrderByHourAsc(merchant.getId(),nowHour);
 
+        for(int i=0;i<nowHour/3*3;i++){
+            CountTodayOrder countTodayOrder=listOrder.get(i);
+            CountTodayPartner countTodayPartner=listPartner.get(i);
+            CountTodayMember countTodayMember=listMerber.get(i);
+            int p=i/3;
+            if(orders[p]==null){
+                orders[p]=countTodayOrder.getAmount();
+            }else{
+                orders[p]=orders[p]+countTodayOrder.getAmount();
+            }
 
+            if(partners[p]==null){
+                partners[p]=countTodayPartner.getAmount();
+            }else{
+                partners[p]=partners[p]+countTodayPartner.getAmount();
+            }
 
+            if(members[p]==null){
+                members[p]=countTodayMember.getAmount();
+            }else{
+                members[p]=members[p]+countTodayMember.getAmount();
+            }
 
-
-
+        }
+        orderHour.outputData(hours);
+        memberHour.outputData(hours);
+        partnerHour.outputData(hours);
+        orderAmount.outputData(orders);
+        memberAmount.outputData(members);
+        partnerAmount.outputData(partners);
         todaySales.outputData(orderService.countSale(merchant,today));
         totalSales.outputData(orderService.countSale(merchant));
-
-
-
         return null;
     }
 
