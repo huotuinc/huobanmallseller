@@ -56,7 +56,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
-                appMerchantModel.setIsOperator(false);
+                appMerchantModel.setOperatored(false);
                 appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
@@ -82,7 +82,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
-                appMerchantModel.setIsOperator(false);
+                appMerchantModel.setOperatored(false);
                 appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
@@ -115,7 +115,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
-                appMerchantModel.setIsOperator(false);
+                appMerchantModel.setOperatored(false);
                 appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
@@ -136,7 +136,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
-                appMerchantModel.setIsOperator(false);
+                appMerchantModel.setOperatored(false);
                 appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
@@ -163,7 +163,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setDiscription(shop.getDiscription());
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
-                appMerchantModel.setIsOperator(false);
+                appMerchantModel.setOperatored(false);
                 appMerchantModel.setLogo(shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
@@ -182,7 +182,7 @@ public class MerchantServiceImpl implements MerchantService {
             appMerchantModel.setDiscription(shop.getDiscription());
             appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
             appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
-            appMerchantModel.setIsOperator(false);
+            appMerchantModel.setOperatored(false);
             appMerchantModel.setLogo(shop.getLogo());
             appMerchantModel.setNickName(merchant.getNickName());
             appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
@@ -214,6 +214,7 @@ public class MerchantServiceImpl implements MerchantService {
             case 1:
                 shop.setDiscription(profileData.toString());
                 shopRepository.saveAndFlush(shop);
+                break;
             case 2:
 
                 byte[] bytes = StringHelper.toByteArray(profileData);
@@ -223,9 +224,11 @@ public class MerchantServiceImpl implements MerchantService {
                 String logo = "";
                 shop.setLogo(logo);
                 shopRepository.saveAndFlush(shop);
+                break;
             case 3:
                 merchant.setNickName(profileData.toString());
                 merchantRepository.saveAndFlush(merchant);
+                break;
             case 4:
                 if (operator == null) {
                     merchant.setEnableBillNotice("1".equals(profileData.toString()));
@@ -234,6 +237,7 @@ public class MerchantServiceImpl implements MerchantService {
                     operator.setEnableBillNotice("1".equals(profileData.toString()));
                     operatorRepository.saveAndFlush(operator);
                 }
+                break;
             case 5:
                 if (operator == null) {
                     merchant.setEnablePartnerNotice("1".equals(profileData.toString()));
@@ -242,14 +246,16 @@ public class MerchantServiceImpl implements MerchantService {
                     operator.setEnablePartnerNotice("1".equals(profileData.toString()));
                     operatorRepository.saveAndFlush(operator);
                 }
+                break;
             case 6:
                 if (operator == null) {
                     merchant.setNoDisturbed("1".equals(profileData.toString()));
                     merchantRepository.saveAndFlush(merchant);
                 } else {
-                    operator.setEnablePartnerNotice("1".equals(profileData.toString()));
+                    operator.setNoDisturbed("1".equals(profileData.toString()));
                     operatorRepository.saveAndFlush(operator);
                 }
+                break;
         }
     }
 

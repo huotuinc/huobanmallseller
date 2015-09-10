@@ -63,10 +63,20 @@ public class AppMerchantModel {
      */
     private String authority;
 
+
+
     /**
      * 0 商家 1 操作员
      */
-    private boolean isOperator;
+    private boolean operatored;
+
+    public boolean getOperatored() {
+        return operatored;
+    }
+
+    public void setOperatored(boolean operatored) {
+        this.operatored = operatored;
+    }
 
     public String getName() {
         return name;
@@ -167,11 +177,5 @@ public class AppMerchantModel {
     }
 
 
-    public boolean isOperator() {
-        return isOperator;
-    }
 
-    public void setIsOperator(boolean isOperator) {
-        this.isOperator = isOperator;
-    }
 }
