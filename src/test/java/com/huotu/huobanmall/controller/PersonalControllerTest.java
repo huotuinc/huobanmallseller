@@ -87,7 +87,6 @@ public class PersonalControllerTest extends SpringAppTest {
      * 5：新增小伙伴通知（0关闭，1开启） 6: 夜间免打扰模式 0 默认开启 1 关闭 （app端维护具体时间22:00-8:00）
      * 0:String 1:String 2:Base64(Image) 3:String 4:Number 5:Number 6:Number
      *
-     * @return
      * @throws Exception
      */
     @Test
