@@ -70,7 +70,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult orderReport(Output<Integer> todayAmount, Output<Integer> weekAmount, Output<Integer> monthAmount
+    ApiResult orderReport(Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
             , Output<Integer[]> todayTimes, Output<Integer[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Integer[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Integer[]> monthAmounts) throws Exception;
@@ -92,7 +92,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesReport(Output<Integer> todayAmount, Output<Integer> weekAmount, Output<Integer> monthAmount
+    ApiResult salesReport(Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
             , Output<Integer[]> todayTimes, Output<Float[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Float[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Float[]> monthAmounts) throws Exception;
@@ -111,26 +111,26 @@ public interface ReportSystem {
      * @param weekMemberAmounts   本周会员量数据
      * @param monthMemberTimes    本月会员时间数据
      * @param monthMemberAmounts  本月会员量数据
-     * @param todayParnterAmount  今日小伙伴量
-     * @param weekParnterAmount   本周小伙伴量
-     * @param monthParnterAmount  本月小伙伴量
-     * @param todayParnterTimes   今日小伙伴时间数据
-     * @param todayParnterAmounts 今日小伙伴量数据
-     * @param weekParnterTimes    本周小伙伴时间数据
-     * @param weekParnterAmounts  本周小伙伴量数据
-     * @param monthParnterTimes   本月小伙伴时间数据
-     * @param monthParnterAmounts 本月小伙伴量数据
+     * @param todayPartnerAmount  今日小伙伴量
+     * @param weekPartnerAmount   本周小伙伴量
+     * @param monthPartnerAmount  本月小伙伴量
+     * @param todayPartnerTimes   今日小伙伴时间数据
+     * @param todayPartnerAmounts 今日小伙伴量数据
+     * @param weekPartnerTimes    本周小伙伴时间数据
+     * @param weekPartnerAmounts  本周小伙伴量数据
+     * @param monthPartnerTimes   本月小伙伴时间数据
+     * @param monthPartnerAmounts 本月小伙伴量数据
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userReport(Output<Integer> total, Output<Integer> todayMemberAmount, Output<Integer> weekMemberAmount, Output<Integer> monthMemberAmount
+    ApiResult userReport(Output<Long> total, Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
             , Output<Integer[]> todayMemberTimes, Output<Integer[]> todayMemberAmounts
             , Output<Date[]> weekMemberTimes, Output<Integer[]> weekMemberAmounts
             , Output<Date[]> monthMemberTimes, Output<Integer[]> monthMemberAmounts
-            , Output<Integer> todayParnterAmount, Output<Integer> weekParnterAmount, Output<Integer> monthParnterAmount
-            , Output<Integer[]> todayParnterTimes, Output<Integer[]> todayParnterAmounts
-            , Output<Date[]> weekParnterTimes, Output<Integer[]> weekParnterAmounts
-            , Output<Date[]> monthParnterTimes, Output<Integer[]> monthParnterAmounts
+            , Output<Long> todayPartnerAmount, Output<Long> weekPartnerAmount, Output<Long> monthPartnerAmount
+            , Output<Integer[]> todayPartnerTimes, Output<Integer[]> todayPartnerAmounts
+            , Output<Date[]> weekPartnerTimes, Output<Integer[]> weekPartnerAmounts
+            , Output<Date[]> monthPartnerTimes, Output<Integer[]> monthPartnerAmounts
     ) throws Exception;
 }

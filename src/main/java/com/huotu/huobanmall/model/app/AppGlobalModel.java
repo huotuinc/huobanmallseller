@@ -80,6 +80,7 @@ public class AppGlobalModel {
 
     @Autowired
     public void setEnv(Environment env) {
+        //todo 没有数据
         serverUrl = env.getProperty("huobanmall.url", "http://test.huobanmall.com");
         customerServicePhone = env.getProperty("huobanmall.customerServicePhone", "4001818357");
     }
