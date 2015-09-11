@@ -51,7 +51,8 @@ public class CountServiceImpl implements CountService {
 
         for(int i=0;i<nowHour;i++){
             if(i>=listOrder.size()){
-                break;
+                map.put(i/3,0);
+                continue;
             }
             CountTodayOrder countTodayOrder=listOrder.get(i);
             int p=i/3;
@@ -75,7 +76,8 @@ public class CountServiceImpl implements CountService {
 
         for (int i = 0; i < nowHour; i++) {
             if (i >= listMember.size()) {
-                break;
+                map.put(i/3,0);
+                continue;
             }
             CountTodayMember countTodayMember = listMember.get(i);
             int p = i / 3;
@@ -211,7 +213,8 @@ public class CountServiceImpl implements CountService {
         List<CountTodayPartner> listPartner=countTodayPartnerRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
         for(int i=0;i<nowHour;i++){
             if(i>=listPartner.size()){
-                break;
+                map.put(i/3,0);
+                continue;
             }
             CountTodayPartner countTodayPartner=listPartner.get(i);
             int p=i/3;

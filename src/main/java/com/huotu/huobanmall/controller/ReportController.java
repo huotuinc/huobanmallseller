@@ -224,7 +224,8 @@ public class ReportController implements ReportSystem {
     }
 
     @Override
-    public ApiResult allStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
+    @RequestMapping("/otherStatistics")
+    public ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
         Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
         AppOtherInfoModel appOtherInfoModel=new AppOtherInfoModel();
         appOtherInfoModel.setBillAmount(orderService.countOrderQuantity(merchant));
@@ -234,5 +235,5 @@ public class ReportController implements ReportSystem {
         otherInfoList.outputData(appOtherInfoModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
-    
+
 }

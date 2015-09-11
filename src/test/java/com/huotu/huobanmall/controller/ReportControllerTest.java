@@ -9,7 +9,6 @@ import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
-import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -22,7 +21,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -222,5 +223,14 @@ public class ReportControllerTest extends SpringAppTest {
 //        }
 //
 //        log.info("size:" + list.size());
+    }
+
+    @Test
+    public void testOtherStatistics() throws Exception {
+        mockMvc.perform(device.getApi("otherStatistics")
+                .build())
+                .andDo(print());
+
+
     }
 }
