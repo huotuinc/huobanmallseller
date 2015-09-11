@@ -3,6 +3,9 @@ package com.huotu.huobanmall.api;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.model.app.AppOtherInfoModel;
+import com.huotu.huobanmall.model.app.AppTopConsumeModel;
+import com.huotu.huobanmall.model.app.AppTopSalesModel;
+import com.huotu.huobanmall.model.app.AppTopScoreModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -139,4 +142,41 @@ public interface ReportSystem {
      */
     @RequestMapping(method = RequestMethod.GET)
     ApiResult allStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception;
+
+
+
+
+    /**
+     * 返利积分统计
+     * top 20
+     *
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception;
+
+
+    /**
+     * 消费统计
+     * top 20
+     *
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception;
+
+
+    /**
+     * 商品销售前10排行
+     * 按照数量排序
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception;
 }

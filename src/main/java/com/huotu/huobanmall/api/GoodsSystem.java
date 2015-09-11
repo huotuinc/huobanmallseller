@@ -2,10 +2,12 @@ package com.huotu.huobanmall.api;
 
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
-import com.huotu.huobanmall.model.app.AppGoodListModel;
+import com.huotu.huobanmall.model.app.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Date;
 
 /**
  * 商品系统
@@ -50,15 +52,16 @@ public interface GoodsSystem {
 
     /**
      * 今日新增信息
-     * @param totalSales        总销售额
-     * @param todaySales        今日销售额
-     * @param orderHour         订单时间段数组
-     * @param orderAmount       订单时间段值数组
-     * @param memberHour        会员时间段数组
-     * @param memberAmount      会员时间段值数组
-     * @param partnerHour       小伙伴时间段数组
-     * @param partnerAmount     小伙伴时间段值数组
-     * @return                  今日新增信息
+     *
+     * @param totalSales    总销售额
+     * @param todaySales    今日销售额
+     * @param orderHour     订单时间段数组
+     * @param orderAmount   订单时间段值数组
+     * @param memberHour    会员时间段数组
+     * @param memberAmount  会员时间段值数组
+     * @param partnerHour   小伙伴时间段数组
+     * @param partnerAmount 小伙伴时间段值数组
+     * @return 今日新增信息
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
@@ -66,13 +69,40 @@ public interface GoodsSystem {
             , Output<Integer[]> orderHour, Output<Integer[]> orderAmount
             , Output<Integer[]> memberHour, Output<Integer[]> memberAmount
             , Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount
-            , Output<Integer>   todayOrderAmount
-            , Output<Integer>   todayMemberAmount
-            , Output<Integer>   todayPartnerAmount
+            , Output<Integer> todayOrderAmount
+            , Output<Integer> todayMemberAmount
+            , Output<Integer> todayPartnerAmount
     ) throws Exception;
 
 //    @RequestMapping(method = RequestMethod.GET)
 //    ApiResult otherInfo(Output<AppGoodListModel[]> list) throws Exception;
+
+
+    /**
+     * 订单管理列表
+     *
+     * @param list     返回订单列表
+     * @param status   订单状态
+     * @param lastDate 上一个订单的下单时间
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult orderList(Output<AppOrderListModel[]> list, Integer status, @RequestParam(required = false) Date lastDate) throws Exception;
+
+
+    /**
+     * 销售明细
+     *
+     * @param list     返回销售明细列表
+     * @param lastDate 上一个订单的下单时间
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Date lastDate) throws Exception;
+
+
 
 
 }
