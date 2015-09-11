@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  * Created by lgh on 2015/9/9.
@@ -80,6 +81,12 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Autowired
     private CountTodaySalesRepository countTodaySalesRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private GoodsRepository goodsRepository;
 
     @Before
     public void prepareDevice() {
@@ -201,36 +208,67 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Test
     public void myTest() {
-        //        mockMvc.perform(device.getApi("salesReport")
-//                .build())
-//                .andDo(print());
-
-//        Merchant mockMerchant = merchantRepository.findByName("lgh");
-//
-//        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 24);
-//        Map<Date, Integer> mapWeek = new TreeMap<>();
-//        List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(mockMerchant.getId(), date);
-//        for (CountDayOrder countDayOrder : list) {
-//            mapWeek.put(countDayOrder.getDate(), countDayOrder.getAmount());
-//        }
-//
-//
-//        if (mapWeek.size() > 0) {
-//            Date[] dates = mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]);
-//            Integer[] integers = mapWeek.values().toArray(new Integer[mapWeek.values().size()]);
-//            long t = mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum();
-//            log.info(t);
-//        }
-//
-//        log.info("size:" + list.size());
     }
 
     @Test
     public void testOtherStatistics() throws Exception {
-        mockMvc.perform(device.getApi("otherStatistics")
+        //准备测试环境
+        Random random=new Random();
+        User user;
+        for(int i=0;i<14;i++){
+            user=new User();
+            user.setMerchant(mockMerchant);
+            user.setType(0);
+            user.setUsername("11");
+            user.setPassword("22");
+            user.setRegTime(new Date());
+            userRepository.save(user);
+        }
+        for(int i=0;i<4;i++){
+            user=new User();
+            user.setMerchant(mockMerchant);
+            user.setType(1);
+            user.setUsername("11");
+            user.setPassword("22");
+            user.setRegTime(new Date());
+            userRepository.save(user);
+        }
+        Goods goods;
+        for(int i=0;i<10;i++){
+            goods=new Goods();
+            goods.setOwner(mockMerchant);
+            goods.setStatus(1);
+            goodsRepository.save(goods);
+        }
+        for(int i=0;i<6;i++){
+            goods=new Goods();
+            goods.setOwner(mockMerchant);
+            goods.setStatus(0);
+            goodsRepository.save(goods);
+        }
+
+
+        Order order;
+        for(int i=0;i<10;i++){
+            order=new Order();
+            order.setId(String.valueOf(100-i));
+            int k=random.nextInt(3)+1;
+            order.setOrderStatus(1);
+            order.setMerchant(mockMerchant);
+            order.setUserId(22);
+            order.setTime(new Date());
+            order.setPrice(25);
+            order.setAmount(10);
+            order.setReceiver("史利挺");
+            orderRepository.save(order);
+        }
+        //准备测试环境END
+       mockMvc.perform(device.getApi("otherStatistics")
                 .build())
-                .andDo(print());
-
-
+                .andDo(print())
+               .andExpect(jsonPath("$.resultData.otherInfoList.discributorAmount").value(4))
+               .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(14))
+               .andExpect(jsonPath("$.resultData.otherInfoList.billAmount").value(10))
+               .andExpect(jsonPath("$.resultData.otherInfoList.goodsAmount").value(10));
     }
 }

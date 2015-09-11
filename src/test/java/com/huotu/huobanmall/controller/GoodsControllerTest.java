@@ -157,10 +157,6 @@ public class GoodsControllerTest extends SpringAppTest {
     public void testGoodsList() throws Exception {
         //准备测试环境
         Random random=new Random();
-
-
-
-
         Goods product=new Goods();
         product.setId(random.nextInt(200));
         product.setOwner(mockMerchant);
@@ -176,17 +172,11 @@ public class GoodsControllerTest extends SpringAppTest {
         product.setStatus(1);
         product.setStock(9999);
         productRepository.save(product);
-
         //准备测试环境END
 
         mockMvc.perform(
                 device.getApi("goodsList")
                         .build());
-
-
-
-
-
     }
 
     @Test
@@ -196,9 +186,67 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testNewToday() throws Exception {
+        //准备测试环境
+        Random random=new Random();
+        //设置时间
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        //获取当前小时
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.SECOND,0);
+        date.set(Calendar.MINUTE,0);
+        //获取今天起始时间
+        Date today=date.getTime();
+
+
+        //新增商品
+        Goods goods=new Goods();
+        goods.setOwner(mockMerchant);
+        goods.setStatus(1);
+        goods.setPrice(100);
+        goods=productRepository.save(goods);
+
+        User user=new User();
+        user.setRegTime(new Date());
+        user.setPassword("11");
+        user.setUsername("22");
+        user.setType(0);
+        user.setMerchant(mockMerchant);
+
+        User user1;
+        for(int i=0;i<5;i++){
+            user1=new User();
+            user1.setRegTime(new Date());
+            user1.setPassword("11");
+            user1.setUsername("22");
+            user1.setType(0);
+            user1.setMerchant(mockMerchant);
+        }
+        for(int i=0;i<4;i++){
+            user1=new User();
+            user1.setRegTime(new Date());
+            user1.setPassword("11");
+            user1.setUsername("22");
+            user1.setType(0);
+            user1.setMerchant(mockMerchant);
+        }
+
+        Order order;
+        for(int i=0;i<20;i++){
+            order=new Order();
+            order.setMerchant(mockMerchant);
+            order.setOrderStatus(1);
+            order.setUserId(user.getId());
+            order.setPrice(50);
+            order.setAmount(2);
+            order.setTime(new Date());
+            order.setUserType(0);
+        }
+        //准备测试环境END
         mockMvc.perform(
                 device.getApi("newToday")
-                        .build());
+                        .build()).andDo(print());
 
     }
 }
