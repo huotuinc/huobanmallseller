@@ -7,6 +7,8 @@ import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
+import com.huotu.huobanmall.model.app.AppOrderListModel;
+import com.huotu.huobanmall.model.app.AppSalesListModel;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,6 +201,18 @@ public class GoodsController implements GoodsSystem {
         todayMemberAmount.outputData(userService.countUserNumber(merchant,0,today));
         todayPartnerAmount.outputData(userService.countUserNumber(merchant,1,today));
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @RequestMapping("/orderList")
+    @Override
+    public ApiResult orderList(Output<AppOrderListModel[]> list, Integer status, @RequestParam(required = false) Date lastDate) throws Exception {
+        return null;
+    }
+
+    @RequestMapping("/salesList")
+    @Override
+    public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Date lastDate) throws Exception {
+        return null;
     }
 
 //    @Override

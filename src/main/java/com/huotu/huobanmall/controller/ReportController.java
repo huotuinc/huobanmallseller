@@ -6,8 +6,7 @@ import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.model.app.AppOtherInfoModel;
-import com.huotu.huobanmall.model.app.AppPublicModel;
+import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.service.CountService;
 import com.huotu.huobanmall.service.GoodsService;
 import com.huotu.huobanmall.service.OrderService;
@@ -221,6 +220,24 @@ public class ReportController implements ReportSystem {
         }
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Override
+    @RequestMapping("/topScore")
+    public ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception {
+        return null;
+    }
+
+    @Override
+    @RequestMapping("/topConsume")
+    public ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception {
+        return null;
+    }
+
+    @Override
+    @RequestMapping("/topSales")
+    public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
+        return null;
     }
 
     @Override

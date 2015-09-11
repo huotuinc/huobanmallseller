@@ -32,30 +32,30 @@ public class OrderController {
     @Autowired
     OrderRepository orderRepository;
 
-    @RequestMapping("/orderList")
-    public String orderList(@RequestParam(required = false)Integer orderStatus,
-                            @RequestParam(required = false) Date lastOrderTime,Integer pageSize,Model model){
-        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastOrderTime,pageSize,orderStatus);
-        model.addAttribute("orderList",pages);
-        return "order";
-    }
-
-    @RequestMapping("/userScoreList")
-    public String userScoreList(Integer pageSize,Model model){
-        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        Page<Rebate> page=orderService.countUserScoreList(merchant,new PageRequest(0,pageSize));
-        model.addAttribute("userScoreList",page);
-        return "x";
-    }
-
-    @RequestMapping("/userExpenditureList")
-    public String userExpenditureList(Integer pageSize,Model model){
-        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        Page<Object[]> page=orderService.countUserExpenditureList(merchant,new PageRequest(0, pageSize));
-        model.addAttribute("userExpenditureList",page);
-        return "x";
-    }
+//    @RequestMapping("/orderList")
+//    public String orderList(@RequestParam(required = false)Integer orderStatus,
+//                            @RequestParam(required = false) Date lastOrderTime,Integer pageSize,Model model){
+//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+//        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastOrderTime,pageSize,orderStatus);
+//        model.addAttribute("orderList",pages);
+//        return "order";
+//    }
+//
+//    @RequestMapping("/userScoreList")
+//    public String userScoreList(Integer pageSize,Model model){
+//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+//        Page<Rebate> page=orderService.countUserScoreList(merchant,new PageRequest(0,pageSize));
+//        model.addAttribute("userScoreList",page);
+//        return "x";
+//    }
+//
+//    @RequestMapping("/userExpenditureList")
+//    public String userExpenditureList(Integer pageSize,Model model){
+//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+//        Page<Object[]> page=orderService.countUserExpenditureList(merchant,new PageRequest(0, pageSize));
+//        model.addAttribute("userExpenditureList",page);
+//        return "x";
+//    }
 
 
 }
