@@ -43,27 +43,26 @@ public class ReportController implements ReportSystem {
         AppPublicModel apm = PublicParameterHolder.getParameters();
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        int nowHour = date.get(Calendar.HOUR_OF_DAY);
         date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND,0);
-        date.set(Calendar.MINUTE,0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MINUTE, 0);
         //今天
-        Date today=date.getTime();
+        Date today = date.getTime();
         //统计今日订单总数
-        todayAmount.outputData((long)orderService.countOrderQuantity(apm.getCurrentUser(),today));
+        todayAmount.outputData((long) orderService.countOrderQuantity(apm.getCurrentUser(), today));
         //统计今日详细数据
-        Integer[] hoursOrder=new Integer[(nowHour+2)/3];
-        Integer[] orders=new Integer[(nowHour+2)/3];
-        int n=0;
-        Map<Integer,Integer>mapToday=countService.todayOrder(apm.getCurrentUser());
+        Integer[] hoursOrder = new Integer[(nowHour + 2) / 3];
+        Integer[] orders = new Integer[(nowHour + 2) / 3];
+        int n = 0;
+        Map<Integer, Integer> mapToday = countService.todayOrder(apm.getCurrentUser());
         for (Map.Entry<Integer, Integer> entry : mapToday.entrySet()) {
-            hoursOrder[n]=(entry.getKey()+1)*3;
-            orders[n]=entry.getValue();
+            hoursOrder[n] = (entry.getKey() + 1) * 3;
+            orders[n] = entry.getValue();
             n++;
         }
         todayAmounts.outputData(orders);
         todayTimes.outputData(hoursOrder);
-
 
 
         Map<Date, Integer> mapWeek = countService.getWeekOrder(apm.getCurrentUser());
@@ -99,16 +98,16 @@ public class ReportController implements ReportSystem {
 
         Map<Integer, Float> mapToday = countService.getDaySales(apm.getCurrentUser());
         if (mapToday.size() > 0) {
-            todayTimes.outputData((Integer[]) mapToday.keySet().toArray());
-            todayAmounts.outputData((Float[]) mapToday.values().toArray());
+            todayTimes.outputData(mapToday.keySet().toArray(new Integer[mapToday.keySet().size()]));
+            todayAmounts.outputData(mapToday.values().toArray(new Float[mapToday.values().size()]));
             todayAmount.outputData(((Double) mapToday.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
         }
 
 
         Map<Date, Float> mapWeek = countService.getWeekSales(apm.getCurrentUser());
         if (mapWeek.size() > 0) {
-            weekTimes.outputData((Date[]) mapWeek.keySet().toArray());
-            weekAmounts.outputData((Float[]) mapWeek.values().toArray());
+            weekTimes.outputData(mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]));
+            weekAmounts.outputData(mapWeek.values().toArray(new Float[mapWeek.values().size()]));
             weekAmount.outputData(((Double) mapWeek.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
         }
 
@@ -116,8 +115,8 @@ public class ReportController implements ReportSystem {
 
         Map<Date, Float> mapMonth = countService.getMonthSales(apm.getCurrentUser());
         if (mapMonth.size() > 0) {
-            monthTimes.outputData((Date[]) mapMonth.keySet().toArray());
-            monthAmounts.outputData((Float[]) mapMonth.values().toArray());
+            monthTimes.outputData(mapMonth.keySet().toArray(new Date[mapMonth.keySet().size()]));
+            monthAmounts.outputData(mapMonth.values().toArray(new Float[mapMonth.values().size()]));
             monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
         }
 
@@ -141,39 +140,39 @@ public class ReportController implements ReportSystem {
         AppPublicModel apm = PublicParameterHolder.getParameters();
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        int nowHour = date.get(Calendar.HOUR_OF_DAY);
         date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND,0);
-        date.set(Calendar.MINUTE,0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MINUTE, 0);
         //今天
-        Date today=date.getTime();
+        Date today = date.getTime();
         //统计注册会员总数
         total.outputData(userService.countAllMember(apm.getCurrentUser()));
         //统计今日新增会员总数
-        todayMemberAmount.outputData((long)userService.countUserNumber(apm.getCurrentUser(),0,today));
+        todayMemberAmount.outputData((long) userService.countUserNumber(apm.getCurrentUser(), 0, today));
         //统计今日新增小伙伴总数
-        todayPartnerAmount.outputData((long)userService.countUserNumber(apm.getCurrentUser(),1,today));
+        todayPartnerAmount.outputData((long) userService.countUserNumber(apm.getCurrentUser(), 1, today));
         //统计今日会员新增明细
-        Integer[] hoursMember=new Integer[(nowHour+2)/3];
-        Integer[] members=new Integer[(nowHour+2)/3];
-        Map<Integer,Integer>mapTodayMember=countService.todayMember(apm.getCurrentUser());
-        int n=0;
+        Integer[] hoursMember = new Integer[(nowHour + 2) / 3];
+        Integer[] members = new Integer[(nowHour + 2) / 3];
+        Map<Integer, Integer> mapTodayMember = countService.todayMember(apm.getCurrentUser());
+        int n = 0;
         for (Map.Entry<Integer, Integer> entry : mapTodayMember.entrySet()) {
-            hoursMember[n]=(entry.getKey()+1)*3;
-            members[n]=entry.getValue();
+            hoursMember[n] = (entry.getKey() + 1) * 3;
+            members[n] = entry.getValue();
             n++;
         }
         todayMemberTimes.outputData(hoursMember);
         todayMemberAmounts.outputData(members);
 
         //统计今日小伙伴新增明细
-        Integer[] hoursPartner=new Integer[(nowHour+2)/3];
-        Integer[] partners=new Integer[(nowHour+2)/3];
-        Map<Integer,Integer> mapTodayPartner=countService.todayPartner(apm.getCurrentUser());
-        n=0;
+        Integer[] hoursPartner = new Integer[(nowHour + 2) / 3];
+        Integer[] partners = new Integer[(nowHour + 2) / 3];
+        Map<Integer, Integer> mapTodayPartner = countService.todayPartner(apm.getCurrentUser());
+        n = 0;
         for (Map.Entry<Integer, Integer> entry : mapTodayPartner.entrySet()) {
-            hoursPartner[n]=(entry.getKey()+1)*3;
-            partners[n]=entry.getValue();
+            hoursPartner[n] = (entry.getKey() + 1) * 3;
+            partners[n] = entry.getValue();
             n++;
         }
         todayPartnerTimes.outputData(hoursPartner);
@@ -182,8 +181,8 @@ public class ReportController implements ReportSystem {
 
         Map<Date, Integer> mapWeekMember = countService.getWeekMember(apm.getCurrentUser());
         if (mapWeekMember.size() > 0) {
-            weekMemberTimes.outputData((Date[]) mapWeekMember.keySet().toArray());
-            weekMemberAmounts.outputData((Integer[]) mapWeekMember.values().toArray());
+            weekMemberTimes.outputData(mapWeekMember.keySet().toArray(new Date[mapWeekMember.keySet().size()]));
+            weekMemberAmounts.outputData(mapWeekMember.values().toArray(new Integer[mapWeekMember.values().size()]));
             weekMemberAmount.outputData(mapWeekMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
         }
 
@@ -191,8 +190,8 @@ public class ReportController implements ReportSystem {
 
         Map<Date, Integer> mapMonthMember = countService.getMonthMember(apm.getCurrentUser());
         if (mapMonthMember.size() > 0) {
-            monthMemberTimes.outputData((Date[]) mapMonthMember.keySet().toArray());
-            monthMemberAmounts.outputData((Integer[]) mapMonthMember.values().toArray());
+            monthMemberTimes.outputData(mapMonthMember.keySet().toArray(new Date[mapMonthMember.keySet().size()]));
+            monthMemberAmounts.outputData(mapMonthMember.values().toArray(new Integer[mapMonthMember.values().size()]));
             monthMemberAmount.outputData(mapMonthMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
         }
 
@@ -201,8 +200,8 @@ public class ReportController implements ReportSystem {
 
         Map<Date, Integer> mapWeekPartner = countService.getWeekPartner(apm.getCurrentUser());
         if (mapWeekPartner.size() > 0) {
-            weekPartnerTimes.outputData((Date[]) mapWeekPartner.keySet().toArray());
-            weekPartnerAmounts.outputData((Integer[]) mapWeekPartner.values().toArray());
+            weekPartnerTimes.outputData(mapWeekPartner.keySet().toArray(new Date[mapWeekPartner.keySet().size()]));
+            weekPartnerAmounts.outputData(mapWeekPartner.values().toArray(new Integer[mapWeekPartner.values().size()]));
             weekPartnerAmount.outputData(mapWeekPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
         }
 
@@ -210,8 +209,8 @@ public class ReportController implements ReportSystem {
 
         Map<Date, Integer> mapMonthPartner = countService.getMonthPartner(apm.getCurrentUser());
         if (mapMonthPartner.size() > 0) {
-            monthPartnerTimes.outputData((Date[]) mapMonthPartner.keySet().toArray());
-            monthPartnerAmounts.outputData((Integer[]) mapMonthPartner.values().toArray());
+            monthPartnerTimes.outputData(mapMonthPartner.keySet().toArray(new Date[mapMonthPartner.keySet().size()]));
+            monthPartnerAmounts.outputData(mapMonthPartner.values().toArray(new Integer[mapMonthPartner.values().size()]));
             monthPartnerAmount.outputData(mapMonthPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
         }
 

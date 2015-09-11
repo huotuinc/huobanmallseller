@@ -227,7 +227,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             countDayMember.setDate(date);
             countDayMemberRepository.save(countDayMember);
 
-            date.setTime(date.getTime() - 1000 * 60 * 60 * 24);
+            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
 
@@ -239,7 +239,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             countDayOrder.setDate(date);
             countDayOrderRepository.save(countDayOrder);
 
-            date.setTime(date.getTime() - 1000 * 60 * 60 * 24);
+            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
         date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
@@ -250,7 +250,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             countDayPartner.setDate(date);
             countDayPartnerRepository.save(countDayPartner);
 
-            date.setTime(date.getTime() - 1000 * 60 * 60 * 24);
+            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
         date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
@@ -261,7 +261,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             countDaySales.setDate(date);
             countDaySalesRepository.save(countDaySales);
 
-            date.setTime(date.getTime() - 1000 * 60 * 60 * 24);
+            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
         }
     }
 

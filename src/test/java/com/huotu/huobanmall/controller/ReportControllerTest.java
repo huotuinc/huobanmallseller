@@ -107,37 +107,12 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Test
     public void testSalesReport() throws Exception {
-//        mockMvc.perform(device.getApi("salesReport")
-//                .build())
-//                .andDo(print());
-
-        Merchant merchant = merchantRepository.findByName("lgh");
-
-        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 24);
-        Map<Date, Integer> mapWeek = new TreeMap<>();
-        List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
-        for (CountDayOrder countDayOrder : list) {
-            mapWeek.put(countDayOrder.getDate(), countDayOrder.getAmount());
-        }
 
 
-        if (mapWeek.size() > 0) {
-            Date[] dates = mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]);
-            Integer[] integers = mapWeek.values().toArray(new Integer[mapWeek.values().size()]);
-            long t = mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum();
-            log.info(t);
-        }
-
-        log.info("size:" + list.size());
+        mockMvc.perform(device.getApi("salesReport")
+                .build())
+                .andDo(print());
     }
-
-//    private <T> T[] TypeFromObject(Object[] objects) {
-//        List<T> result = new ArrayList<>();
-//        for (Object o : objects) {
-//            result.add((T)o);
-//        }
-//        return result.toArray(T[result.size()]);
-//    }
 
     @Test
     public void testUserReport() throws Exception {
@@ -146,5 +121,31 @@ public class ReportControllerTest extends SpringAppTest {
                 .build())
                 .andDo(print());
 
+    }
+
+    @Test
+    public void myTest() {
+        //        mockMvc.perform(device.getApi("salesReport")
+//                .build())
+//                .andDo(print());
+
+//        Merchant merchant = merchantRepository.findByName("lgh");
+//
+//        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 24);
+//        Map<Date, Integer> mapWeek = new TreeMap<>();
+//        List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
+//        for (CountDayOrder countDayOrder : list) {
+//            mapWeek.put(countDayOrder.getDate(), countDayOrder.getAmount());
+//        }
+//
+//
+//        if (mapWeek.size() > 0) {
+//            Date[] dates = mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]);
+//            Integer[] integers = mapWeek.values().toArray(new Integer[mapWeek.values().size()]);
+//            long t = mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum();
+//            log.info(t);
+//        }
+//
+//        log.info("size:" + list.size());
     }
 }
