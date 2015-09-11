@@ -138,5 +138,5 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult allStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception;
+    ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception;
 }
