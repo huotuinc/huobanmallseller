@@ -21,7 +21,7 @@ public class AppPublicModel {
     private Operator currentOprator;
 
     /**
-     * 当前店铺 todo 赋值
+     * 当前店铺
      */
     private Shop currentShop;
 //    /**

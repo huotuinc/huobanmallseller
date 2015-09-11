@@ -279,4 +279,31 @@ public class MerchantController implements MerchantSystem {
             return ApiResult.resultWith(CommonEnum.AppCode.ERROR_SEND_MESSAGE_FAIL);
         }
     }
+
+    //todo
+    @Override
+    public ApiResult modifyPassword(Output<AppMerchantModel> user, String oldPassword, String newPassword) throws Exception {
+
+//        AppPublicModel pms = PublicParameterHolder.getParameters();
+//
+//        User userData = pms.getCurrentUser();
+//        if (userData == null) {
+//            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_USER_LOGIN_FAIL);
+//        }
+//
+//        if (newPassword.length() != 32) {
+//            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_PASSWORD);
+//        }
+//
+//        if (!userData.getPassword().equals(password)) {
+//            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_PASSWORD);
+//        }
+//
+//        userService.updatePassword(userData, newPassword);
+//        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+
+        return null;
+    }
+
+
 }

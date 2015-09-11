@@ -27,10 +27,12 @@ public class ReportController implements ReportSystem {
 
     @Autowired
     private CountService countService;
+
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
+
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     @RequestMapping("/orderReport")
@@ -64,16 +66,21 @@ public class ReportController implements ReportSystem {
 
 
 
-
         Map<Date, Integer> mapWeek = countService.getWeekOrder(apm.getCurrentUser());
-        weekTimes.outputData((Date[]) mapWeek.keySet().toArray());
-        weekAmounts.outputData((Integer[]) mapWeek.values().toArray());
+        if (mapWeek.size() > 0) {
+            weekTimes.outputData(mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]));
+            weekAmounts.outputData(mapWeek.values().toArray(new Integer[mapWeek.values().size()]));
+            weekAmount.outputData(mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+        }
 
         weekAmount.outputData(mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
         Map<Date, Integer> mapMonth = countService.getMonthOrder(apm.getCurrentUser());
-        monthTimes.outputData((Date[]) mapMonth.keySet().toArray());
-        monthAmounts.outputData((Integer[]) mapMonth.values().toArray());
+        if (mapMonth.size() > 0) {
+            monthTimes.outputData(mapMonth.keySet().toArray(new Date[mapMonth.keySet().size()]));
+            monthAmounts.outputData(mapMonth.values().toArray(new Integer[mapMonth.values().size()]));
+            monthAmount.outputData(mapMonth.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+        }
 
         monthAmount.outputData(mapMonth.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
@@ -89,21 +96,30 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> monthTimes, Output<Float[]> monthAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
+
         Map<Integer, Float> mapToday = countService.getDaySales(apm.getCurrentUser());
-        todayTimes.outputData((Integer[]) mapToday.keySet().toArray());
-        todayAmounts.outputData((Float[]) mapToday.values().toArray());
-        todayAmount.outputData(((Double) mapToday.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+        if (mapToday.size() > 0) {
+            todayTimes.outputData((Integer[]) mapToday.keySet().toArray());
+            todayAmounts.outputData((Float[]) mapToday.values().toArray());
+            todayAmount.outputData(((Double) mapToday.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+        }
 
 
         Map<Date, Float> mapWeek = countService.getWeekSales(apm.getCurrentUser());
-        weekTimes.outputData((Date[]) mapWeek.keySet().toArray());
-        weekAmounts.outputData((Float[]) mapWeek.values().toArray());
+        if (mapWeek.size() > 0) {
+            weekTimes.outputData((Date[]) mapWeek.keySet().toArray());
+            weekAmounts.outputData((Float[]) mapWeek.values().toArray());
+            weekAmount.outputData(((Double) mapWeek.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+        }
 
         weekAmount.outputData(((Double) mapWeek.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
 
         Map<Date, Float> mapMonth = countService.getMonthSales(apm.getCurrentUser());
-        monthTimes.outputData((Date[]) mapMonth.keySet().toArray());
-        monthAmounts.outputData((Float[]) mapMonth.values().toArray());
+        if (mapMonth.size() > 0) {
+            monthTimes.outputData((Date[]) mapMonth.keySet().toArray());
+            monthAmounts.outputData((Float[]) mapMonth.values().toArray());
+            monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+        }
 
         monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
 
@@ -165,30 +181,39 @@ public class ReportController implements ReportSystem {
 
 
         Map<Date, Integer> mapWeekMember = countService.getWeekMember(apm.getCurrentUser());
-        weekMemberTimes.outputData((Date[]) mapWeekMember.keySet().toArray());
-        weekMemberAmounts.outputData((Integer[]) mapWeekMember.values().toArray());
+        if (mapWeekMember.size() > 0) {
+            weekMemberTimes.outputData((Date[]) mapWeekMember.keySet().toArray());
+            weekMemberAmounts.outputData((Integer[]) mapWeekMember.values().toArray());
+            weekMemberAmount.outputData(mapWeekMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+        }
 
         weekMemberAmount.outputData(mapWeekMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
         Map<Date, Integer> mapMonthMember = countService.getMonthMember(apm.getCurrentUser());
-        monthMemberTimes.outputData((Date[]) mapMonthMember.keySet().toArray());
-        monthMemberAmounts.outputData((Integer[]) mapMonthMember.values().toArray());
+        if (mapMonthMember.size() > 0) {
+            monthMemberTimes.outputData((Date[]) mapMonthMember.keySet().toArray());
+            monthMemberAmounts.outputData((Integer[]) mapMonthMember.values().toArray());
+            monthMemberAmount.outputData(mapMonthMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+        }
 
         monthMemberAmount.outputData(mapMonthMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
 
         Map<Date, Integer> mapWeekPartner = countService.getWeekPartner(apm.getCurrentUser());
-        weekPartnerTimes.outputData((Date[]) mapWeekPartner.keySet().toArray());
-        weekPartnerAmounts.outputData((Integer[]) mapWeekPartner.values().toArray());
+        if (mapWeekPartner.size() > 0) {
+            weekPartnerTimes.outputData((Date[]) mapWeekPartner.keySet().toArray());
+            weekPartnerAmounts.outputData((Integer[]) mapWeekPartner.values().toArray());
+            weekPartnerAmount.outputData(mapWeekPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+        }
 
         weekPartnerAmount.outputData(mapWeekPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
         Map<Date, Integer> mapMonthPartner = countService.getMonthPartner(apm.getCurrentUser());
-        monthPartnerTimes.outputData((Date[]) mapMonthPartner.keySet().toArray());
-        monthPartnerAmounts.outputData((Integer[]) mapMonthPartner.values().toArray());
-
-        monthPartnerAmount.outputData(mapMonthPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
-
+        if (mapMonthPartner.size() > 0) {
+            monthPartnerTimes.outputData((Date[]) mapMonthPartner.keySet().toArray());
+            monthPartnerAmounts.outputData((Integer[]) mapMonthPartner.values().toArray());
+            monthPartnerAmount.outputData(mapMonthPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+        }
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }

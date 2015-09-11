@@ -91,4 +91,13 @@ public interface MerchantSystem {
     ) throws Exception;
 
 
+    /**
+     * @param user 返回用户数据
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult modifyPassword(Output<AppMerchantModel> user, String oldPassword, String newPassword) throws Exception;
 }
