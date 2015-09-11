@@ -2,10 +2,7 @@ package com.huotu.huobanmall.api;
 
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
-import com.huotu.huobanmall.model.app.AppBillReportModel;
-import com.huotu.huobanmall.model.app.AppMemberReportModel;
-import com.huotu.huobanmall.model.app.AppSalesReportModel;
-import com.huotu.huobanmall.model.app.AppTopBuyAmountModel;
+import com.huotu.huobanmall.model.app.AppOtherInfoModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -133,4 +130,13 @@ public interface ReportSystem {
             , Output<Date[]> weekPartnerTimes, Output<Integer[]> weekPartnerAmounts
             , Output<Date[]> monthPartnerTimes, Output<Integer[]> monthPartnerAmounts
     ) throws Exception;
+
+    /**
+     * 其他信息统计
+     * @param otherInfoList
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult allStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception;
 }

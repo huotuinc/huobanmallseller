@@ -26,7 +26,7 @@ public interface CountService {
     Map<Integer,Integer> todayMember(Merchant merchant);
 
     /**
-     * 获取分销商的数据(小伙伴)
+     * 获取当天分销商的数据(小伙伴)
      * @param merchant
      * @return
      */

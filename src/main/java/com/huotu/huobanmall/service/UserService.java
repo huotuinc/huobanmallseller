@@ -26,6 +26,11 @@ public interface UserService {
      */
     public Integer countUserNumber(Merchant merchant,Integer type,Date date);
 
+    /**
+     * Create by shiliting on 2015/9/11
+     * @param merchant      会员所属商家
+     * @return
+     */
     public Long countAllMember(Merchant merchant);
 
 

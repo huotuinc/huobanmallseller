@@ -5,8 +5,11 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
+import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.model.app.AppOtherInfoModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.service.CountService;
+import com.huotu.huobanmall.service.GoodsService;
 import com.huotu.huobanmall.service.OrderService;
 import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,9 @@ public class ReportController implements ReportSystem {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GoodsService goodsService;
 
     @Override
     @RequestMapping("/orderReport")
@@ -217,27 +223,16 @@ public class ReportController implements ReportSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
-//    @Autowired
-//    private ReportService reportService;
-//
-//    @Override
-//    @RequestMapping("/orderReport")
-//    public ApiResult orderReport(Output<AppBillReportModel> data, Integer type) throws Exception {
-//        data.outputData(reportService.orderReport(PublicParameterHolder.getParameters().getCurrentUser().getId(), type));
-//        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-//    }
-//
-//    @Override
-//    @RequestMapping("/salesReport")
-//    public ApiResult salesReport(Output<AppSalesReportModel> data, Integer type) throws Exception {
-//        data.outputData(reportService.salesReport(PublicParameterHolder.getParameters().getCurrentUser().getId(),type));
-//        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-//    }
-//
-//    @Override
-//    @RequestMapping("/userReport")
-//    public ApiResult userReport(Output<AppMemberReportModel> data, Integer type) throws Exception {
-//        data.outputData(reportService.userReport(PublicParameterHolder.getParameters().getCurrentUser().getId(),type));
-//        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-//    }
+    @Override
+    public ApiResult allStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
+        AppOtherInfoModel appOtherInfoModel=new AppOtherInfoModel();
+        appOtherInfoModel.setBillAmount(orderService.countOrderQuantity(merchant));
+        appOtherInfoModel.setGoodsAmount(goodsService.countByMerchant(merchant));
+        appOtherInfoModel.setDiscributorAmount(userService.countUserNumber(merchant,1));
+        appOtherInfoModel.setMemberAmount(userService.countUserNumber(merchant,0));
+        otherInfoList.outputData(appOtherInfoModel);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+    
 }
