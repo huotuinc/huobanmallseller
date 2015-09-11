@@ -282,6 +282,7 @@ public class MerchantController implements MerchantSystem {
 
     //todo
     @Override
+    @RequestMapping("/modifyPassword")
     public ApiResult modifyPassword(Output<AppMerchantModel> user, String oldPassword, String newPassword) throws Exception {
 
 //        AppPublicModel pms = PublicParameterHolder.getParameters();
@@ -302,7 +303,7 @@ public class MerchantController implements MerchantSystem {
 //        userService.updatePassword(userData, newPassword);
 //        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
 
-        return null;
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
 
