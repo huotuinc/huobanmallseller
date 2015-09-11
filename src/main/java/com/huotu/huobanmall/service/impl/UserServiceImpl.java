@@ -29,4 +29,9 @@ public class UserServiceImpl implements UserService{
     public Integer countUserNumber(Merchant merchant, Integer type, Date date) {
         return userRepository.findByMerchantAndTypeAndRegTimeGreaterThan(merchant,type,date).size();
     }
+
+    @Override
+    public Long countAllMember(Merchant merchant) {
+        return userRepository.countByMerchant(merchant);
+    }
 }

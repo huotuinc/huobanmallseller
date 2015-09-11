@@ -7,10 +7,13 @@ import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.service.CountService;
+import com.huotu.huobanmall.service.OrderService;
+import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,6 +27,10 @@ public class ReportController implements ReportSystem {
 
     @Autowired
     private CountService countService;
+    @Autowired
+    OrderService orderService;
+    @Autowired
+    UserService userService;
 
     @Override
     @RequestMapping("/orderReport")
@@ -32,6 +39,29 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> weekTimes, Output<Integer[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Integer[]> monthAmounts) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.SECOND,0);
+        date.set(Calendar.MINUTE,0);
+        //今天
+        Date today=date.getTime();
+        //统计今日订单总数
+        todayAmount.outputData((long)orderService.countOrderQuantity(apm.getCurrentUser(),today));
+        //统计今日详细数据
+        Integer[] hoursOrder=new Integer[(nowHour+2)/3];
+        Integer[] orders=new Integer[(nowHour+2)/3];
+        int n=0;
+        Map<Integer,Integer>mapToday=countService.todayOrder(apm.getCurrentUser());
+        for (Map.Entry<Integer, Integer> entry : mapToday.entrySet()) {
+            hoursOrder[n]=(entry.getKey()+1)*3;
+            orders[n]=entry.getValue();
+            n++;
+        }
+        todayAmounts.outputData(orders);
+        todayTimes.outputData(hoursOrder);
+
 
 
 
@@ -59,7 +89,6 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> monthTimes, Output<Float[]> monthAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
-
         Map<Integer, Float> mapToday = countService.getDaySales(apm.getCurrentUser());
         todayTimes.outputData((Integer[]) mapToday.keySet().toArray());
         todayAmounts.outputData((Float[]) mapToday.values().toArray());
@@ -94,6 +123,46 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> monthPartnerTimes, Output<Integer[]> monthPartnerAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.SECOND,0);
+        date.set(Calendar.MINUTE,0);
+        //今天
+        Date today=date.getTime();
+        //统计注册会员总数
+        total.outputData(userService.countAllMember(apm.getCurrentUser()));
+        //统计今日新增会员总数
+        todayMemberAmount.outputData((long)userService.countUserNumber(apm.getCurrentUser(),0,today));
+        //统计今日新增小伙伴总数
+        todayPartnerAmount.outputData((long)userService.countUserNumber(apm.getCurrentUser(),1,today));
+        //统计今日会员新增明细
+        Integer[] hoursMember=new Integer[(nowHour+2)/3];
+        Integer[] members=new Integer[(nowHour+2)/3];
+        Map<Integer,Integer>mapTodayMember=countService.todayMember(apm.getCurrentUser());
+        int n=0;
+        for (Map.Entry<Integer, Integer> entry : mapTodayMember.entrySet()) {
+            hoursMember[n]=(entry.getKey()+1)*3;
+            members[n]=entry.getValue();
+            n++;
+        }
+        todayMemberTimes.outputData(hoursMember);
+        todayMemberAmounts.outputData(members);
+
+        //统计今日小伙伴新增明细
+        Integer[] hoursPartner=new Integer[(nowHour+2)/3];
+        Integer[] partners=new Integer[(nowHour+2)/3];
+        Map<Integer,Integer> mapTodayPartner=countService.todayPartner(apm.getCurrentUser());
+        n=0;
+        for (Map.Entry<Integer, Integer> entry : mapTodayPartner.entrySet()) {
+            hoursPartner[n]=(entry.getKey()+1)*3;
+            partners[n]=entry.getValue();
+            n++;
+        }
+        todayPartnerTimes.outputData(hoursPartner);
+        todayPartnerAmounts.outputData(partners);
+
 
         Map<Date, Integer> mapWeekMember = countService.getWeekMember(apm.getCurrentUser());
         weekMemberTimes.outputData((Date[]) mapWeekMember.keySet().toArray());

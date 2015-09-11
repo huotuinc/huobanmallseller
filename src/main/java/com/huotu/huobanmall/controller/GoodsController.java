@@ -155,19 +155,19 @@ public class GoodsController implements GoodsSystem {
         Date today=date.getTime();
 
         //定义数组大小
-        Integer[] hoursOrder=new Integer[nowHour/3];
-        Integer[] hoursMember=new Integer[nowHour/3];
-        Integer[] hoursPartner=new Integer[nowHour/3];
-        Integer[] orders=new Integer[nowHour/3];
-        Integer[] members=new Integer[nowHour/3];
-        Integer[] partners=new Integer[nowHour/3];
+        Integer[] hoursOrder=new Integer[(nowHour+2)/3];
+        Integer[] hoursMember=new Integer[(nowHour+2)/3];
+        Integer[] hoursPartner=new Integer[(nowHour+2)/3];
+        Integer[] orders=new Integer[(nowHour+2)/3];
+        Integer[] members=new Integer[(nowHour+2)/3];
+        Integer[] partners=new Integer[(nowHour+2)/3];
 
 
         //将Map结果分解成两个时间和数量的数组
         int n=0;
         Map<Integer,Integer> map=countService.todayOrder(merchant);
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursOrder[n]=(entry.getKey()/3+1)*3;
+            hoursOrder[n]=(entry.getKey()+1)*3;
             orders[n]=entry.getValue();
             n++;
         }
@@ -175,14 +175,14 @@ public class GoodsController implements GoodsSystem {
         n=0;
         map=countService.todayMember(merchant);
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursMember[n]=(entry.getKey()/3+1)*3;
+            hoursMember[n]=(entry.getKey()+1)*3;
             members[n]=entry.getValue();
             n++;
         }
         n=0;
         map=countService.todayPartner(merchant);
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursPartner[n]=(entry.getKey()/3+1)*3;
+            hoursPartner[n]=(entry.getKey()+1)*3;
             partners[n]=entry.getValue();
             n++;
         }

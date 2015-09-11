@@ -26,6 +26,8 @@ public interface UserService {
      */
     public Integer countUserNumber(Merchant merchant,Integer type,Date date);
 
+    public Long countAllMember(Merchant merchant);
+
 
 
 }
