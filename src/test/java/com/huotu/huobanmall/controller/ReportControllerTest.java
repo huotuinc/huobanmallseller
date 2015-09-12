@@ -21,6 +21,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -81,12 +85,6 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Autowired
     private CountTodaySalesRepository countTodaySalesRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private GoodsRepository goodsRepository;
 
     @Before
     public void prepareDevice() {
@@ -208,6 +206,28 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Test
     public void myTest() {
+        //        mockMvc.perform(device.getApi("salesReport")
+//                .build())
+//                .andDo(print());
+
+//        Merchant mockMerchant = merchantRepository.findByName("lgh");
+//
+//        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 24);
+//        Map<Date, Integer> mapWeek = new TreeMap<>();
+//        List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(mockMerchant.getId(), date);
+//        for (CountDayOrder countDayOrder : list) {
+//            mapWeek.put(countDayOrder.getDate(), countDayOrder.getAmount());
+//        }
+//
+//
+//        if (mapWeek.size() > 0) {
+//            Date[] dates = mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]);
+//            Integer[] integers = mapWeek.values().toArray(new Integer[mapWeek.values().size()]);
+//            long t = mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum();
+//            log.info(t);
+//        }
+//
+//        log.info("size:" + list.size());
     }
 
     @Test

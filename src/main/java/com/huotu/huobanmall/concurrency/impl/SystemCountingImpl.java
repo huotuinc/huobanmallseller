@@ -1,0 +1,184 @@
+package com.huotu.huobanmall.concurrency.impl;
+
+
+import com.huotu.common.DateHelper;
+import com.huotu.huobanmall.concurrency.SystemCounting;
+import com.huotu.huobanmall.entity.CountTodayMember;
+import com.huotu.huobanmall.entity.CountTodayOrder;
+import com.huotu.huobanmall.entity.CountTodayPartner;
+import com.huotu.huobanmall.entity.CountTodaySales;
+import com.huotu.huobanmall.repository.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+
+/**
+ * Created by lgh on 2015/9/11.
+ */
+
+@Service
+
+public class SystemCountingImpl implements SystemCounting {
+
+    private Log log = LogFactory.getLog(SystemCountingImpl.class);
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private CountTodayOrderRepository countTodayOrderRepository;
+
+    @Autowired
+    private CountTodaySalesRepository countTodaySalesRepository;
+
+    @Autowired
+    private CountTodayMemberRepository countTodayMemberRepository;
+
+    @Autowired
+    private CountTodayPartnerRepository countTodayPartnerRepository;
+
+
+    /**
+     * 计算订单量、销售额、会员量、小伙伴
+     * 计算频率 每时
+     * 凌晨计算完后，需要计算每天量
+     */
+    @Override
+    @Scheduled(cron = "0 41 10 * * ?")
+    public void count() {
+        Calendar calendar = Calendar.getInstance();
+        Integer hour = calendar.get(Calendar.HOUR);
+
+        countHour(hour);
+
+        if (hour == 0) {
+            countDay();
+        }
+    }
+
+    /**
+     * 计算指定小时量
+     *
+     * @param hour
+     */
+    private void countHour(Integer hour) {
+        Date beginTime = DateHelper.getThisDayBegin();
+        beginTime.setHours(hour - 1);
+        Date endTime = DateHelper.getThisDayBegin();
+        endTime.setHours(hour);
+
+        //订单量
+        countOrder(beginTime, endTime, hour);
+        //销售额
+        countSales(beginTime, endTime, hour);
+        //会员量
+        countMember(beginTime, endTime, hour);
+        //小伙伴
+        countPartner(beginTime, endTime, hour);
+
+    }
+
+    /**
+     * 计算订单量
+     *
+     * @param beginTime
+     * @param endTime
+     * @param hour
+     */
+    private void countOrder(Date beginTime, Date endTime, Integer hour) {
+        List<CountTodayOrder> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,count(order) as amount from Order order " +
+                " where order.time>=:beginTime and order.time<:endTime" +
+                " group by order.merchant.id");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodayOrder(Integer.parseInt(objects[0].toString())
+                    , hour, Integer.parseInt(objects[1].toString())));
+        });
+
+        countTodayOrderRepository.save(Arrays.asList(list.toArray(new CountTodayOrder[list.size()])));
+    }
+
+    private void countSales(Date beginTime, Date endTime, Integer hour) {
+        List<CountTodaySales> list = new ArrayList<>();
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,count(order) as amount from Order order " +
+                " where order.time>=:beginTime and order.time<:endTime" +
+                " group by order.merchant.id");//todo 对应表
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodaySales(Integer.parseInt(objects[0].toString())
+                    , hour, Float.parseFloat(objects[1].toString())));
+        });
+
+        countTodaySalesRepository.save(Arrays.asList(list.toArray(new CountTodaySales[list.size()])));
+    }
+
+    private void countMember(Date beginTime, Date endTime, Integer hour) {
+        List<CountTodayMember> list = new ArrayList<>();
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,count(order) as amount from Order order " +
+                " where order.time>=:beginTime and order.time<:endTime" +
+                " group by order.merchant.id");//todo 对应表
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodayMember(Integer.parseInt(objects[0].toString())
+                    , hour, Integer.parseInt(objects[1].toString())));
+        });
+
+        countTodayMemberRepository.save(Arrays.asList(list.toArray(new CountTodayMember[list.size()])));
+    }
+
+    private void countPartner(Date beginTime, Date endTime, Integer hour) {
+        List<CountTodayPartner> list = new ArrayList<>();
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,count(order) as amount from Order order " +
+                " where order.time>=:beginTime and order.time<:endTime" +
+                " group by order.merchant.id");//todo 对应表
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodayPartner(Integer.parseInt(objects[0].toString())
+                    , hour, Integer.parseInt(objects[1].toString())));
+        });
+
+        countTodayPartnerRepository.save(Arrays.asList(list.toArray(new CountTodayPartner[list.size()])));
+    }
+
+
+
+
+    /**
+     * 计算每天量
+     */
+    private void countDay() {
+
+    }
+}

@@ -30,7 +30,14 @@ public class CountTodaySales {
      */
     private float money;
 
+    public CountTodaySales(Integer merchantId, Integer hour, float money) {
+        this.merchantId = merchantId;
+        this.hour = hour;
+        this.money = money;
+    }
 
+    public CountTodaySales() {
+    }
 
 
     public Integer getHour() {

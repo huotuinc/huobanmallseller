@@ -31,6 +31,15 @@ public class CountTodayOrder {
      */
     private Integer amount;
 
+    public CountTodayOrder(Integer merchantId, Integer hour, Integer amount) {
+        this.merchantId = merchantId;
+        this.hour = hour;
+        this.amount = amount;
+    }
+
+    public CountTodayOrder() {
+    }
+
     public Integer getMerchantId() {
         return merchantId;
     }
