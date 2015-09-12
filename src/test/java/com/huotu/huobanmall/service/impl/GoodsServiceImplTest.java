@@ -7,6 +7,7 @@ import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.service.GoodsService;
 import com.huotu.huobanmall.test.TestWebConfig;
 import com.huotu.huobanmall.test.WebTestBase;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -35,40 +35,39 @@ public class GoodsServiceImplTest extends WebTestBase {
     MerchantRepository merchantRepository;
     @Autowired
     GoodsService goodsService;
+    @Autowired
+    GoodsRepository goodsRepository;
     @Test
     @Rollback
     public void testSearchProducts() throws Exception {
         //准备测试环境
         Random random=new Random();
-
         Merchant merchant=new Merchant();
         merchant.setId(100);
         Merchant mockMerchant=merchantRepository.save(merchant);
 
+        Goods goods;
+        for(int i=0;i<10;i++){
+            goods=new Goods();
+            goods.setOwner(mockMerchant);
+            goods.setStatus(1);
+            goodsRepository.save(goods);
+        }
+        for(int i=0;i<6;i++){
+            goods=new Goods();
+            goods.setOwner(mockMerchant);
+            goods.setStatus(0);
+            goodsRepository.save(goods);
+        }
+
+        Integer goodAmount=goodsService.countByMerchant(mockMerchant);
+        Integer expected=10;
+        Assert.assertEquals("商品数量是否正确(上架的)", expected, goodAmount);
 
 
-        Goods product=new Goods();
-        int n1=random.nextInt(200);
-        product.setId(n1);
-        product.setOwner(mockMerchant);
-        product.setPrice(100);
-        product.setStatus(1);
-        product.setStock(1000);
-        Goods productNew=productRepository.save(product);                            //新建一个商品
 
-        Goods product1=new Goods();
-        int n2=random.nextInt(200);
-        product1.setId(n2);
-        product1.setOwner(mockMerchant);
-        product1.setPrice(200);
-        product1.setStatus(1);
-        product1.setStock(9999);
-        productRepository.save(product1);
 
-        //准备测试环境END
 
-        List<Goods> listAll=productRepository.findAll();
-        List<Goods> List=goodsService.searchProducts(mockMerchant,1,6,5).getContent();
 
 
     }

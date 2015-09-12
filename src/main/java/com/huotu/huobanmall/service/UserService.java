@@ -19,6 +19,7 @@ public interface UserService {
 
     /**
      * Create by shiliting on 2015/9/6
+     * 按照注册时间计算会员数量
      * @param merchant      会员所属商家
      * @param type          会员类型
      * @param date          会员注册时间
