@@ -18,10 +18,14 @@ public class Rebate {
     @Column(name = "UTIH_ID")
     private Integer id;
 
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "UTIH_Order_Id")
+    private Order order;
+
     /**
      * 商家
      */
-    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "UTIH_CustomerID")
     private Merchant merchant;
 
@@ -94,5 +98,13 @@ public class Rebate {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }
