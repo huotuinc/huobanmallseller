@@ -282,7 +282,7 @@ public class ReportControllerTest extends SpringAppTest {
             order=new Order();
             order.setId(String.valueOf(100-i));
             int k=random.nextInt(3)+1;
-            order.setOrderStatus(1);
+            order.setPayStatus(1);
             order.setMerchant(mockMerchant);
             order.setUserId(22);
             order.setTime(new Date());

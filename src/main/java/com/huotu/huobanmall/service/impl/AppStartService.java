@@ -156,7 +156,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setTitle("购买abcd1");
         order.setPrice(product.getPrice());
         order.setAmount(1);
-        order.setOrderStatus(1);
+        order.setStatus(1);
+        order.setPayStatus(1);
         order.setReceiver("zhangsan");
         order.setTime(new Date());
         orderRepository.save(order);
@@ -180,7 +181,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setTitle("购买abcd2");
         order.setPrice(product.getPrice());
         order.setAmount(1);
-        order.setOrderStatus(0);
+        order.setStatus(1);
+        order.setPayStatus(1);
         order.setReceiver("zhangsan");
         order.setTime(new Date());
         orderRepository.save(order);

@@ -222,7 +222,7 @@ public class GoodsController implements GoodsSystem {
 //            appOrderListModel.setPictureUrl(o.);//todo 订单里的商品图片怎么显示
             appOrderListModel.setPictureUrl(o.getPictureUrl());
             appOrderListModel.setReceiver(o.getReceiver());
-            appOrderListModel.setStatus(o.getOrderStatus());
+            appOrderListModel.setStatus(o.getStatus());
             appOrderListModel.setScore(0);//todo 返利积分怎么计算
             appOrderListModels[i]=appOrderListModel;
             i++;

@@ -67,7 +67,7 @@ public class Order {
      * 付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
      */
     @Column(name = "Pay_Status")
-    private Integer orderStatus;
+    private Integer payStatus;
 
 
     /**
@@ -149,12 +149,28 @@ public class Order {
         this.title = title;
     }
 
-    public Integer getOrderStatus() {
-        return orderStatus;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public void setOrderStatus(Integer orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(Integer payStatus) {
+        this.payStatus = payStatus;
     }
 
     public String getReceiver() {
@@ -187,22 +203,6 @@ public class Order {
 
     public void setTime(Date time) {
         this.time = time;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public Date getPayTime() {

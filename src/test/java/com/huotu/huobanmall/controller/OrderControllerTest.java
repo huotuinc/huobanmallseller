@@ -118,7 +118,7 @@ public class OrderControllerTest extends SpringAppTest {
                     wancheng++;
                     oldDays++;
             }
-            order.setOrderStatus(k);
+            order.setPayStatus(k);
             order.setMerchant(mockMerchant);
 //            order.setUser(user);
             order.setUserId(user.getId());
@@ -209,7 +209,7 @@ public class OrderControllerTest extends SpringAppTest {
                     wancheng++;
                     oldDays++;
             }
-            order.setOrderStatus(k);
+            order.setPayStatus(k);
             order.setMerchant(mockMerchant);
 //            order.setUser(user);
             order.setUserId(user.getId());
@@ -234,7 +234,7 @@ public class OrderControllerTest extends SpringAppTest {
 
         order=new Order();
         order.setId("10");
-        order.setOrderStatus(1);
+        order.setPayStatus(1);
         order.setMerchant(mockMerchant);
         order.setUserId(user1.getId());
         order.setTime(new Date());

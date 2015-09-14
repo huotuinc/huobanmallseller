@@ -79,9 +79,9 @@ public class OrderServiceImpl implements OrderService{
         List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime);
         float sum=0;
         for(Order o:list){
-            if(o.getOrderStatus()==3) {
-                sum = sum +  o.getPrice();
-            }
+//            if(o.getOrderStatus()==3) {
+//                sum = sum +  o.getPrice();
+//            }
         }
         return sum;
     }
@@ -91,9 +91,9 @@ public class OrderServiceImpl implements OrderService{
         List<Order> list=orderRepository.findByMerchant(merchant);
         float sum=0;
         for(Order o:list){
-            if(o.getOrderStatus()==3){
-                sum=sum+o.getPrice();
-            }
+//            if(o.getOrderStatus()==3){
+//                sum=sum+o.getPrice();
+//            }
 
         }
         return sum;

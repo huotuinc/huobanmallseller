@@ -116,7 +116,7 @@ public class OrderServiceImplTest extends WebTestBase {
                     wancheng++;
                     oldDays++;
             }
-            order.setOrderStatus(k);
+            order.setPayStatus(k);
             order.setMerchant(merchant);
             order.setUserId(user.getId());
             order.setTime(k==1? new Date():(k==2?testSevenDays:oldTime));
