@@ -86,6 +86,15 @@ public class ReportControllerTest extends SpringAppTest {
     @Autowired
     private CountTodaySalesRepository countTodaySalesRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private GoodsRepository goodsRepository;
+
+
+    @Autowired
+    private  OrderRepository orderRepository;
     @Before
     public void prepareDevice() {
         device = Device.newDevice(DeviceType.Android);

@@ -34,6 +34,15 @@ public class CountDayPartner {
      */
     private Integer amount;
 
+    public CountDayPartner(Integer merchantId, Date date, Integer amount) {
+        this.merchantId = merchantId;
+        this.date = date;
+        this.amount = amount;
+    }
+
+    public CountDayPartner() {
+    }
+
     public Integer getMerchantId() {
         return merchantId;
     }

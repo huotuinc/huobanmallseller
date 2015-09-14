@@ -18,6 +18,14 @@ public class Goods {
     @Column(name = "Goods_Id")
     private Integer id;
 
+
+    /**
+     * 所属分类
+     */
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "Cat_Id")
+    private Category category;
+
     /**
      * 商品标题
      */
@@ -28,7 +36,7 @@ public class Goods {
     /**
      * 商家
      */
-    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "Customer_Id")
     private Merchant owner;
     /**

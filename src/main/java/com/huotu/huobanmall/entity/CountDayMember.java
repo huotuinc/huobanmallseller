@@ -33,6 +33,15 @@ public class CountDayMember {
      */
     private Integer amount;
 
+    public CountDayMember(Integer merchantId, Date date, Integer amount) {
+        this.merchantId = merchantId;
+        this.date = date;
+        this.amount = amount;
+    }
+
+    public CountDayMember() {
+    }
+
     public Integer getMerchantId() {
         return merchantId;
     }

@@ -5,4 +5,6 @@ package com.huotu.huobanmall.concurrency;
  */
 public interface SystemCounting {
     void count();
+
+    void countDay();
 }

@@ -2,6 +2,7 @@ package com.huotu.huobanmall.repository;
 
 import com.huotu.huobanmall.entity.CountTodayOrder;
 import com.huotu.huobanmall.entity.pk.CountTodayOrderPK;
+import org.luffy.lib.libspring.data.ClassicsRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,6 @@ import java.util.List;
  */
 
 @Repository
-public interface CountTodayOrderRepository extends JpaRepository<CountTodayOrder, CountTodayOrderPK>, JpaSpecificationExecutor<CountTodayOrder> {
+public interface CountTodayOrderRepository extends JpaRepository<CountTodayOrder, CountTodayOrderPK>, JpaSpecificationExecutor<CountTodayOrder>,ClassicsRepository<CountTodayOrder> {
     List<CountTodayOrder> findByMerchantIdAndHourLessThanEqual(Integer merchantId,Integer hour);
 }

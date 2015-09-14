@@ -32,6 +32,15 @@ public class CountDaySales {
      */
     private float money;
 
+    public CountDaySales(Integer merchantId, Date date, float money) {
+        this.merchantId = merchantId;
+        this.date = date;
+        this.money = money;
+    }
+
+    public CountDaySales() {
+    }
+
 
     public Integer getMerchantId() {
         return merchantId;

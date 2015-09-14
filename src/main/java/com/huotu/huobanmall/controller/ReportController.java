@@ -41,7 +41,7 @@ public class ReportController implements ReportSystem {
 
     @Override
     @RequestMapping("/orderReport")
-    public ApiResult orderReport(Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
+    public ApiResult orderReport(Output<Long> totalAmount, Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
             , Output<Integer[]> todayTimes, Output<Integer[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Integer[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Integer[]> monthAmounts) throws Exception {
@@ -88,13 +88,16 @@ public class ReportController implements ReportSystem {
 
         monthAmount.outputData(mapMonth.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
+
+      //  totalAmount.outputData();//todo
+
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @Override
     @RequestMapping("/salesReport")
     public ApiResult salesReport(
-            Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
+            Output<Long> totalAmount, Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
             , Output<Integer[]> todayTimes, Output<Float[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Float[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Float[]> monthAmounts
@@ -126,6 +129,8 @@ public class ReportController implements ReportSystem {
         }
 
         monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+
+        //  totalAmount.outputData();//todo
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -243,12 +248,12 @@ public class ReportController implements ReportSystem {
     @Override
     @RequestMapping("/otherStatistics")
     public ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
-        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
-        AppOtherInfoModel appOtherInfoModel=new AppOtherInfoModel();
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        AppOtherInfoModel appOtherInfoModel = new AppOtherInfoModel();
         appOtherInfoModel.setBillAmount(orderService.countOrderQuantity(merchant));
         appOtherInfoModel.setGoodsAmount(goodsService.countByMerchant(merchant));
-        appOtherInfoModel.setDiscributorAmount(userService.countUserNumber(merchant,1));
-        appOtherInfoModel.setMemberAmount(userService.countUserNumber(merchant,0));
+        appOtherInfoModel.setDiscributorAmount(userService.countUserNumber(merchant, 1));
+        appOtherInfoModel.setMemberAmount(userService.countUserNumber(merchant, 0));
         otherInfoList.outputData(appOtherInfoModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }

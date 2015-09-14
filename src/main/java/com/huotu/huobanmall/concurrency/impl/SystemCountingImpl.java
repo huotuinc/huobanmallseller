@@ -3,10 +3,7 @@ package com.huotu.huobanmall.concurrency.impl;
 
 import com.huotu.common.DateHelper;
 import com.huotu.huobanmall.concurrency.SystemCounting;
-import com.huotu.huobanmall.entity.CountTodayMember;
-import com.huotu.huobanmall.entity.CountTodayOrder;
-import com.huotu.huobanmall.entity.CountTodayPartner;
-import com.huotu.huobanmall.entity.CountTodaySales;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,16 +29,28 @@ public class SystemCountingImpl implements SystemCounting {
     private OrderRepository orderRepository;
 
     @Autowired
-    private CountTodayOrderRepository countTodayOrderRepository;
+    private CountDayMemberRepository countDayMemberRepository;
 
     @Autowired
-    private CountTodaySalesRepository countTodaySalesRepository;
+    private CountDayOrderRepository countDayOrderRepository;
+
+    @Autowired
+    private CountDayPartnerRepository countDayPartnerRepository;
+
+    @Autowired
+    private CountDaySalesRepository countDaySalesRepository;
 
     @Autowired
     private CountTodayMemberRepository countTodayMemberRepository;
 
     @Autowired
+    private CountTodayOrderRepository countTodayOrderRepository;
+
+    @Autowired
     private CountTodayPartnerRepository countTodayPartnerRepository;
+
+    @Autowired
+    private CountTodaySalesRepository countTodaySalesRepository;
 
 
     /**
@@ -173,12 +182,91 @@ public class SystemCountingImpl implements SystemCounting {
     }
 
 
-
-
     /**
      * 计算每天量
      */
-    private void countDay() {
+    public void countDay() {
+        Date date = DateHelper.getThisDayBegin();
+        date.setHours(-24);
+
+        countDayMember(date);
+
+        countDayOrder(date);
+
+        countDayPartner(date);
+
+        countDaySales(date);
+
+
+        //        log.info(list.size());
+//        StringBuilder hql = new StringBuilder();
+//        hql.append("insert CountDayMember select c.merchantId,:date,sum(c.amount)" +
+//                " from CountTodayMember c group by c.merchantId");
+//        countDayMemberRepository.executeHql(hql.toString(), query -> {
+//            query.setParameter("date", date);
+//        });
+    }
+
+    private void countDayMember(Date date) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select c.merchantId,sum(c.amount) from CountTodayMember c group by c.merchantId");
+        List listQuery = countTodayMemberRepository.queryHql(hql.toString(), query -> {
+        });
+
+        List<CountDayMember> list = new ArrayList<>();
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountDayMember(Integer.parseInt(objects[0].toString())
+                    , date, Integer.parseInt(objects[1].toString())));
+        });
+        countDayMemberRepository.save(Arrays.asList(list.toArray(new CountDayMember[list.size()])));
+    }
+
+    private void countDayOrder(Date date) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select c.merchantId,sum(c.amount) from CountTodayOrder c group by c.merchantId");
+        List listQuery = countTodayOrderRepository.queryHql(hql.toString(), query -> {
+        });
+
+        List<CountDayOrder> list = new ArrayList<>();
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountDayOrder(Integer.parseInt(objects[0].toString())
+                    , date, Integer.parseInt(objects[1].toString())));
+        });
+        countDayOrderRepository.save(Arrays.asList(list.toArray(new CountDayOrder[list.size()])));
+    }
+
+    private void countDayPartner(Date date) {
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select c.merchantId,sum(c.amount) from CountTodayPartner c group by c.merchantId");
+        List listQuery = countTodayPartnerRepository.queryHql(hql.toString(), query -> {
+        });
+
+        List<CountDayPartner> list = new ArrayList<>();
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountDayPartner(Integer.parseInt(objects[0].toString())
+                    , date, Integer.parseInt(objects[1].toString())));
+        });
+        countDayPartnerRepository.save(Arrays.asList(list.toArray(new CountDayPartner[list.size()])));
+
+    }
+
+    private void countDaySales(Date date) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select c.merchantId,sum(c.money) from CountTodaySales c group by c.merchantId");
+        List listQuery = countTodaySalesRepository.queryHql(hql.toString(), query -> {
+        });
+
+        List<CountDaySales> list = new ArrayList<>();
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountDaySales(Integer.parseInt(objects[0].toString())
+                    , date, Float.parseFloat(objects[1].toString())));
+        });
+        countDaySalesRepository.save(Arrays.asList(list.toArray(new CountDaySales[list.size()])));
 
     }
 }

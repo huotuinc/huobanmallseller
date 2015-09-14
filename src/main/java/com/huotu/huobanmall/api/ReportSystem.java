@@ -57,6 +57,7 @@ public interface ReportSystem {
     /**
      * 订单统计报表
      *
+     * @param totalAmount  订单总量
      * @param todayAmount  今日总量
      * @param weekAmount   本周总量
      * @param monthAmount  本月总量
@@ -70,7 +71,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult orderReport(Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
+    ApiResult orderReport(Output<Long> totalAmount, Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
             , Output<Integer[]> todayTimes, Output<Integer[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Integer[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Integer[]> monthAmounts) throws Exception;
@@ -79,6 +80,7 @@ public interface ReportSystem {
     /**
      * 销售额统计报表
      *
+     * @param totalAmount  销售总额
      * @param todayAmount  今日销售额
      * @param weekAmount   本周销售额
      * @param monthAmount  本月销售额
@@ -92,7 +94,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesReport(Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
+    ApiResult salesReport(Output<Long> totalAmount, Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
             , Output<Integer[]> todayTimes, Output<Float[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Float[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Float[]> monthAmounts) throws Exception;
@@ -136,14 +138,13 @@ public interface ReportSystem {
 
     /**
      * 其他信息统计
+     *
      * @param otherInfoList
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
     ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception;
-
-
 
 
     /**
@@ -173,6 +174,7 @@ public interface ReportSystem {
     /**
      * 商品销售前10排行
      * 按照数量排序
+     *
      * @param list
      * @return
      * @throws Exception
