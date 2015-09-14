@@ -119,4 +119,12 @@ public class Goods {
     public void setPrice(float price) {
         this.price = price;
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

@@ -34,24 +34,24 @@ public interface OrderService {
 
     /**
      * Create by shiliting on 2015/9/1
-     * 计算订单总数
+     * 计算今日订单数
      * @param merchant      所属商家
      * @return              订单数量
      */
     Integer countOrderQuantity(Merchant merchant);
 
-    /**
-     * Create by shiliting on 2015/9/1
-     * 计算销售额
-     * @param merchant      所属商家
-     * @param lastTime      大于设定的时间
-     * @return              销售额
-     */
-    float countSale(Merchant merchant,Date lastTime);
+//    /**
+//     * Create by shiliting on 2015/9/1
+//     * 计算销售额
+//     * @param merchant      所属商家
+//     * @param lastTime      大于设定的时间
+//     * @return              销售额
+//     */
+//    float countSale(Merchant merchant,Date lastTime);
 
     /**
      * Create by shiliting on 2015/9/1
-     * 计算总销售额
+     * 计算今日销售额
      * @param merchant      所属商家
      * @return              销售额
      */

@@ -17,6 +17,11 @@ public class AppGoodListModel {
     private String pictureUrl;
 
     /**
+     * 产品分类
+     */
+    private String category;
+
+    /**
      * 商品标题
      */
     private String title;
@@ -69,5 +74,13 @@ public class AppGoodListModel {
 
     public void setGoodsId(Integer goodsId) {
         this.goodsId = goodsId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

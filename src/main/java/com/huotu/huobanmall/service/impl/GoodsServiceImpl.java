@@ -58,8 +58,8 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Integer countByMerchant(Merchant merchant) {
-        return productRepository.findByOwnerAndStatus(merchant,1).size();
+    public Long countByMerchant(Merchant merchant) {
+        return productRepository.countByOwnerAndStatus(merchant,1);
     }
 
 

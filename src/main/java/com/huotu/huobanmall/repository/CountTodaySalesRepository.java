@@ -15,5 +15,6 @@ public interface CountTodaySalesRepository extends JpaRepository<CountTodaySales
 ,ClassicsRepository<CountTodaySales>{
 
     List<CountTodaySales> findAllByMerchantIdOrderByHour(Integer merchantId);
+    List<CountTodaySales> findByMerchantId(Integer merchantId);
 
 }

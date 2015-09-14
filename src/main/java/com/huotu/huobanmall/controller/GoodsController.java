@@ -114,6 +114,7 @@ public class GoodsController implements GoodsSystem {
             appGoodListModel.setPictureUrl(product.getPictureUrl());
             appGoodListModel.setStock(product.getStock());
             appGoodListModel.setPrice(product.getStock());
+            appGoodListModel.setCategory(product.getCategory().getTitle());
             appGoodListModels[i]=appGoodListModel;
         }
         list.outputData(appGoodListModels);
@@ -168,6 +169,7 @@ public class GoodsController implements GoodsSystem {
 
 
         //将Map结果分解成两个时间和数量的数组
+        //计算今天各个时间段新增的订单数量
         int n=0;
         Map<Integer,Integer> map=countService.todayOrder(merchant);
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
@@ -176,6 +178,7 @@ public class GoodsController implements GoodsSystem {
             n++;
         }
 
+        //计算今天各个时间段新增的会员数量
         n=0;
         map=countService.todayMember(merchant);
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
@@ -183,6 +186,7 @@ public class GoodsController implements GoodsSystem {
             members[n]=entry.getValue();
             n++;
         }
+        //计算今天各个时间段新增的小伙伴数量
         n=0;
         map=countService.todayPartner(merchant);
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
@@ -191,17 +195,28 @@ public class GoodsController implements GoodsSystem {
             n++;
         }
 
+        //返回订单时间段数组
         orderHour.outputData(hoursOrder);
+        //返回会员时间段数组
         memberHour.outputData(hoursMember);
+        //返回小伙伴时间段数组
         partnerHour.outputData(hoursPartner);
+        //返回订单时间段值数组
         orderAmount.outputData(orders);
+        //返回会员时间段值数组
         memberAmount.outputData(members);
+        //返回小伙伴时间段值数组
         partnerAmount.outputData(partners);
-        todaySales.outputData(orderService.countSale(merchant,today));
-        totalSales.outputData(orderService.countSale(merchant));
-        todayOrderAmount.outputData(orderService.countOrderQuantity(merchant,today));
-        todayMemberAmount.outputData(userService.countUserNumber(merchant,0,today));
-        todayPartnerAmount.outputData(userService.countUserNumber(merchant,1,today));
+        //返回今日销售额
+        todaySales.outputData(orderService.countSale(merchant));
+        //返回总销售额
+        totalSales.outputData(countService.getTotalSales(merchant));
+        //返回今日新增订单数
+        todayOrderAmount.outputData(orderService.countOrderQuantity(merchant));
+        //返回今日新增会员数
+        todayMemberAmount.outputData(userService.countTodayMember(merchant));
+        //返回今日新增小伙伴数
+        todayPartnerAmount.outputData(userService.countTodayPartner(merchant));
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -219,7 +234,6 @@ public class GoodsController implements GoodsSystem {
             appOrderListModel.setAmount(o.getAmount());
             appOrderListModel.setMoney(o.getPrice());
             appOrderListModel.setOrderNo(o.getId());
-//            appOrderListModel.setPictureUrl(o.);//todo 订单里的商品图片怎么显示
             appOrderListModel.setPictureUrl(o.getPictureUrl());
             appOrderListModel.setReceiver(o.getReceiver());
             appOrderListModel.setStatus(o.getStatus());

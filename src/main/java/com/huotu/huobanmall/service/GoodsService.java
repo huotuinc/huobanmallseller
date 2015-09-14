@@ -27,5 +27,5 @@ public interface GoodsService {
      * @param merchant
      * @return
      */
-    Integer countByMerchant(Merchant merchant);
+    Long countByMerchant(Merchant merchant);
 }

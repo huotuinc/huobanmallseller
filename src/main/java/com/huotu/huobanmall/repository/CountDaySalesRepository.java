@@ -16,4 +16,5 @@ public interface CountDaySalesRepository extends JpaRepository<CountDaySales, Co
         , JpaSpecificationExecutor<CountDaySales>,ClassicsRepository<CountDaySales> {
 
     List<CountDaySales> findByMerchantIdAndDateGreaterThanEqualOrderByDate(Integer merchantId, Date date);
+    List<CountDaySales> findByMerchantId(Integer merchantId);
 }

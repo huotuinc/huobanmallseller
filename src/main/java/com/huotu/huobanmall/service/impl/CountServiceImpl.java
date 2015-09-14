@@ -48,7 +48,6 @@ public class CountServiceImpl implements CountService {
         int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
         List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
-
         for(int i=0;i<nowHour;i++){
             if(i>=listOrder.size()){
                 map.put(i/3,0);
@@ -93,6 +92,8 @@ public class CountServiceImpl implements CountService {
     }
     @Override
     public Map<Date, Integer> getWeekOrder(Merchant merchant) {
+
+
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
         List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
@@ -184,6 +185,9 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Date, Float> getWeekSales(Merchant merchant) {
+
+
+
         Map<Date, Float> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
         List<CountDaySales> list = countDaySalesRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
@@ -202,6 +206,30 @@ public class CountServiceImpl implements CountService {
             result.put(countDaySales.getDate(), countDaySales.getMoney());
         }
         return result;
+    }
+
+    @Override
+    public Float getTotalSales(Merchant merchant) {
+        List<CountDaySales> countDaySales=countDaySalesRepository.findByMerchantId(merchant.getId());
+       return ((Number)  countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum()).floatValue();
+    }
+
+    @Override
+    public Long getTotalOrders(Merchant merchant) {
+        List<CountDayOrder> countDayOrders=countDayOrderRepository.findByMerchantId(merchant.getId());
+        return countDayOrders.stream().mapToLong((x) -> x.getAmount()).summaryStatistics().getSum();
+    }
+
+    @Override
+    public Long getTotalMembers(Merchant merchant) {
+        List<CountDayMember> countDayMembers=countDayMemberRepository.findByMerchantId(merchant.getId());
+        return countDayMembers.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
+    }
+
+    @Override
+    public Long getTotalPartner(Merchant merchant) {
+        List<CountDayPartner> countDayPartners=countDayPartnerRepository.findByMerchantId(merchant.getId());
+        return countDayPartners.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
     }
 
     @Override

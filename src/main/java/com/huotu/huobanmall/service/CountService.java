@@ -107,5 +107,33 @@ public interface CountService {
      */
     Map<Date, Float> getMonthSales(Merchant merchant);
 
+    /**
+     * 计算总销售额(不含今日)
+     * @param merchant
+     * @return
+     */
+    Float getTotalSales(Merchant merchant);
+
+    /**
+     * 计算总订单量(不含今日)
+     * @param merchant
+     * @return
+     */
+    Long getTotalOrders(Merchant merchant);
+
+    /**
+     * 计算总会员数量(不含今日)
+     * @param merchant
+     * @return
+     */
+    Long getTotalMembers(Merchant merchant);
+
+    /**
+     * 计算总小伙伴数量(不含今日)
+     * @param merchant
+     * @return
+     */
+    Long getTotalPartner(Merchant merchant);
+
 
 }

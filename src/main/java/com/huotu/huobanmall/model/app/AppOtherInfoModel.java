@@ -9,54 +9,53 @@ public class AppOtherInfoModel {
     /**
      * 商品总数
      */
-    private Integer goodsAmount;
+    private Long goodsAmount;
 
     /**
      * 分销商总数
      */
-    private Integer discributorAmount;
+    private Long discributorAmount;
 
     /**
      * 会员总数
      */
-    private Integer memberAmount;
+    private Long memberAmount;
 
     /**
      * 总订单数
      */
-    private Integer BillAmount;
+    private Long BillAmount;
 
 
-
-    public Integer getGoodsAmount() {
+    public Long getGoodsAmount() {
         return goodsAmount;
     }
 
-    public void setGoodsAmount(Integer goodsAmount) {
+    public void setGoodsAmount(Long goodsAmount) {
         this.goodsAmount = goodsAmount;
     }
 
-    public Integer getDiscributorAmount() {
+    public Long getDiscributorAmount() {
         return discributorAmount;
     }
 
-    public void setDiscributorAmount(Integer discributorAmount) {
+    public void setDiscributorAmount(Long discributorAmount) {
         this.discributorAmount = discributorAmount;
     }
 
-    public Integer getMemberAmount() {
+    public Long getMemberAmount() {
         return memberAmount;
     }
 
-    public void setMemberAmount(Integer memberAmount) {
+    public void setMemberAmount(Long memberAmount) {
         this.memberAmount = memberAmount;
     }
 
-    public Integer getBillAmount() {
+    public Long getBillAmount() {
         return BillAmount;
     }
 
-    public void setBillAmount(Integer billAmount) {
+    public void setBillAmount(Long billAmount) {
         BillAmount = billAmount;
     }
 }

@@ -29,10 +29,19 @@ public interface UserService {
 
     /**
      * Create by shiliting on 2015/9/11
+     * 计算今日新增会员数量
      * @param merchant      会员所属商家
      * @return
      */
-    public Long countAllMember(Merchant merchant);
+    public Integer countTodayMember(Merchant merchant);
+
+    /**
+     * Create by shiliting on 2015/9/14
+     * 计算今日新增小伙伴数量
+     * @param merchant
+     * @return
+     */
+    public Integer countTodayPartner(Merchant merchant);
 
 
 

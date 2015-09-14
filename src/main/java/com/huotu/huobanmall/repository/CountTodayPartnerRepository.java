@@ -14,4 +14,5 @@ import java.util.List;
 public interface CountTodayPartnerRepository  extends JpaRepository<CountTodayPartner, CountTodayPartnerPK>
         , JpaSpecificationExecutor<CountTodayPartner>,ClassicsRepository<CountTodayPartner> {
     List<CountTodayPartner> findByMerchantIdAndHourLessThanEqual(Integer merchantId,Integer hour);
+    List<CountTodayPartner> findByMerchantId(Integer merchantId);
 }

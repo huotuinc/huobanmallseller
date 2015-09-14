@@ -153,7 +153,7 @@ public class OrderServiceImplTest extends WebTestBase {
         Integer orders=orderService.countOrderQuantity(merchantNew);
         Assert.assertEquals("测试订单总数量",expected,orders);
 
-        orders=orderService.countOrderQuantity(merchantNew,today);
+        orders=orderService.countOrderQuantity(merchantNew);
         Assert.assertEquals("测试今日订单数量",todayNum,orders);
 
         orders=orderService.countOrderQuantity(merchantNew,sevenDays);

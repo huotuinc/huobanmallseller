@@ -1,10 +1,7 @@
 package com.huotu.huobanmall.service.impl;
 
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Rebate;
-import com.huotu.huobanmall.repository.OrderRepository;
-import com.huotu.huobanmall.repository.RebateRepository;
+import com.huotu.huobanmall.entity.*;
+import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +29,12 @@ public class OrderServiceImpl implements OrderService{
     OrderRepository orderRepository;
     @Autowired
     RebateRepository rebateRepository;
+    @Autowired
+    CountTodaySalesRepository countTodaySalesRepository;
+    @Autowired
+    CountDayOrderRepository countDayOrderRepository;
+    @Autowired
+    CountTodayOrderRepository countTodayOrderRepository;
 
 
 
@@ -66,38 +69,48 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Integer countOrderQuantity(Merchant merchant, Date lastTime) {
-        return orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime).size();
+        List<CountDayOrder> countDayOrders= countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), lastTime);
+        int orders=0;
+        for(CountDayOrder o:countDayOrders){
+            orders+=o.getAmount();
+        }
+        return orders;
+//        return orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime).size();
     }
 
     @Override
     public Integer countOrderQuantity(Merchant merchant) {
-        return orderRepository.findByMerchant(merchant).size();
-    }
-
-    @Override
-    public float countSale(Merchant merchant, Date lastTime) {
-        List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime);
-        float sum=0;
-        for(Order o:list){
-//            if(o.getOrderStatus()==3) {
-//                sum = sum +  o.getPrice();
-//            }
+        List<CountTodayOrder> countTodayOrders= countTodayOrderRepository.findByMerchantId(merchant.getId());
+        int todayOrders=0;
+        for(CountTodayOrder o:countTodayOrders){
+            todayOrders+=o.getAmount();
         }
-        return sum;
+        return todayOrders;
     }
 
     @Override
     public float countSale(Merchant merchant) {
-        List<Order> list=orderRepository.findByMerchant(merchant);
+        List<CountTodaySales> countTodayOrderList=countTodaySalesRepository.findAllByMerchantIdOrderByHour(merchant.getId());
+//        List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime);
         float sum=0;
-        for(Order o:list){
-//            if(o.getOrderStatus()==3){
-//                sum=sum+o.getPrice();
-//            }
-
+        for(CountTodaySales sales:countTodayOrderList){
+            sum+=sales.getMoney();
         }
         return sum;
     }
+
+//    @Override
+//    public float countSale(Merchant merchant) {
+//        List<Order> list=orderRepository.findByMerchant(merchant);
+//        float sum=0;
+//        for(Order o:list){
+//            if(o.getOrderStatus()==3){
+//                sum=sum+o.getPrice();
+//            }
+//
+//        }
+//        return sum;
+//    }
 
     @Override
     public Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable) {
