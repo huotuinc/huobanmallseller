@@ -57,4 +57,12 @@ public class Category {
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
+
+    public Integer getSortId() {
+        return sortId;
+    }
+
+    public void setSortId(Integer sortId) {
+        this.sortId = sortId;
+    }
 }
