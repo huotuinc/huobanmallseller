@@ -89,7 +89,7 @@ public class ReportController implements ReportSystem {
         monthAmount.outputData(mapMonth.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
 
-      //  totalAmount.outputData();//todo
+        //  totalAmount.outputData();//todo
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -138,7 +138,8 @@ public class ReportController implements ReportSystem {
     @Override
     @RequestMapping("/userReport")
     public ApiResult userReport(
-            Output<Long> total, Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
+            Output<Long> totalMember, Output<Long> totalPartner
+            , Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
             , Output<Integer[]> todayMemberTimes, Output<Integer[]> todayMemberAmounts
             , Output<Date[]> weekMemberTimes, Output<Integer[]> weekMemberAmounts
             , Output<Date[]> monthMemberTimes, Output<Integer[]> monthMemberAmounts
@@ -157,7 +158,7 @@ public class ReportController implements ReportSystem {
         //今天
         Date today = date.getTime();
         //统计注册会员总数
-        total.outputData(userService.countAllMember(apm.getCurrentUser()));
+        totalMember.outputData(userService.countAllMember(apm.getCurrentUser()));
         //统计今日新增会员总数
         todayMemberAmount.outputData((long) userService.countUserNumber(apm.getCurrentUser(), 0, today));
         //统计今日新增小伙伴总数

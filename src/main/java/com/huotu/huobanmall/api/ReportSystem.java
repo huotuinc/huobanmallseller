@@ -103,7 +103,8 @@ public interface ReportSystem {
     /**
      * 会员量统计报表
      *
-     * @param total               注册会员总数
+     * @param totalMember         会员总数
+     * @param totalPartner        分销商总数
      * @param todayMemberAmount   今日会员量
      * @param weekMemberAmount    本周会员量
      * @param monthMemberAmount   本月会员量
@@ -113,20 +114,21 @@ public interface ReportSystem {
      * @param weekMemberAmounts   本周会员量数据
      * @param monthMemberTimes    本月会员时间数据
      * @param monthMemberAmounts  本月会员量数据
-     * @param todayPartnerAmount  今日小伙伴量
-     * @param weekPartnerAmount   本周小伙伴量
-     * @param monthPartnerAmount  本月小伙伴量
-     * @param todayPartnerTimes   今日小伙伴时间数据
-     * @param todayPartnerAmounts 今日小伙伴量数据
-     * @param weekPartnerTimes    本周小伙伴时间数据
-     * @param weekPartnerAmounts  本周小伙伴量数据
-     * @param monthPartnerTimes   本月小伙伴时间数据
-     * @param monthPartnerAmounts 本月小伙伴量数据
+     * @param todayPartnerAmount  今日分销商量
+     * @param weekPartnerAmount   本周分销商量
+     * @param monthPartnerAmount  本月分销商量
+     * @param todayPartnerTimes   今日分销商时间数据
+     * @param todayPartnerAmounts 今日分销商量数据
+     * @param weekPartnerTimes    本周分销商时间数据
+     * @param weekPartnerAmounts  本周分销商量数据
+     * @param monthPartnerTimes   本月分销商时间数据
+     * @param monthPartnerAmounts 本月分销商量数据
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userReport(Output<Long> total, Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
+    ApiResult userReport(Output<Long> totalMember, Output<Long> totalPartner
+            , Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
             , Output<Integer[]> todayMemberTimes, Output<Integer[]> todayMemberAmounts
             , Output<Date[]> weekMemberTimes, Output<Integer[]> weekMemberAmounts
             , Output<Date[]> monthMemberTimes, Output<Integer[]> monthMemberAmounts
