@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "Mall_Orders")
 public class Order {
     /**
-     *  订单号(yyyyMMdd+8位随机数)  todo 订单号格式
+     * 订单号(yyyyMMdd+8位随机数)  todo 订单号格式
      */
     @Id
     @Column(name = "Order_Id")
@@ -58,7 +58,13 @@ public class Order {
     private String pictureUrl;
 
     /**
-     * 订单状态 0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
+     * 订单状态 0活动 -1死单 1已完成
+     */
+    @Column(name = "Status")
+    private Integer status;
+
+    /**
+     * 付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
      */
     @Column(name = "Pay_Status")
     private Integer orderStatus;
@@ -95,6 +101,13 @@ public class Order {
     @Column(name = "Createtime")
     private Date time;
 
+
+    /**
+     * 付款时间
+     */
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "Paytime")
+    private Date payTime;
 
     public String getId() {
         return id;
@@ -182,5 +195,21 @@ public class Order {
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
     }
 }
