@@ -124,9 +124,9 @@ public class SystemCountingImpl implements SystemCounting {
     private void countSales(Date beginTime, Date endTime, Integer hour) {
         List<CountTodaySales> list = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
-        hql.append("select order.merchant.id,count(order) as amount from Order order " +
-                " where order.payTime>=:beginTime and order.payTime<:endTime" +
-                " group by order.merchant.id");//todo 对应表
+        hql.append("select order.merchant.id,sum(order.price) as amount from Order order " +
+                " where order.payTime>=:beginTime and order.payTime<:endTime and order.payStatus=1 " +
+                " group by order.merchant.id");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
@@ -144,12 +144,13 @@ public class SystemCountingImpl implements SystemCounting {
     private void countMember(Date beginTime, Date endTime, Integer hour) {
         List<CountTodayMember> list = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
-        hql.append("select order.merchant.id,count(order) as amount from Order order " +
-                " where order.time>=:beginTime and order.time<:endTime" +
-                " group by order.merchant.id");//todo 对应表
+        hql.append("select log.merchant.id,count(log) as amount from UserChangeLog log " +
+                " where log.time>=:beginTime and log.time<:endTime and log.changeType=:changeType" +
+                " group by order.merchant.id");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
+            query.setParameter("changeType", 5);
         });
 
         listQuery.forEach(data -> {
@@ -164,9 +165,9 @@ public class SystemCountingImpl implements SystemCounting {
     private void countPartner(Date beginTime, Date endTime, Integer hour) {
         List<CountTodayPartner> list = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
-        hql.append("select order.merchant.id,count(order) as amount from Order order " +
-                " where order.time>=:beginTime and order.time<:endTime" +
-                " group by order.merchant.id");//todo 对应表
+        hql.append("select log.merchant.id,count(log) as amount from UserChangeLog log " +
+                " where log.time>=:beginTime and log.time<:endTime and log.changeType in (2,6)" +
+                " group by order.merchant.id");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
