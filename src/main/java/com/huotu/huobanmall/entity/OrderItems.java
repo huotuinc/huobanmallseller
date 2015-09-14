@@ -24,6 +24,8 @@ public class OrderItems {
     @JoinColumn(name = "Order_Id")
     private Order order;
 
+    @Column(name = "Goods_Id")
+    private Integer goodsId;
 
     /**
      * 货品Id

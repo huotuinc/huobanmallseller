@@ -5,7 +5,9 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.entity.*;
+import com.huotu.huobanmall.entity.Goods;
+import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Order;
 import com.huotu.huobanmall.model.app.AppGoodListModel;
 import com.huotu.huobanmall.model.app.AppOrderListModel;
 import com.huotu.huobanmall.model.app.AppSalesListModel;
@@ -206,7 +208,27 @@ public class GoodsController implements GoodsSystem {
     @RequestMapping("/orderList")
     @Override
     public ApiResult orderList(Output<AppOrderListModel[]> list, Integer status, @RequestParam(required = false) Date lastDate) throws Exception {
-        return null;
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
+        List<Order> orderList=orderService.searchOrders(merchant.getId(),lastDate,PAGE_SIZE,status).getContent();
+        AppOrderListModel[] appOrderListModels=new AppOrderListModel[orderList.size()];
+        int i=0;
+        for(Order o:orderList){
+            AppOrderListModel appOrderListModel=new AppOrderListModel();
+            appOrderListModel.setTitle(o.getTitle());
+            appOrderListModel.setTime(o.getTime());
+            appOrderListModel.setAmount(o.getAmount());
+            appOrderListModel.setMoney(o.getPrice());
+            appOrderListModel.setOrderNo(o.getId());
+//            appOrderListModel.setPictureUrl(o.);//todo 订单里的商品图片怎么显示
+            appOrderListModel.setPictureUrl(o.getPictureUrl());
+            appOrderListModel.setReceiver(o.getReceiver());
+            appOrderListModel.setStatus(o.getOrderStatus());
+            appOrderListModel.setScore(0);//todo 返利积分怎么计算
+            appOrderListModels[i]=appOrderListModel;
+            i++;
+        }
+        list.outputData(appOrderListModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @RequestMapping("/salesList")

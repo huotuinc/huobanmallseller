@@ -51,10 +51,11 @@ public class Order {
     @Column(name = "Tostr")
     private String title;
 
-//    /**
-//     * 图片 需要从商品表获取
-//     */
-//    private String pictureUrl;
+    /**
+     * 图片 需要从商品表获取
+     */
+    @Column
+    private String pictureUrl;
 
     /**
      * 订单状态 0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
@@ -173,5 +174,13 @@ public class Order {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

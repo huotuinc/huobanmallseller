@@ -21,6 +21,7 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecificationExecutor<Order>,ClassicsRepository<Order> {
 
+
     List<Order> findByMerchant(Merchant merchant);
     List<Order> findByMerchantAndTimeGreaterThan(Merchant merchant,Date lastTime);
 

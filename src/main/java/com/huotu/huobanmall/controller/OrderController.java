@@ -1,21 +1,11 @@
 package com.huotu.huobanmall.controller;
 
-import com.huotu.huobanmall.api.common.PublicParameterHolder;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Rebate;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OrderRepository;
 import com.huotu.huobanmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Date;
 
 /**
  * Created by lgh on 2015/8/27.
@@ -24,7 +14,7 @@ import java.util.Date;
 @Controller
 @RequestMapping("/app")
 public class OrderController {
-//    public static final int PAGE_SIZE=10;
+    public static final int PAGE_SIZE=10;
     @Autowired
     MerchantRepository merchantRepository;
     @Autowired
