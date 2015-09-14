@@ -97,7 +97,7 @@ public class ReportController implements ReportSystem {
     @Override
     @RequestMapping("/salesReport")
     public ApiResult salesReport(
-            Output<Long> totalAmount, Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
+            Output<Float> totalAmount, Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
             , Output<Integer[]> todayTimes, Output<Float[]> todayAmounts
             , Output<Date[]> weekTimes, Output<Float[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Float[]> monthAmounts

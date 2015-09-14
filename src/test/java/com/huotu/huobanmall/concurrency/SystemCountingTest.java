@@ -34,7 +34,7 @@ public class SystemCountingTest extends SpringAppTest {
     @Test
     public void testCount() throws Exception {
 
-//        systemCounting.count();
+        systemCounting.count();
 
         systemCounting.countDay();
     }

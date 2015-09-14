@@ -53,6 +53,9 @@ public class SystemCountingImpl implements SystemCounting {
     private CountTodaySalesRepository countTodaySalesRepository;
 
 
+    @Autowired
+    private UserChangeLogRepository userChangeLogRepository;
+
     /**
      * 计算订单量、销售额、会员量、小伙伴
      * 计算频率 每时
@@ -146,8 +149,8 @@ public class SystemCountingImpl implements SystemCounting {
         StringBuilder hql = new StringBuilder();
         hql.append("select log.merchant.id,count(log) as amount from UserChangeLog log " +
                 " where log.time>=:beginTime and log.time<:endTime and log.changeType=:changeType" +
-                " group by order.merchant.id");
-        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+                " group by log.merchant.id");
+        List listQuery = userChangeLogRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
             query.setParameter("changeType", 5);
@@ -167,8 +170,8 @@ public class SystemCountingImpl implements SystemCounting {
         StringBuilder hql = new StringBuilder();
         hql.append("select log.merchant.id,count(log) as amount from UserChangeLog log " +
                 " where log.time>=:beginTime and log.time<:endTime and log.changeType in (2,6)" +
-                " group by order.merchant.id");
-        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+                " group by log.merchant.id");
+        List listQuery = userChangeLogRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
         });

@@ -21,7 +21,7 @@ public class UserChangeLog {
      * 所属商户
      */
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @Column(name = "Customer_Id")
+    @JoinColumn(name = "Customer_Id")
     private Merchant merchant;
 
     /**
