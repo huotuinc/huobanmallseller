@@ -60,8 +60,8 @@ public class GoodsServiceImplTest extends WebTestBase {
             goodsRepository.save(goods);
         }
 
-        Integer goodAmount=goodsService.countByMerchant(mockMerchant);
-        Integer expected=10;
+        Long goodAmount=goodsService.countByMerchant(mockMerchant);
+        Long expected=10L;
         Assert.assertEquals("商品数量是否正确(上架的)", expected, goodAmount);
 
 

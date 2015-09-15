@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
+import com.huotu.common.DateHelper;
 import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,7 +188,9 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setTime(new Date());
         orderRepository.save(order);
 
-        for (int i = 1; i <= 12; i++) {
+
+
+        for (int i = 1; i <= 24; i++) {
             CountTodayMember countTodayMember = new CountTodayMember();
             countTodayMember.setMerchantId(merchant.getId());
             countTodayMember.setAmount(100 + i);
@@ -196,7 +199,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         }
 
 
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i <= 24; i++) {
             CountTodayOrder countTodayOrder = new CountTodayOrder();
             countTodayOrder.setMerchantId(merchant.getId());
             countTodayOrder.setAmount(100 + i * 2);
@@ -205,7 +208,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         }
 
 
-        for (int i = 1; i <= 18; i++) {
+        for (int i = 1; i <= 24; i++) {
             CountTodayPartner countTodayPartner = new CountTodayPartner();
             countTodayPartner.setMerchantId(merchant.getId());
             countTodayPartner.setAmount(100 + i * 3);
@@ -213,7 +216,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             countTodayPartnerRepository.save(countTodayPartner);
         }
 
-        for (int i = 1; i <= 22; i++) {
+        for (int i = 1; i <= 24; i++) {
             CountTodaySales countTodaySales = new CountTodaySales();
             countTodaySales.setMerchantId(merchant.getId());
             countTodaySales.setMoney(100 + i * 4);
@@ -221,8 +224,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             countTodaySalesRepository.save(countTodaySales);
         }
 
-        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 0; i <= 12; i++) {
+        Date date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
+        for (int i = 1; i <= 12; i++) {
             CountDayMember countDayMember = new CountDayMember();
             countDayMember.setMerchantId(merchant.getId());
             countDayMember.setAmount(100 + i * 11);
@@ -233,8 +236,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         }
 
 
-        date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 0; i <= 12; i++) {
+        date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
+        for (int i = 1; i <= 12; i++) {
             CountDayOrder countDayOrder = new CountDayOrder();
             countDayOrder.setMerchantId(merchant.getId());
             countDayOrder.setAmount(100 + i * 22);
@@ -244,8 +247,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
-        date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 0; i <= 12; i++) {
+        date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
+        for (int i = 1; i <= 12; i++) {
             CountDayPartner countDayPartner = new CountDayPartner();
             countDayPartner.setMerchantId(merchant.getId());
             countDayPartner.setAmount(100 + i * 33);
@@ -255,8 +258,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
-        date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 0; i <= 12; i++) {
+        date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
+        for (int i = 1; i <= 12; i++) {
             CountDaySales countDaySales = new CountDaySales();
             countDaySales.setMerchantId(merchant.getId());
             countDaySales.setMoney(100 + i * 44);

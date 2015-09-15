@@ -9,9 +9,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 
@@ -62,15 +62,24 @@ public class SystemCountingImpl implements SystemCounting {
      * 凌晨计算完后，需要计算每天量
      */
     @Override
-    @Scheduled(cron = "0 41 10 * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Transactional
     public void count() {
-        Calendar calendar = Calendar.getInstance();
-        Integer hour = calendar.get(Calendar.HOUR);
+        try {
+            log.info("小时计算服务已开启");
 
-        countHour(hour);
+            Calendar calendar = Calendar.getInstance();
+            Integer hour = calendar.get(Calendar.HOUR);
 
-        if (hour == 0) {
-            countDay();
+            countHour(hour);
+
+            if (hour == 0) {
+                log.info("每天计算服务已开启");
+                countDay();
+            }
+        } catch (Exception ex) {
+            log.error("计算服务异常");
+            log.error(ex);
         }
     }
 

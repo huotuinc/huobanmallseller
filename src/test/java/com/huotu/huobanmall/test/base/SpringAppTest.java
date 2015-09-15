@@ -57,7 +57,7 @@ public class SpringAppTest {
         shop.setDiscription("");
         shop.setLogo("");
         shop.setMerchant(merchant);
-        shopRepository.save(shop);
+        shopRepository.saveAndFlush(shop);
 
         return merchant;
     }

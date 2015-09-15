@@ -63,4 +63,17 @@ public class DateHelper {
         return calendar.getTime();
     }
 
+
+    /**
+     * 获取当前整点
+     * @return
+     */
+    public static Date getThisHourBegin() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
 }

@@ -28,6 +28,12 @@ public class Product {
     private Merchant merchant;
 
     /**
+     * 规格说明
+     */
+    @Column(name = "Pdt_Desc")
+    private String spec;
+
+    /**
      * 名称
      */
     @Column(name = "Name")
@@ -63,5 +69,13 @@ public class Product {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
     }
 }

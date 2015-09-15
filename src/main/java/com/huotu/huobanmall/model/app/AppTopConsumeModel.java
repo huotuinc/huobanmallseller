@@ -30,6 +30,11 @@ public class AppTopConsumeModel {
      */
     private float money;
 
+    /**
+     * 购买单数
+     */
+    private  Integer amount;
+
     public String getPictureUrl() {
         return pictureUrl;
     }
@@ -68,5 +73,13 @@ public class AppTopConsumeModel {
 
     public void setMoney(float money) {
         this.money = money;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 }

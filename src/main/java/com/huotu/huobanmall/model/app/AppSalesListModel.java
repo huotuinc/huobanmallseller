@@ -15,20 +15,20 @@ public class AppSalesListModel {
 
 
 
-    /**
-     * 订单标题
-     */
-    private String title;
+//    /**
+//     * 订单标题
+//     */
+//    private String title;
 
-    /**
-     * 购买人姓名
-     */
-    private  String receiver;
+//    /**
+//     * 购买人姓名
+//     */
+//    private  String receiver;
 
-    /**
-     * 手机号
-     */
-    private  String moblie;
+//    /**
+//     * 手机号
+//     */
+//    private  String moblie;
 
 
     /**
@@ -50,29 +50,29 @@ public class AppSalesListModel {
         this.orderNo = orderNo;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getMoblie() {
-        return moblie;
-    }
-
-    public void setMoblie(String moblie) {
-        this.moblie = moblie;
-    }
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
+//
+//    public String getReceiver() {
+//        return receiver;
+//    }
+//
+//    public void setReceiver(String receiver) {
+//        this.receiver = receiver;
+//    }
+//
+//    public String getMoblie() {
+//        return moblie;
+//    }
+//
+//    public void setMoblie(String moblie) {
+//        this.moblie = moblie;
+//    }
 
     public Float getMoney() {
         return money;

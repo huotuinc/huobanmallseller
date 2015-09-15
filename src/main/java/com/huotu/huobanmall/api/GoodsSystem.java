@@ -85,13 +85,37 @@ public interface GoodsSystem {
      * 订单管理列表
      *
      * @param list     返回订单列表
-     * @param status   订单状态
+     * @param status   订单状态 0 全部 1待付款 2待收货 3已完成
      * @param lastDate 上一个订单的下单时间
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
     ApiResult orderList(Output<AppOrderListModel[]> list, Integer status, @RequestParam(required = false) Date lastDate) throws Exception;
+
+
+    /**
+     * 订单管理详情
+     * @param data 返回订单管理详情
+     * @param orderNo 订单号
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult orderDetail(Output<AppOrderDetailModel> data,String orderNo) throws  Exception;
+
+
+    /**
+     * 物流详情
+     * @param data 返回物流详情数据
+     * @param orderNo 订单号
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data,String orderNo) throws  Exception;
+
+
 
 
     /**
