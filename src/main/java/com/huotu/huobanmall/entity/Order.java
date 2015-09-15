@@ -71,6 +71,13 @@ public class Order {
 
 
     /**
+     * 发货状态
+     * 0：未发货|1：已发货|2：部分发货|3：部分退货|4：已退货
+     */
+    @Column(name = "Ship_Status")
+    private Integer deliverStatus;
+
+    /**
      * 收货人
      */
     @Column(name = "Ship_Name")
@@ -211,5 +218,13 @@ public class Order {
 
     public void setPayTime(Date payTime) {
         this.payTime = payTime;
+    }
+
+    public Integer getDeliverStatus() {
+        return deliverStatus;
+    }
+
+    public void setDeliverStatus(Integer deliverStatus) {
+        this.deliverStatus = deliverStatus;
     }
 }
