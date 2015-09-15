@@ -8,9 +8,8 @@ import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.model.app.AppGoodListModel;
-import com.huotu.huobanmall.model.app.AppOrderListModel;
-import com.huotu.huobanmall.model.app.AppSalesListModel;
+import com.huotu.huobanmall.entity.OrderItems;
+import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ import java.util.Map;
 public class GoodsController implements GoodsSystem {
     public static final int PAGE_SIZE=10;
     @Autowired
-    GoodsService productService;
+    GoodsService goodsService;
     @Autowired
     MerchantService merchantService;
     @Autowired
@@ -42,7 +41,7 @@ public class GoodsController implements GoodsSystem {
     @Autowired
     MerchantRepository merchantRepository;
     @Autowired
-    GoodsRepository productRepository;
+    GoodsRepository goodsRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -54,7 +53,13 @@ public class GoodsController implements GoodsSystem {
     @Autowired
     CountTodayPartnerRepository countTodayPartnerRepository;
     @Autowired
+    OrderItemsRepository orderItemsRepository;
+    @Autowired
     CountService countService;
+    @Autowired
+    ProductService productService;
+
+
 
 
 //    @Override
@@ -104,7 +109,7 @@ public class GoodsController implements GoodsSystem {
         //获取当前商家信息
         Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
         //获取商家的商品信息集合
-        List<Goods> lists=productService.searchProducts(merchant,type,lastProductId,PAGE_SIZE).getContent();
+        List<Goods> lists=goodsService.searchProducts(merchant,type,lastProductId,PAGE_SIZE).getContent();
         AppGoodListModel[] appGoodListModels=new AppGoodListModel[lists.size()];
         for(int i=0;i<lists.size();i++){
             AppGoodListModel appGoodListModel=new AppGoodListModel();
@@ -126,9 +131,9 @@ public class GoodsController implements GoodsSystem {
     public ApiResult operGoods(Integer type, String goods) throws Exception {
         String[] products=goods.split(",");
         for(int i=0;i<products.length;i++){
-            Goods product=productRepository.findOne(Integer.parseInt(products[i]));
+            Goods product= goodsRepository.findOne(Integer.parseInt(products[i]));
             product.setStatus(type);
-            productRepository.save(product);
+            goodsRepository.save(product);
         }
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -229,13 +234,19 @@ public class GoodsController implements GoodsSystem {
         int i=0;
         for(Order o:orderList){
             AppOrderListModel appOrderListModel=new AppOrderListModel();
-            appOrderListModel.setTitle(o.getTitle());
+            List<OrderItems> orderItemses=orderItemsRepository.findByOrder(o);
+            AppOrderListProductModel[] appOrderListProductModels=new AppOrderListProductModel[orderItemses.size()];
+//            for(OrderItems oi:orderItemses){
+//                AppOrderListProductModel appOrderListProductModel=new AppOrderListProductModel();
+//                appOrderListProductModel.setSpec(productService.);
+//            }
+//            appOrderListModel.setTitle(o.getTitle());
             appOrderListModel.setTime(o.getTime());
             appOrderListModel.setAmount(o.getAmount());
-            appOrderListModel.setMoney(o.getPrice());
+//            appOrderListModel.setMoney(o.getPrice());
             appOrderListModel.setOrderNo(o.getId());
-            appOrderListModel.setPictureUrl(o.getPictureUrl());
-            appOrderListModel.setReceiver(o.getReceiver());
+//            appOrderListModel.setPictureUrl(o.getPictureUrl());
+//            appOrderListModel.setReceiver(o.getReceiver());
             appOrderListModel.setStatus(o.getStatus());
             appOrderListModel.setScore(0);//todo 返利积分怎么计算
             appOrderListModels[i]=appOrderListModel;
@@ -245,10 +256,22 @@ public class GoodsController implements GoodsSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
+    @Override
+    @RequestMapping("/orderDetail")
+    public ApiResult orderDetail(Output<AppOrderDetailModel> data, String orderNo) throws Exception {
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Override
+    @RequestMapping("/logisticsDetail")
+    public ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data, String orderNo) throws Exception {
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
     @RequestMapping("/salesList")
     @Override
     public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Date lastDate) throws Exception {
-        return null;
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
 //    @Override

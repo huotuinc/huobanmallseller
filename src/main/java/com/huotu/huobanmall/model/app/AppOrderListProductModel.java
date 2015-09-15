@@ -11,7 +11,7 @@ public class AppOrderListProductModel {
      */
     private String pictureUrl;
     /**
-     * 订单标题
+     * 名称
      */
     private String title;
     /**
@@ -59,5 +59,13 @@ public class AppOrderListProductModel {
 
     public void setSpec(String spec) {
         this.spec = spec;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

@@ -39,6 +39,12 @@ public class Product {
     @Column(name = "Name")
     private String name;
 
+    /**
+     * 价格
+     */
+    @Column(name = "Price")
+    private Float price;
+
     public Integer getId() {
         return id;
     }
@@ -77,5 +83,13 @@ public class Product {
 
     public void setSpec(String spec) {
         this.spec = spec;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }

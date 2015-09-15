@@ -85,4 +85,12 @@ public class OrderItems {
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
     }
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
+    }
 }
