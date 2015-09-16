@@ -50,6 +50,12 @@ public class User {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Merchant merchant;
 
+    /**
+     * 用户头像
+     */
+    @Column(name = "UB_UserFace")
+    private String userFace;
+
     public Integer getId() {
         return id;
     }
@@ -96,5 +102,13 @@ public class User {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    public String getUserFace() {
+        return userFace;
+    }
+
+    public void setUserFace(String userFace) {
+        this.userFace = userFace;
     }
 }
