@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -170,26 +169,18 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> monthPartnerTimes, Output<Integer[]> monthPartnerAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        int nowHour = date.get(Calendar.HOUR_OF_DAY);
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MINUTE, 0);
-        //今天
-        Date today = date.getTime();
         //统计注册会员总数
         totalMember.outputData(countService.getTotalMembers(apm.getCurrentUser()));
         //统计分销商的总数
         totalPartner.outputData(countService.getTotalPartner(apm.getCurrentUser()));
         //统计今日新增会员总数
-        todayMemberAmount.outputData((long) userService.countUserNumber(apm.getCurrentUser(), 0, today));
+        todayMemberAmount.outputData((long)userService.countTodayMember(apm.getCurrentUser()));
         //统计今日新增小伙伴总数
-        todayPartnerAmount.outputData((long) userService.countUserNumber(apm.getCurrentUser(), 1, today));
+        todayPartnerAmount.outputData((long) userService.countTodayPartner(apm.getCurrentUser()));
         //统计今日会员新增明细
-        Integer[] hoursMember = new Integer[(nowHour + 2) / 3];
-        Integer[] members = new Integer[(nowHour + 2) / 3];
         Map<Integer, Integer> mapTodayMember = countService.todayMember(apm.getCurrentUser());
+        Integer[] hoursMember = new Integer[mapTodayMember.size()];
+        Integer[] members = new Integer[mapTodayMember.size()];
         int n = 0;
         for (Map.Entry<Integer, Integer> entry : mapTodayMember.entrySet()) {
             hoursMember[n] = entry.getKey();
@@ -200,9 +191,10 @@ public class ReportController implements ReportSystem {
         todayMemberAmounts.outputData(members);
 
         //统计今日小伙伴新增明细
-        Integer[] hoursPartner = new Integer[(nowHour + 2) / 3];
-        Integer[] partners = new Integer[(nowHour + 2) / 3];
+
         Map<Integer, Integer> mapTodayPartner = countService.todayPartner(apm.getCurrentUser());
+        Integer[] hoursPartner = new Integer[mapTodayPartner.size()];
+        Integer[] partners = new Integer[mapTodayPartner.size()];
         n = 0;
         for (Map.Entry<Integer, Integer> entry : mapTodayPartner.entrySet()) {
             hoursPartner[n] = entry.getKey();

@@ -301,4 +301,12 @@ public class GoodsControllerTest extends SpringAppTest {
                         .build()).andDo(print());
 
     }
+
+    @Test
+    public void testOrderList() throws Exception {
+        mockMvc.perform(
+                device.getApi("orderList")
+                        .build()).andDo(print());
+
+    }
 }
