@@ -13,24 +13,6 @@ public class AppSalesListModel {
      */
     private String orderNo;
 
-
-
-//    /**
-//     * 订单标题
-//     */
-//    private String title;
-
-//    /**
-//     * 购买人姓名
-//     */
-//    private  String receiver;
-
-//    /**
-//     * 手机号
-//     */
-//    private  String moblie;
-
-
     /**
      * 付款金额
      */
@@ -49,30 +31,6 @@ public class AppSalesListModel {
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
     }
-
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public String getReceiver() {
-//        return receiver;
-//    }
-//
-//    public void setReceiver(String receiver) {
-//        this.receiver = receiver;
-//    }
-//
-//    public String getMoblie() {
-//        return moblie;
-//    }
-//
-//    public void setMoblie(String moblie) {
-//        this.moblie = moblie;
-//    }
 
     public Float getMoney() {
         return money;

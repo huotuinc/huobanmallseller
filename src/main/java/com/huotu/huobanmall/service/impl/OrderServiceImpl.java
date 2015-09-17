@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService{
 
 
     @Override
-    public Page<Order> searchOrders(Integer merchantId,Date time, Integer pageSize, Integer orderStatus) {
+    public Page<Order> searchOrders(Integer merchantId,Date time, Integer pageSize, Integer orderStatus) {//todo 检索规则需要修改，状态有多个
         return orderRepository.findAll(new Specification<Order>() {
             @Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

@@ -92,4 +92,5 @@ public class Product {
     public void setPrice(Float price) {
         this.price = price;
     }
+
 }

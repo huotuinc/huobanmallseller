@@ -5,10 +5,7 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.entity.Goods;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.OrderItems;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
@@ -17,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lgh on 2015/8/27.
@@ -57,6 +52,8 @@ public class GoodsController implements GoodsSystem {
     CountService countService;
     @Autowired
     ProductService productService;
+    @Autowired
+    ProductRepository productRepository;
 
 
 
@@ -224,20 +221,30 @@ public class GoodsController implements GoodsSystem {
         int i=0;
         for(Order o:orderList){
             AppOrderListModel appOrderListModel=new AppOrderListModel();
+            //规格
             List<OrderItems> orderItemses=orderItemsRepository.findByOrder(o);
-            AppOrderListProductModel[] appOrderListProductModels=new AppOrderListProductModel[orderItemses.size()];
-//            for(OrderItems oi:orderItemses){
-//                AppOrderListProductModel appOrderListProductModel=new AppOrderListProductModel();
-//                appOrderListProductModel.setSpec(productService.);
-//            }
-//            appOrderListModel.setTitle(o.getTitle());
-            appOrderListModel.setTime(o.getTime());
-            appOrderListModel.setAmount(o.getAmount());
-//            appOrderListModel.setMoney(o.getPrice());
+            List<AppOrderListProductModel> appOrderListProductModels=new ArrayList<AppOrderListProductModel>();
+            for(int k=0;k<orderItemses.size();k++){
+                AppOrderListProductModel appOrderListProductModel=new AppOrderListProductModel();
+
+                OrderItems orderItems=orderItemses.get(k);
+                Product product=productRepository.findOne(orderItems.getProductId());
+                Goods goods=goodsRepository.findOne(orderItems.getGoodsId());
+
+                appOrderListProductModel.setAmount(orderItems.getAmount());
+                appOrderListProductModel.setSpec(product.getSpec());
+                appOrderListProductModel.setTitle(product.getName());
+                appOrderListProductModel.setMoney(product.getPrice());
+                appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+
+                appOrderListProductModels.add(appOrderListProductModel);
+            }
+            appOrderListModel.setList(appOrderListProductModels);
             appOrderListModel.setOrderNo(o.getId());
-//            appOrderListModel.setPictureUrl(o.getPictureUrl());
-//            appOrderListModel.setReceiver(o.getReceiver());
+            appOrderListModel.setPaid(o.getPrice());
+            appOrderListModel.setAmount(o.getAmount());
             appOrderListModel.setStatus(o.getStatus());
+            appOrderListModel.setTime(o.getTime());
             appOrderListModel.setScore(0);//todo 返利积分怎么计算
             appOrderListModels[i]=appOrderListModel;
             i++;
@@ -249,6 +256,36 @@ public class GoodsController implements GoodsSystem {
     @Override
     @RequestMapping("/orderDetail")
     public ApiResult orderDetail(Output<AppOrderDetailModel> data, String orderNo) throws Exception {
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
+        AppOrderDetailModel appOrderDetailModel=new AppOrderDetailModel();
+        //获取订单
+        Order order=orderRepository.findOne(orderNo);
+        User user=userRepository.findOne(order.getUserId());
+
+
+        //获取该订单的顶单项
+        List<OrderItems> orderItemses=orderItemsRepository.findByOrder(order);
+        List<AppOrderListProductModel> appOrderListProductModels=new ArrayList<AppOrderListProductModel>();
+        for(int i=0;i<orderItemses.size();i++){
+            OrderItems orderItems=orderItemses.get(i);
+            Product product=productRepository.findOne(orderItems.getProductId());
+            Goods goods=goodsRepository.findOne(orderItems.getGoodsId());
+            AppOrderListProductModel appOrderListProductModel=new AppOrderListProductModel();
+            appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+            appOrderListProductModel.setMoney(product.getPrice());
+            appOrderListProductModel.setAmount(orderItems.getAmount());
+            appOrderListProductModel.setTitle(product.getName());
+            appOrderListProductModel.setSpec(product.getSpec());
+            appOrderListProductModels.add(appOrderListProductModel);
+        }
+        appOrderDetailModel.setList(appOrderListProductModels);
+        appOrderDetailModel.setAmount(order.getAmount());
+        appOrderDetailModel.setBuyer(order.getReceiver());
+        appOrderDetailModel.setContact(user.getMobile());
+        appOrderDetailModel.setOrderNo(order.getId());
+        appOrderDetailModel.setAddress("");//todo 收货地址
+        appOrderDetailModel.setPaid(order.getPrice());
+        data.outputData(appOrderDetailModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -260,17 +297,20 @@ public class GoodsController implements GoodsSystem {
 
     @RequestMapping("/salesList")
     @Override
-    public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Date lastDate) throws Exception {
+    public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate) throws Exception {
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
+        Date date=new Date(lastDate);
+        List<Order> orderList=orderService.searchOrders(merchant.getId(),date,PAGE_SIZE,1).getContent();
+        AppSalesListModel[] appSalesListModels=new AppSalesListModel[orderList.size()];
+        for(int i=0;i<orderList.size();i++){
+            AppSalesListModel appSalesListModel=new AppSalesListModel();
+            Order order=orderList.get(i);
+            appSalesListModel.setOrderNo(order.getId());
+            appSalesListModel.setMoney(order.getPrice());
+            appSalesListModel.setTime(order.getTime());
+            appSalesListModels[i]=appSalesListModel;
+        }
+        list.outputData(appSalesListModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
-
-//    @Override
-//    public ApiResult newToday(Output<AppGoodListModel[]> list) throws Exception {
-//        return null;
-//    }
-//
-//    @Override
-//    public ApiResult otherInfo(Output<AppGoodListModel[]> list) throws Exception {
-//        return null;
-//    }
 }

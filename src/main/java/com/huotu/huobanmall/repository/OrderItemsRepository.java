@@ -20,7 +20,7 @@ import java.util.List;
 
 @Repository
 public interface OrderItemsRepository extends JpaRepository<OrderItems, Integer>, JpaSpecificationExecutor<OrderItems>,ClassicsRepository<OrderItems> {
-                List<OrderItems> findByOrder(Order order);
+    List<OrderItems> findByOrder(Order order);
     @Query(value = "select o.goodsId,sum(o.amount) from OrderItems o where o.merchant=?1 group by o.goodsId order by sum(o.amount) desc")
     Page<Object[]> countTopGoods(Merchant merchant,Pageable pageable);
 }

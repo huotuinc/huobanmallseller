@@ -1,6 +1,5 @@
 package com.huotu.huobanmall.model.app;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,5 +48,67 @@ public class AppOrderDetailModel {
      */
     private float paid;
 
+    public String getBuyer() {
+        return buyer;
+    }
 
+    public void setBuyer(String buyer) {
+        this.buyer = buyer;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public List<AppOrderListProductModel> getList() {
+        return list;
+    }
+
+    public void setList(List<AppOrderListProductModel> list) {
+        this.list = list;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public float getPaid() {
+        return paid;
+    }
+
+    public void setPaid(float paid) {
+        this.paid = paid;
+    }
 }
