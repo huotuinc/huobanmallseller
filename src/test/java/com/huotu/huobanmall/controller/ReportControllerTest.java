@@ -21,9 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -92,9 +89,9 @@ public class ReportControllerTest extends SpringAppTest {
     @Autowired
     private GoodsRepository goodsRepository;
 
-
     @Autowired
     private  OrderRepository orderRepository;
+
     @Before
     public void prepareDevice() {
         device = Device.newDevice(DeviceType.Android);
@@ -242,26 +239,26 @@ public class ReportControllerTest extends SpringAppTest {
     @Test
     public void testOtherStatistics() throws Exception {
         //准备测试环境
-        Random random=new Random();
-        User user;
-        for(int i=0;i<14;i++){
-            user=new User();
-            user.setMerchant(mockMerchant);
-            user.setType(0);
-            user.setUsername("11");
-            user.setPassword("22");
-            user.setRegTime(new Date());
-            userRepository.save(user);
-        }
-        for(int i=0;i<4;i++){
-            user=new User();
-            user.setMerchant(mockMerchant);
-            user.setType(1);
-            user.setUsername("11");
-            user.setPassword("22");
-            user.setRegTime(new Date());
-            userRepository.save(user);
-        }
+//        Random random=new Random();
+//        User user;
+//        for(int i=0;i<14;i++){
+//            user=new User();
+//            user.setMerchant(mockMerchant);
+//            user.setType(0);
+//            user.setUsername("11");
+//            user.setPassword("22");
+//            user.setRegTime(new Date());
+//            userRepository.save(user);
+//        }
+//        for(int i=0;i<4;i++){
+//            user=new User();
+//            user.setMerchant(mockMerchant);
+//            user.setType(1);
+//            user.setUsername("11");
+//            user.setPassword("22");
+//            user.setRegTime(new Date());
+//            userRepository.save(user);
+//        }
         Goods goods;
         for(int i=0;i<10;i++){
             goods=new Goods();
@@ -275,29 +272,121 @@ public class ReportControllerTest extends SpringAppTest {
             goods.setStatus(0);
             goodsRepository.save(goods);
         }
+//
+//
+//        Order order;
+//        for(int i=0;i<10;i++){
+//            order=new Order();
+//            order.setId(String.valueOf(100-i));
+//            int k=random.nextInt(3)+1;
+//            order.setPayStatus(1);
+//            order.setMerchant(mockMerchant);
+//            order.setUserId(22);
+//            order.setTime(new Date());
+//            order.setPrice(25);
+//            order.setAmount(10);
+//            order.setReceiver("史利挺");
+//            orderRepository.save(order);
+//        }
+
+        Calendar dt = Calendar.getInstance();
+        dt.setTime(new Date());
+        dt.set(Calendar.HOUR_OF_DAY, 0);
+        dt.set(Calendar.SECOND,0);
+        dt.set(Calendar.MINUTE,0);
+        dt.set(Calendar.DATE,-20);
+        CountDayMember countDayMember=new CountDayMember();
+        countDayMember.setMerchantId(mockMerchant.getId());
+        countDayMember.setDate(dt.getTime());
+        countDayMember.setAmount(10);
+        countDayMemberRepository.save(countDayMember);
+
+        CountDayOrder countDayOrder=new CountDayOrder();
+        countDayOrder.setMerchantId(mockMerchant.getId());
+        countDayOrder.setDate(dt.getTime());
+        countDayOrder.setAmount(10);
+        countDayOrderRepository.save(countDayOrder);
 
 
-        Order order;
-        for(int i=0;i<10;i++){
-            order=new Order();
-            order.setId(String.valueOf(100-i));
-            int k=random.nextInt(3)+1;
-            order.setPayStatus(1);
-            order.setMerchant(mockMerchant);
-            order.setUserId(22);
-            order.setTime(new Date());
-            order.setPrice(25);
-            order.setAmount(10);
-            order.setReceiver("史利挺");
-            orderRepository.save(order);
-        }
+        CountDayPartner countDayPartner=new CountDayPartner();
+        countDayPartner.setMerchantId(mockMerchant.getId());
+        countDayPartner.setDate(dt.getTime());
+        countDayPartner.setAmount(10);
+        countDayPartnerRepository.save(countDayPartner);
+
+
+
+
         //准备测试环境END
        mockMvc.perform(device.getApi("otherStatistics")
                 .build())
                 .andDo(print())
-               .andExpect(jsonPath("$.resultData.otherInfoList.discributorAmount").value(4))
-               .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(14))
+               .andExpect(jsonPath("$.resultData.otherInfoList.discributorAmount").value(10))
+               .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(10))
                .andExpect(jsonPath("$.resultData.otherInfoList.billAmount").value(10))
                .andExpect(jsonPath("$.resultData.otherInfoList.goodsAmount").value(10));
+    }
+
+    @Test
+    public void testTopScore() throws Exception {
+//准备测试环境
+        Random random=new Random();
+        //设置时间
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        //获取当前小时
+        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.SECOND,0);
+        date.set(Calendar.MINUTE,0);
+        //获取今天起始时间
+        Date today=date.getTime();
+
+
+        //新增商品
+        Goods goods=new Goods();
+        goods.setOwner(mockMerchant);
+        goods.setStatus(1);
+        goods.setPrice(100);
+        goodsRepository.save(goods);
+
+
+        User user=new User();
+        user.setRegTime(new Date());
+        user.setPassword("11");
+        user.setUsername("22");
+        user.setType(0);
+        user.setMerchant(mockMerchant);
+        user =userRepository.saveAndFlush(user);
+
+        Order order;
+        for(int i=0;i<20;i++){
+            order=new Order();
+            order.setId("ffffff");
+            order.setMerchant(mockMerchant);
+            order.setPayStatus(1);
+            order.setUserId(user.getId());
+            order.setPrice(50);
+            order.setAmount(2);
+            order.setTime(new Date());
+            order.setUserType(0);
+            orderRepository.save(order);
+        }
+
+        mockMvc.perform(device.getApi("topConsume")
+                .build())
+                .andDo(print());
+
+
+    }
+
+    @Test
+    public void testTopConsume() throws Exception {
+
+    }
+
+    @Test
+    public void testTopSales() throws Exception {
+
     }
 }

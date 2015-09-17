@@ -3,10 +3,7 @@ package com.huotu.huobanmall.controller;
 import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
-import com.huotu.huobanmall.entity.Goods;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.User;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
@@ -48,7 +45,16 @@ public class GoodsControllerTest extends SpringAppTest {
     private Merchant mockMerchant;
     @Autowired
     private ShopRepository shopRepository;
-
+    @Autowired
+    CountTodayPartnerRepository countTodayPartnerRepository;
+    @Autowired
+    CountTodayOrderRepository countTodayOrderRepository;
+    @Autowired
+    CountTodayMemberRepository countTodayMemberRepository;
+    @Autowired
+    CountTodaySalesRepository countTodaySalesRepository;
+    @Autowired
+    CountDaySalesRepository countDaySalesRepository;
 
 
     @Before
@@ -157,26 +163,26 @@ public class GoodsControllerTest extends SpringAppTest {
     public void testGoodsList() throws Exception {
         //准备测试环境
         Random random=new Random();
-        Goods product=new Goods();
-        product.setId(random.nextInt(200));
-        product.setOwner(mockMerchant);
-        product.setPrice(100);
-        product.setStatus(1);
-        product.setStock(1000);
-        Goods productNew=productRepository.save(product);                            //新建一个商品
-
-        product=new Goods();
-        product.setId(random.nextInt(200));
-        product.setOwner(mockMerchant);
-        product.setPrice(200);
-        product.setStatus(1);
-        product.setStock(9999);
-        productRepository.save(product);
+        Category category=new Category();
+        category.setTitle("干果");
+        Goods product;
+        for(int i=0;i<35;i++){
+            product=new Goods();
+            product.setId(i+1);
+            product.setOwner(mockMerchant);
+            product.setPrice(200);
+            product.setStatus(1);
+            product.setCategory(category);
+            product.setStock(9999);
+            productRepository.save(product);
+        }
         //准备测试环境END
 
         mockMvc.perform(
                 device.getApi("goodsList")
+                        .param("lastProductId", "10")
                         .build());
+
     }
 
     @Test
@@ -242,6 +248,52 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setAmount(2);
             order.setTime(new Date());
             order.setUserType(0);
+        }
+        CountTodayOrder countTodayOrder;
+        for(int i=0;i<24;i++){
+            countTodayOrder=new CountTodayOrder();
+            countTodayOrder.setMerchantId(mockMerchant.getId());
+            countTodayOrder.setHour(i+1);
+            countTodayOrder.setAmount(i+1);
+            countTodayOrderRepository.save(countTodayOrder);
+        }
+        CountTodayPartner countTodayPartner;
+        for(int i=0;i<24;i++){
+            countTodayPartner=new CountTodayPartner();
+            countTodayPartner.setMerchantId(mockMerchant.getId());
+            countTodayPartner.setHour(i+1);
+            countTodayPartner.setAmount(i+1);
+            countTodayPartnerRepository.save(countTodayPartner);
+        }
+        CountTodayMember countTodayMember;
+        for (int i=0;i<24;i++){
+            countTodayMember=new CountTodayMember();
+            countTodayMember.setMerchantId(mockMerchant.getId());
+            countTodayMember.setHour(i+1);
+            countTodayMember.setAmount(i+1);
+            countTodayMemberRepository.save(countTodayMember);
+        }
+        CountTodaySales countTodaySales;
+        for(int i=0;i<10;i++){
+            countTodaySales=new CountTodaySales();
+            countTodaySales.setMerchantId(mockMerchant.getId());
+            countTodaySales.setHour(i+1);
+            countTodaySales.setMoney(i+1);
+            countTodaySalesRepository.save(countTodaySales);
+        }
+        CountDaySales countDaySales;
+        Calendar dt = Calendar.getInstance();
+        dt.setTime(new Date());
+        dt.set(Calendar.HOUR_OF_DAY, 0);
+        dt.set(Calendar.SECOND,0);
+        dt.set(Calendar.MINUTE,0);
+        for(int i=0;i<6;i++){
+            countDaySales=new CountDaySales();
+            countDaySales.setMerchantId(mockMerchant.getId());
+            dt.set(Calendar.DATE,-5);
+            countDaySales.setDate(dt.getTime());
+            countDaySales.setMoney(100);
+            countDaySalesRepository.save(countDaySales);
         }
         //准备测试环境END
         mockMvc.perform(

@@ -30,6 +30,17 @@ public class User {
     @Column(name = "UB_UserLoginPassword")
     private String password;
 
+    /**
+     * 手机号
+     */
+    @Column(name="UB_UserMobile")
+    private String mobile;
+
+    /**
+     * 昵称
+     */
+    @Column(name = "UB_UserNickName")
+    private String nickname;
 
     /**
      * 注册时间
@@ -110,5 +121,21 @@ public class User {
 
     public void setUserFace(String userFace) {
         this.userFace = userFace;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

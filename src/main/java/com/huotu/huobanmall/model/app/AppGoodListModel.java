@@ -83,4 +83,5 @@ public class AppGoodListModel {
     public void setCategory(String category) {
         this.category = category;
     }
+
 }

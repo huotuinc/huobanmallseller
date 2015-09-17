@@ -43,18 +43,11 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Integer,Integer> todayOrder(Merchant merchant) {
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
-        List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
-        for(int i=0;i<nowHour;i++){
-            if(i>=listOrder.size()){
-                map.put(i/3,0);
-                continue;
-            }
-            CountTodayOrder countTodayOrder=listOrder.get(i);
-            int p=i/3;
+        List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantId(merchant.getId());
+        for(int i=1;i<=listOrder.size();i++){
+            CountTodayOrder countTodayOrder=listOrder.get(i-1);
+            int p=(i+2)/3*3;
             if(map.get(p)==null){
                 map.put(p,countTodayOrder.getAmount());
             }else{
@@ -67,33 +60,22 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Integer, Integer> todayMember(Merchant merchant) {
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
-        List<CountTodayMember> listMember = countTodayMemberRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
-
-        for (int i = 0; i < nowHour; i++) {
-            if (i >= listMember.size()) {
-                map.put(i/3,0);
-                continue;
-            }
-            CountTodayMember countTodayMember = listMember.get(i);
-            int p = i / 3;
+        List<CountTodayMember> listMember = countTodayMemberRepository.findByMerchantId(merchant.getId());
+        for (int i = 1; i <=listMember.size(); i++) {
+            CountTodayMember countTodayMember = listMember.get(i-1);
+            int p=(i+2)/3*3;
             if (map.get(p) == null) {
                 map.put(p, countTodayMember.getAmount());
             } else {
                 map.put(p, map.get(p) + countTodayMember.getAmount());
             }
-
         }
         return map;
 
     }
     @Override
     public Map<Date, Integer> getWeekOrder(Merchant merchant) {
-
-
         Map<Date, Integer> result = new TreeMap<>();
         Date date = DateHelper.getThisWeekBegin();
         List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
@@ -234,18 +216,11 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Integer, Integer> todayPartner(Merchant merchant) {
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
         Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
-        List<CountTodayPartner> listPartner=countTodayPartnerRepository.findByMerchantIdAndHourLessThanEqual(merchant.getId(), nowHour);
-        for(int i=0;i<nowHour;i++){
-            if(i>=listPartner.size()){
-                map.put(i/3,0);
-                continue;
-            }
-            CountTodayPartner countTodayPartner=listPartner.get(i);
-            int p=i/3;
+        List<CountTodayPartner> listPartner=countTodayPartnerRepository.findByMerchantId(merchant.getId());
+        for(int i=1;i<=listPartner.size();i++){
+            CountTodayPartner countTodayPartner=listPartner.get(i-1);
+            int p=(i+2)/3*3;
             if(map.get(p)==null){
                 map.put(p,countTodayPartner.getAmount());
             }else{

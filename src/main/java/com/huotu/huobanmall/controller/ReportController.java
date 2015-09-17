@@ -6,18 +6,22 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
+import com.huotu.huobanmall.entity.Goods;
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Rebate;
+import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.model.app.*;
-import com.huotu.huobanmall.service.CountService;
-import com.huotu.huobanmall.service.GoodsService;
-import com.huotu.huobanmall.service.OrderService;
-import com.huotu.huobanmall.service.UserService;
+import com.huotu.huobanmall.repository.GoodsRepository;
+import com.huotu.huobanmall.repository.UserRepository;
+import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +31,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("/app")
 public class ReportController implements ReportSystem {
+    static final  int TOP_PAGE=20;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    GoodsRepository goodsRepository;
 
     @Autowired
     private CountService countService;
@@ -40,6 +51,11 @@ public class ReportController implements ReportSystem {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private RebateService rebateService;
+    @Autowired
+    private OrderItemsService orderItemsService;
+
     @Override
     @RequestMapping("/orderReport")
     public ApiResult orderReport(Output<Long> totalAmount, Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
@@ -47,24 +63,16 @@ public class ReportController implements ReportSystem {
             , Output<Date[]> weekTimes, Output<Integer[]> weekAmounts
             , Output<Date[]> monthTimes, Output<Integer[]> monthAmounts) throws Exception {
 
+        //获取当前公共信息
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        int nowHour = date.get(Calendar.HOUR_OF_DAY);
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MINUTE, 0);
-        //今天
-        Date today = date.getTime();
         //统计今日订单总数
         todayAmount.outputData((long) orderService.countOrderQuantity(apm.getCurrentUser()));
-        //统计今日详细数据
-        Integer[] hoursOrder = new Integer[(nowHour + 2) / 3];
-        Integer[] orders = new Integer[(nowHour + 2) / 3];
         int n = 0;
         Map<Integer, Integer> mapToday = countService.todayOrder(apm.getCurrentUser());
+        Integer[] hoursOrder = new Integer[mapToday.size()];
+        Integer[] orders = new Integer[mapToday.size()];
         for (Map.Entry<Integer, Integer> entry : mapToday.entrySet()) {
-            hoursOrder[n] = (entry.getKey() + 1) * 3;
+            hoursOrder[n] = entry.getKey();
             orders[n] = entry.getValue();
             n++;
         }
@@ -184,7 +192,7 @@ public class ReportController implements ReportSystem {
         Map<Integer, Integer> mapTodayMember = countService.todayMember(apm.getCurrentUser());
         int n = 0;
         for (Map.Entry<Integer, Integer> entry : mapTodayMember.entrySet()) {
-            hoursMember[n] = (entry.getKey() + 1) * 3;
+            hoursMember[n] = entry.getKey();
             members[n] = entry.getValue();
             n++;
         }
@@ -197,7 +205,7 @@ public class ReportController implements ReportSystem {
         Map<Integer, Integer> mapTodayPartner = countService.todayPartner(apm.getCurrentUser());
         n = 0;
         for (Map.Entry<Integer, Integer> entry : mapTodayPartner.entrySet()) {
-            hoursPartner[n] = (entry.getKey() + 1) * 3;
+            hoursPartner[n] = entry.getKey();
             partners[n] = entry.getValue();
             n++;
         }
@@ -247,19 +255,67 @@ public class ReportController implements ReportSystem {
     @Override
     @RequestMapping("/topScore")
     public ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception {
-        return null;
+        AppPublicModel apm = PublicParameterHolder.getParameters();
+        List<Rebate> rebates=rebateService.showTopScore(apm.getCurrentUser(),1).getContent();
+        AppTopScoreModel[] appTopScoreModels=new AppTopScoreModel[rebates.size()];
+        for(int i=0;i<rebates.size();i++){
+            AppTopScoreModel appTopScoreModel=new AppTopScoreModel();
+            Rebate rebate=rebates.get(i);
+            User user=userRepository.findOne(rebate.getId());
+            appTopScoreModel.setMobile(user.getMobile());
+            appTopScoreModel.setName(user.getUsername());
+            appTopScoreModel.setNickName(user.getNickname());
+            appTopScoreModel.setScore(rebate.getScore());
+            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
+            appTopScoreModels[i]=appTopScoreModel;
+        }
+        list.outputData(appTopScoreModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @Override
     @RequestMapping("/topConsume")
     public ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception {
-        return null;
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        List<Object[]> toplist=orderService.countUserExpenditureList(merchant,new PageRequest(0,TOP_PAGE)).getContent();
+        AppTopConsumeModel[] appTopConsumeModels=new AppTopConsumeModel[toplist.size()];
+        for(int i=0;i<toplist.size();i++){
+            AppTopConsumeModel appTopConsumeModel=new AppTopConsumeModel();
+            Object[] objects=toplist.get(i);
+            Integer userId= (Integer)objects[0];
+            User user=userRepository.findOne(userId);
+            double money=(Double)objects[1];
+            long amount=(Long)objects[2];
+            appTopConsumeModel.setPictureUrl(user.getUserFace());
+            appTopConsumeModel.setNickName(user.getNickname());
+            appTopConsumeModel.setName(user.getUsername());
+            appTopConsumeModel.setMoney((float)money);
+            appTopConsumeModel.setMobile(user.getMobile());
+            appTopConsumeModel.setAmount((int)amount);
+            appTopConsumeModels[i]=appTopConsumeModel;
+        }
+        list.outputData(appTopConsumeModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @Override
     @RequestMapping("/topSales")
     public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
-        return null;
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        List<Object[]> toplist=orderItemsService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE - 10)).getContent();
+        AppTopSalesModel[] appTopSalesModels=new AppTopSalesModel[toplist.size()];
+        for(int i=0;i<toplist.size();i++){
+            AppTopSalesModel appTopSalesModel=new AppTopSalesModel();
+            Object[] objects=toplist.get(i);
+            Integer goodId= (Integer)objects[0];
+            Goods goods=goodsRepository.findOne(goodId);
+            long amount=(Long)objects[1];
+            appTopSalesModel.setName(goods.getTitle());
+            appTopSalesModel.setAmount((int)amount);
+            appTopSalesModels[i]=appTopSalesModel;
+        }
+        list.outputData(appTopSalesModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @Override

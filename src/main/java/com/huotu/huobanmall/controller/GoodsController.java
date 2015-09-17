@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -107,19 +106,19 @@ public class GoodsController implements GoodsSystem {
     public ApiResult goodsList(Output<AppGoodListModel[]> list,
                                Integer type,@RequestParam(required = false)Integer lastProductId) throws Exception {
         //获取当前商家信息
-        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
         //获取商家的商品信息集合
         List<Goods> lists=goodsService.searchProducts(merchant,type,lastProductId,PAGE_SIZE).getContent();
         AppGoodListModel[] appGoodListModels=new AppGoodListModel[lists.size()];
         for(int i=0;i<lists.size();i++){
             AppGoodListModel appGoodListModel=new AppGoodListModel();
-            Goods product=lists.get(i);
-            appGoodListModel.setGoodsId(product.getId());
-            appGoodListModel.setTitle(product.getTitle());
-            appGoodListModel.setPictureUrl(product.getPictureUrl());
-            appGoodListModel.setStock(product.getStock());
-            appGoodListModel.setPrice(product.getStock());
-            appGoodListModel.setCategory(product.getCategory().getTitle());
+            Goods good=lists.get(i);
+            appGoodListModel.setGoodsId(good.getId());
+            appGoodListModel.setTitle(good.getTitle());
+            appGoodListModel.setPictureUrl(good.getPictureUrl());
+            appGoodListModel.setStock(good.getStock());
+            appGoodListModel.setPrice(good.getStock());
+            appGoodListModel.setCategory(good.getCategory().getTitle());
             appGoodListModels[i]=appGoodListModel;
         }
         list.outputData(appGoodListModels);
@@ -154,31 +153,16 @@ public class GoodsController implements GoodsSystem {
 
     ) throws Exception {
         //获取当前商家信息
-        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND,0);
-        date.set(Calendar.MINUTE,0);
-        //今天
-        Date today=date.getTime();
-
-        //定义数组大小
-        Integer[] hoursOrder=new Integer[(nowHour+2)/3];
-        Integer[] hoursMember=new Integer[(nowHour+2)/3];
-        Integer[] hoursPartner=new Integer[(nowHour+2)/3];
-        Integer[] orders=new Integer[(nowHour+2)/3];
-        Integer[] members=new Integer[(nowHour+2)/3];
-        Integer[] partners=new Integer[(nowHour+2)/3];
-
-
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
         //将Map结果分解成两个时间和数量的数组
         //计算今天各个时间段新增的订单数量
         int n=0;
         Map<Integer,Integer> map=countService.todayOrder(merchant);
+        Integer[] hoursOrder=new Integer[map.size()];
+        Integer[] orders=new Integer[map.size()];
+
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursOrder[n]=(entry.getKey()+1)*3;
+            hoursOrder[n]=(entry.getKey());
             orders[n]=entry.getValue();
             n++;
         }
@@ -186,16 +170,20 @@ public class GoodsController implements GoodsSystem {
         //计算今天各个时间段新增的会员数量
         n=0;
         map=countService.todayMember(merchant);
+        Integer[] hoursMember=new Integer[map.size()];
+        Integer[] members=new Integer[map.size()];
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursMember[n]=(entry.getKey()+1)*3;
+            hoursMember[n]=(entry.getKey());
             members[n]=entry.getValue();
             n++;
         }
         //计算今天各个时间段新增的小伙伴数量
         n=0;
         map=countService.todayPartner(merchant);
+        Integer[] hoursPartner=new Integer[map.size()];
+        Integer[] partners=new Integer[map.size()];
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursPartner[n]=(entry.getKey()+1)*3;
+            hoursPartner[n]=(entry.getKey());
             partners[n]=entry.getValue();
             n++;
         }
@@ -224,6 +212,8 @@ public class GoodsController implements GoodsSystem {
         todayPartnerAmount.outputData(userService.countTodayPartner(merchant));
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
+
+
 
     @RequestMapping("/orderList")
     @Override
