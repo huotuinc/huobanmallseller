@@ -174,7 +174,7 @@ public interface ReportSystem {
 
 
     /**
-     * 商品销售前10排行
+     * 商品销量前10排行
      * 按照数量排序
      *
      * @param list

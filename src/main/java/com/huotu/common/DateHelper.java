@@ -1,5 +1,7 @@
 package com.huotu.common;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,7 +29,7 @@ public class DateHelper {
 
         GregorianCalendar currentDate = new GregorianCalendar();
         currentDate.add(GregorianCalendar.DATE, mondayPlus);
-        currentDate.set(Calendar.HOUR, 0);
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
         currentDate.set(Calendar.MINUTE, 0);
         currentDate.set(Calendar.SECOND, 0);
         currentDate.set(Calendar.MILLISECOND, 0);
@@ -42,7 +44,7 @@ public class DateHelper {
     public static Date getThisMonthBegin() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -52,11 +54,27 @@ public class DateHelper {
 
     /**
      * 获取当天整点
+     *
      * @return
      */
     public static Date getThisDayBegin() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取指定时间整点
+     *
+     * @return
+     */
+    public static Date getThisDayBegin(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);//从0开始 所以比时间少1
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -66,6 +84,7 @@ public class DateHelper {
 
     /**
      * 获取当前整点
+     *
      * @return
      */
     public static Date getThisHourBegin() {
@@ -74,6 +93,15 @@ public class DateHelper {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
+    }
+
+    public static Date StringToDate(String s, String pattern) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.parse(s);
+    }
+
+    public static Date StringToDate(String s) throws ParseException {
+        return StringToDate(s, "yyyy-MM-dd hh:mm:ss");
     }
 
 }

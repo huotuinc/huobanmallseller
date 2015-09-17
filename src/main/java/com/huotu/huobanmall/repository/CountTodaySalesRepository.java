@@ -12,9 +12,12 @@ import java.util.List;
  * Created by lgh on 2015/9/10.
  */
 public interface CountTodaySalesRepository extends JpaRepository<CountTodaySales, CountTodaySalesPK>, JpaSpecificationExecutor<CountTodaySales>
-,ClassicsRepository<CountTodaySales>{
+        , ClassicsRepository<CountTodaySales> {
 
     List<CountTodaySales> findAllByMerchantIdOrderByHour(Integer merchantId);
+
     List<CountTodaySales> findByMerchantId(Integer merchantId);
+
+    CountTodaySales findByMerchantIdAndHour(Integer merchantId, Integer hour);
 
 }

@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.repository;
 
+
 import com.huotu.huobanmall.entity.CountDaySales;
 import com.huotu.huobanmall.entity.pk.CountDaySalesPK;
 import org.luffy.lib.libspring.data.ClassicsRepository;
@@ -17,4 +18,6 @@ public interface CountDaySalesRepository extends JpaRepository<CountDaySales, Co
 
     List<CountDaySales> findByMerchantIdAndDateGreaterThanEqualOrderByDate(Integer merchantId, Date date);
     List<CountDaySales> findByMerchantId(Integer merchantId);
+
+    CountDaySales findByMerchantIdAndDate(Integer merchantId, Date date);
 }

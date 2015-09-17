@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.ParseException;
 import java.util.*;
 
 
@@ -69,13 +70,20 @@ public class SystemCountingImpl implements SystemCounting {
             log.info("小时计算服务已开启");
 
             Calendar calendar = Calendar.getInstance();
-            Integer hour = calendar.get(Calendar.HOUR);
+            Integer hour = calendar.get(Calendar.HOUR_OF_DAY);
 
             countHour(hour);
 
             if (hour == 0) {
                 log.info("每天计算服务已开启");
+
+                //计算昨天数据
                 countDay();
+
+                //清除昨日小时数据
+                deleteYesterdayHour();
+
+
             }
         } catch (Exception ex) {
             log.error("计算服务异常");
@@ -199,6 +207,7 @@ public class SystemCountingImpl implements SystemCounting {
      * 计算每天量
      */
     public void countDay() {
+
         Date date = DateHelper.getThisDayBegin();
         date.setHours(-24);
 
@@ -282,4 +291,241 @@ public class SystemCountingImpl implements SystemCounting {
         countDaySalesRepository.save(Arrays.asList(list.toArray(new CountDaySales[list.size()])));
 
     }
+
+
+    /**
+     * 清除昨日数据
+     */
+    private void deleteYesterdayHour() {
+        countTodayMemberRepository.deleteAll();
+        countTodayOrderRepository.deleteAll();
+        countDayPartnerRepository.deleteAll();
+        countDaySalesRepository.deleteAll();
+    }
+
+
+    /**
+     * 初始化历史数据
+     * 包含当前的销售数据
+     *
+     * @throws ParseException
+     */
+    @Override
+    public void InitHistoryDayAndToday() throws ParseException {
+        Date startTime = DateHelper.getThisDayBegin();
+
+        log.info("初始化" + startTime + "之前的天数据");
+
+        InitDayOrder(startTime);
+
+        InitDaySales(startTime);
+
+        InitDayMember(startTime);
+
+        InitDayPartner(startTime);
+
+
+        Date beginHour = DateHelper.getThisDayBegin();
+
+        Date endHour = DateHelper.getThisDayBegin();
+        Calendar calendar = Calendar.getInstance();
+        Integer hour = calendar.get(Calendar.HOUR_OF_DAY);
+        endHour.setHours(hour);
+
+        log.info("初始化" + beginHour + "到" + endHour + "之前的小时数据");
+        initOrder(beginHour, endHour);
+
+        initSales(beginHour, endHour);
+
+        initMember(beginHour, endHour);
+
+        initPartner(beginHour, endHour);
+    }
+
+
+    /**
+     * 当天之前的订单
+     *
+     * @param startTime
+     * @throws ParseException
+     */
+    private void InitDayOrder(Date startTime) throws ParseException {
+        List<CountDayOrder> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,FUNC('year',order.time) as year,FUNC('month',order.time) as month,FUNC('day',order.time) as day" +
+                " ,count(order) as amount from Order order " +
+                " where order.time<:startTime " +
+                " group by order.merchant.id,year,month,day");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("startTime", startTime);
+        });
+
+        for (Object data : listQuery) {
+
+            Object[] objects = (Object[]) data;
+            list.add(new CountDayOrder(Integer.parseInt(objects[0].toString())
+                    , DateHelper.getThisDayBegin(Integer.parseInt(objects[1].toString()), Integer.parseInt(objects[2].toString()), Integer.parseInt(objects[3].toString()))
+                    , Integer.parseInt(objects[4].toString())));
+        }
+        countDayOrderRepository.save(Arrays.asList(list.toArray(new CountDayOrder[list.size()])));
+    }
+
+    private void InitDaySales(Date startTime) throws ParseException {
+        List<CountDaySales> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,FUNC('year',order.time) as year,FUNC('month',order.time) as month,FUNC('day',order.time) as day" +
+                " ,sum(order.price) as amount from Order order " +
+                " where order.time<:startTime and order.payStatus=1 " +
+                " group by order.merchant.id,year,month,day");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("startTime", startTime);
+        });
+
+        for (Object data : listQuery) {
+
+            Object[] objects = (Object[]) data;
+            list.add(new CountDaySales(Integer.parseInt(objects[0].toString())
+                    , DateHelper.getThisDayBegin(Integer.parseInt(objects[1].toString()), Integer.parseInt(objects[2].toString()), Integer.parseInt(objects[3].toString()))
+                    , Float.parseFloat(objects[4].toString())));
+        }
+        countDaySalesRepository.save(Arrays.asList(list.toArray(new CountDaySales[list.size()])));
+    }
+
+
+    private void InitDayMember(Date startTime) throws ParseException {
+        List<CountDayMember> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select log.merchant.id,FUNC('year',log.time) as year,FUNC('month',log.time) as month,FUNC('day',log.time) as day" +
+                " ,count(log) as amount from UserChangeLog log " +
+                " where log.time<:startTime and log.changeType=:changeType " +
+                " group by log.merchant.id,year,month,day");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("startTime", startTime);
+            query.setParameter("changeType", 5);
+        });
+
+        for (Object data : listQuery) {
+
+            Object[] objects = (Object[]) data;
+            list.add(new CountDayMember(Integer.parseInt(objects[0].toString())
+                    , DateHelper.getThisDayBegin(Integer.parseInt(objects[1].toString()), Integer.parseInt(objects[2].toString()), Integer.parseInt(objects[3].toString()))
+                    , Integer.parseInt(objects[4].toString())));
+        }
+        countDayMemberRepository.save(Arrays.asList(list.toArray(new CountDayMember[list.size()])));
+    }
+
+    private void InitDayPartner(Date startTime) throws ParseException {
+        List<CountDayPartner> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select log.merchant.id,FUNC('year',log.time) as year,FUNC('month',log.time) as month,FUNC('day',log.time) as day" +
+                " ,count(log) as amount from UserChangeLog log " +
+                " where log.time<:startTime and log.changeType in (2,6)" +
+                " group by log.merchant.id,year,month,day");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("startTime", startTime);
+        });
+
+        for (Object data : listQuery) {
+
+            Object[] objects = (Object[]) data;
+            list.add(new CountDayPartner(Integer.parseInt(objects[0].toString())
+                    , DateHelper.getThisDayBegin(Integer.parseInt(objects[1].toString()), Integer.parseInt(objects[2].toString()), Integer.parseInt(objects[3].toString()))
+                    , Integer.parseInt(objects[4].toString())));
+        }
+        countDayPartnerRepository.save(Arrays.asList(list.toArray(new CountDayPartner[list.size()])));
+    }
+
+
+    private void initOrder(Date beginTime, Date endTime) {
+        List<CountTodayOrder> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,FUNC('dbo.hour',order.time) d,count(order) as amount from Order order " +
+                " where order.time>=:beginTime and order.time<:endTime" +
+                " group by order.merchant.id,d");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodayOrder(Integer.parseInt(objects[0].toString())
+                    , Integer.parseInt(objects[1].toString())
+                    , Integer.parseInt(objects[2].toString())));
+        });
+        countTodayOrderRepository.save(Arrays.asList(list.toArray(new CountTodayOrder[list.size()])));
+    }
+
+
+    private void initSales(Date beginTime, Date endTime) {
+        List<CountTodaySales> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select order.merchant.id,FUNC('dbo.hour',order.time) d,sum(order.price) as amount from Order order " +
+                " where order.time>=:beginTime and order.time<:endTime  and order.payStatus=1 " +
+                " group by order.merchant.id,d");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodaySales(Integer.parseInt(objects[0].toString())
+                    , Integer.parseInt(objects[1].toString())
+                    , Float.parseFloat(objects[2].toString())));
+        });
+        countTodaySalesRepository.save(Arrays.asList(list.toArray(new CountTodaySales[list.size()])));
+    }
+
+
+    private void initMember(Date beginTime, Date endTime) {
+        List<CountTodayMember> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select log.merchant.id,FUNC('dbo.hour',log.time) d,count(log) as amount from UserChangeLog log " +
+                " where log.time>=:beginTime and log.time<:endTime  and log.changeType=:changeType " +
+                " group by log.merchant.id,d");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+            query.setParameter("changeType", 5);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodayMember(Integer.parseInt(objects[0].toString())
+                    , Integer.parseInt(objects[1].toString())
+                    , Integer.parseInt(objects[2].toString())));
+        });
+        countTodayMemberRepository.save(Arrays.asList(list.toArray(new CountTodayMember[list.size()])));
+    }
+
+
+    private void initPartner(Date beginTime, Date endTime) {
+        List<CountTodayPartner> list = new ArrayList<>();
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("select log.merchant.id,FUNC('dbo.hour',log.time) d,count(log) as amount from UserChangeLog log " +
+                " where log.time>=:beginTime and log.time<:endTime   and log.changeType in (2,6) " +
+                " group by log.merchant.id,d");
+        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("beginTime", beginTime);
+            query.setParameter("endTime", endTime);
+        });
+
+        listQuery.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            list.add(new CountTodayPartner(Integer.parseInt(objects[0].toString())
+                    , Integer.parseInt(objects[1].toString())
+                    , Integer.parseInt(objects[2].toString())));
+        });
+        countTodayPartnerRepository.save(Arrays.asList(list.toArray(new CountTodayPartner[list.size()])));
+    }
+
 }

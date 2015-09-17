@@ -18,4 +18,5 @@ public interface CountDayPartnerRepository extends JpaRepository<CountDayPartner
     List<CountDayPartner> findByMerchantIdAndDateGreaterThanEqualOrderByDate(Integer merchantId, Date date);
     List<CountDayPartner> findByMerchantId(Integer merchantId);
 
+    CountDayPartner findByMerchantIdAndDate(Integer merchantId, Date date);
 }
