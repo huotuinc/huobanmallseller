@@ -17,9 +17,11 @@ import com.huotu.huobanmall.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.Connection;
 import java.text.ParseException;
 import java.util.*;
 
@@ -134,7 +136,6 @@ public class ReportController implements ReportSystem {
         monthAmounts.outputData(mapMonth.values().toArray(new Float[mapMonth.values().size()]));
         monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
 
-
         totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser()) + todayCountSales);
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
@@ -145,64 +146,134 @@ public class ReportController implements ReportSystem {
     public ApiResult userReport(
             Output<Long> totalMember, Output<Long> totalPartner
             , Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
-            , Output<Integer[]> todayMemberTimes, Output<Integer[]> todayMemberAmounts
-            , Output<Date[]> weekMemberTimes, Output<Integer[]> weekMemberAmounts
-            , Output<Date[]> monthMemberTimes, Output<Integer[]> monthMemberAmounts
+            , Output<Integer[]> todayTimes, Output<Integer[]> todayMemberAmounts
+            , Output<Date[]> weekTimes, Output<Integer[]> weekMemberAmounts
+            , Output<Date[]> monthTimes, Output<Integer[]> monthMemberAmounts
             , Output<Long> todayPartnerAmount, Output<Long> weekPartnerAmount, Output<Long> monthPartnerAmount
-            , Output<Integer[]> todayPartnerTimes, Output<Integer[]> todayPartnerAmounts
-            , Output<Date[]> weekPartnerTimes, Output<Integer[]> weekPartnerAmounts
-            , Output<Date[]> monthPartnerTimes, Output<Integer[]> monthPartnerAmounts
+            , Output<Integer[]> todayPartnerAmounts
+            , Output<Integer[]> weekPartnerAmounts
+            , Output<Integer[]> monthPartnerAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
         //今日会员
         Map<Integer, Integer> mapTodayMember = countService.todayMember(apm.getCurrentUser());
-        todayMemberTimes.outputData(mapTodayMember.keySet().toArray(new Integer[mapTodayMember.keySet().size()]));
-        todayMemberAmounts.outputData(mapTodayMember.values().toArray(new Integer[mapTodayMember.values().size()]));
         Long todayCountMemberAmount = mapTodayMember.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
         todayMemberAmount.outputData(todayCountMemberAmount);
 
         //今日分销商
         Map<Integer, Integer> mapTodayPartner = countService.todayPartner(apm.getCurrentUser());
-        todayPartnerTimes.outputData(mapTodayPartner.keySet().toArray(new Integer[mapTodayPartner.keySet().size()]));
-        todayPartnerAmounts.outputData(mapTodayPartner.values().toArray(new Integer[mapTodayPartner.values().size()]));
         Long todayCountPartnerAmount = mapTodayPartner.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
         todayPartnerAmount.outputData(todayCountPartnerAmount);
 
-        
+        //合并今日会员和分销商
+        List<Integer> listTodayTimes = new ArrayList<>();
+        for (Integer hour : mapTodayMember.keySet()) {
+            if (!listTodayTimes.contains(hour)) listTodayTimes.add(hour);
+        }
+        for (Integer hour : mapTodayPartner.keySet()) {
+            if (!listTodayTimes.contains(hour)) listTodayTimes.add(hour);
+        }
+        Collections.sort(listTodayTimes);
+        todayTimes.outputData(listTodayTimes.toArray(new Integer[listTodayTimes.size()]));
+
+        List<Integer> listTodayMemberAmounts = new ArrayList<>();
+        List<Integer> listTodayPartnerAmounts = new ArrayList<>();
+        for (Integer hour : listTodayTimes) {
+            if (mapTodayMember.get(hour) == null)
+                listTodayMemberAmounts.add(0);
+            else
+                listTodayMemberAmounts.add(mapTodayMember.get(hour));
+
+            if (mapTodayPartner.get(hour) == null)
+                listTodayPartnerAmounts.add(0);
+            else
+                listTodayPartnerAmounts.add(mapTodayPartner.get(hour));
+        }
+        todayMemberAmounts.outputData(listTodayMemberAmounts.toArray(new Integer[listTodayMemberAmounts.size()]));
+        todayPartnerAmounts.outputData(listTodayPartnerAmounts.toArray(new Integer[listTodayPartnerAmounts.size()]));
 
 
         //周会员量
         Map<Date, Integer> mapWeekMember = countService.getWeekMember(apm.getCurrentUser());
         mapWeekMember.put(DateHelper.getThisDayBegin(), todayCountMemberAmount.intValue());
-        weekMemberTimes.outputData(mapWeekMember.keySet().toArray(new Date[mapWeekMember.keySet().size()]));
-        weekMemberAmounts.outputData(mapWeekMember.values().toArray(new Integer[mapWeekMember.values().size()]));
         weekMemberAmount.outputData(mapWeekMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+
+        //周分销商
+        Map<Date, Integer> mapWeekPartner = countService.getWeekPartner(apm.getCurrentUser());
+        mapWeekPartner.put(DateHelper.getThisDayBegin(), todayCountPartnerAmount.intValue());
+        weekPartnerAmount.outputData(mapWeekPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
+
+
+        //合并周会员和分销商
+        List<Date> listWeekTimes = new ArrayList<>();
+        for (Date hour : mapWeekMember.keySet()) {
+            if (!listWeekTimes.contains(hour)) listWeekTimes.add(hour);
+        }
+        for (Date hour : mapWeekPartner.keySet()) {
+            if (!listWeekTimes.contains(hour)) listWeekTimes.add(hour);
+        }
+        Collections.sort(listWeekTimes);
+        weekTimes.outputData(listWeekTimes.toArray(new Date[listWeekTimes.size()]));
+
+        List<Integer> listWeekMemberAmounts = new ArrayList<>();
+        List<Integer> listWeekPartnerAmounts = new ArrayList<>();
+        for (Date hour : listWeekTimes) {
+            if (mapWeekMember.get(hour) == null)
+                listWeekMemberAmounts.add(0);
+            else
+                listWeekMemberAmounts.add(mapWeekMember.get(hour));
+
+            if (mapWeekPartner.get(hour) == null)
+                listWeekPartnerAmounts.add(0);
+            else
+                listWeekPartnerAmounts.add(mapWeekPartner.get(hour));
+        }
+
+        weekMemberAmounts.outputData(listWeekMemberAmounts.toArray(new Integer[listWeekMemberAmounts.size()]));
+        weekPartnerAmounts.outputData(listWeekPartnerAmounts.toArray(new Integer[listWeekPartnerAmounts.size()]));
+
 
         //月会员量
         Map<Date, Integer> mapMonthMember = countService.getMonthMember(apm.getCurrentUser());
         mapMonthMember.put(DateHelper.getThisDayBegin(), todayCountMemberAmount.intValue());
         mapMonthMember = MonthToWeek(mapMonthMember, Integer.class);
-        monthMemberTimes.outputData(mapMonthMember.keySet().toArray(new Date[mapMonthMember.keySet().size()]));
-        monthMemberAmounts.outputData(mapMonthMember.values().toArray(new Integer[mapMonthMember.values().size()]));
         monthMemberAmount.outputData(mapMonthMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
-
-        //周分销商
-        Map<Date, Integer> mapWeekPartner = countService.getWeekPartner(apm.getCurrentUser());
-        mapWeekPartner.put(DateHelper.getThisDayBegin(), todayCountPartnerAmount.intValue());
-        weekPartnerTimes.outputData(mapWeekPartner.keySet().toArray(new Date[mapWeekPartner.keySet().size()]));
-        weekPartnerAmounts.outputData(mapWeekPartner.values().toArray(new Integer[mapWeekPartner.values().size()]));
-        weekPartnerAmount.outputData(mapWeekPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
         //月分销商
         Map<Date, Integer> mapMonthPartner = countService.getMonthPartner(apm.getCurrentUser());
         mapMonthPartner.put(DateHelper.getThisDayBegin(), todayCountPartnerAmount.intValue());
         //月转周
         mapMonthPartner = MonthToWeek(mapMonthPartner, Integer.class);
-        monthPartnerTimes.outputData(mapMonthPartner.keySet().toArray(new Date[mapMonthPartner.keySet().size()]));
-        monthPartnerAmounts.outputData(mapMonthPartner.values().toArray(new Integer[mapMonthPartner.values().size()]));
         monthPartnerAmount.outputData(mapMonthPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
+
+        //合并周会员和分销商
+        List<Date> listMonthTimes = new ArrayList<>();
+        for (Date hour : mapMonthMember.keySet()) {
+            if (!listMonthTimes.contains(hour)) listMonthTimes.add(hour);
+        }
+        for (Date hour : mapMonthPartner.keySet()) {
+            if (!listMonthTimes.contains(hour)) listMonthTimes.add(hour);
+        }
+        Collections.sort(listMonthTimes);
+        monthTimes.outputData(listMonthTimes.toArray(new Date[listMonthTimes.size()]));
+
+        List<Integer> listMonthMemberAmounts = new ArrayList<>();
+        List<Integer> listMonthPartnerAmounts = new ArrayList<>();
+        for (Date hour : listMonthTimes) {
+            if (mapMonthMember.get(hour) == null)
+                listMonthMemberAmounts.add(0);
+            else
+                listMonthMemberAmounts.add(mapMonthMember.get(hour));
+
+            if (mapMonthPartner.get(hour) == null)
+                listMonthPartnerAmounts.add(0);
+            else
+                listMonthPartnerAmounts.add(mapMonthPartner.get(hour));
+        }
+        monthMemberAmounts.outputData(listMonthMemberAmounts.toArray(new Integer[listMonthMemberAmounts.size()]));
+        monthPartnerAmounts.outputData(listMonthPartnerAmounts.toArray(new Integer[listMonthPartnerAmounts.size()]));
 
         //统计注册会员总数
         totalMember.outputData(countService.getTotalMembers(apm.getCurrentUser()) + todayCountMemberAmount);
@@ -240,12 +311,12 @@ public class ReportController implements ReportSystem {
             for (Date weekend : listWeekend)
                 if (date.getTime() <= weekend.getTime()) {
                     if (Integer.class.equals(cls)) {
-                        Integer t = result.get(weekend) == null ? 0 : (Integer) result.get(weekend) + (Integer) value;
+                        Integer t = (result.get(weekend) == null ? 0 : (Integer) result.get(weekend)) + (Integer) value;
                         result.put(weekend, (T) t);
                         break;
                     }
                     if (Float.class.equals(cls)) {
-                        Float t = result.get(weekend) == null ? 0 : (Float) result.get(weekend) + (Float) value;
+                        Float t = (result.get(weekend) == null ? 0 : (Float) result.get(weekend)) + (Float) value;
                         result.put(weekend, (T) t);
                         break;
                     }

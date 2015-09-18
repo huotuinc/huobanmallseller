@@ -151,7 +151,7 @@ public class ReportControllerTest extends SpringAppTest {
             countDaySales.setDate(date);
             countDaySalesRepository.saveAndFlush(countDaySales);
 
-            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
+            date = new Date(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
         mockMvc.perform(device.getApi("salesReport")
@@ -188,7 +188,7 @@ public class ReportControllerTest extends SpringAppTest {
             countDayMember.setDate(date);
             countDayMemberRepository.saveAndFlush(countDayMember);
 
-            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
+            date = new Date(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
 
@@ -200,7 +200,7 @@ public class ReportControllerTest extends SpringAppTest {
             countDayPartner.setDate(date);
             countDayPartnerRepository.saveAndFlush(countDayPartner);
 
-            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
+            date = new Date(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
 

@@ -108,20 +108,17 @@ public interface ReportSystem {
      * @param todayMemberAmount   今日会员量
      * @param weekMemberAmount    本周会员量
      * @param monthMemberAmount   本月会员量
-     * @param todayMemberTimes    今日会员时间数据
+     * @param todayTimes          今日时间数据
      * @param todayMemberAmounts  今日会员量数据
-     * @param weekMemberTimes     本周会员时间数据
+     * @param weekTimes           本周时间数据
      * @param weekMemberAmounts   本周会员量数据
-     * @param monthMemberTimes    本月会员时间数据
+     * @param monthTimes          本月时间数据
      * @param monthMemberAmounts  本月会员量数据
      * @param todayPartnerAmount  今日分销商量
      * @param weekPartnerAmount   本周分销商量
      * @param monthPartnerAmount  本月分销商量
-     * @param todayPartnerTimes   今日分销商时间数据
      * @param todayPartnerAmounts 今日分销商量数据
-     * @param weekPartnerTimes    本周分销商时间数据
      * @param weekPartnerAmounts  本周分销商量数据
-     * @param monthPartnerTimes   本月分销商时间数据
      * @param monthPartnerAmounts 本月分销商量数据
      * @return
      * @throws Exception
@@ -129,13 +126,13 @@ public interface ReportSystem {
     @RequestMapping(method = RequestMethod.GET)
     ApiResult userReport(Output<Long> totalMember, Output<Long> totalPartner
             , Output<Long> todayMemberAmount, Output<Long> weekMemberAmount, Output<Long> monthMemberAmount
-            , Output<Integer[]> todayMemberTimes, Output<Integer[]> todayMemberAmounts
-            , Output<Date[]> weekMemberTimes, Output<Integer[]> weekMemberAmounts
-            , Output<Date[]> monthMemberTimes, Output<Integer[]> monthMemberAmounts
+            , Output<Integer[]> todayTimes, Output<Integer[]> todayMemberAmounts
+            , Output<Date[]> weekTimes, Output<Integer[]> weekMemberAmounts
+            , Output<Date[]> monthTimes, Output<Integer[]> monthMemberAmounts
             , Output<Long> todayPartnerAmount, Output<Long> weekPartnerAmount, Output<Long> monthPartnerAmount
-            , Output<Integer[]> todayPartnerTimes, Output<Integer[]> todayPartnerAmounts
-            , Output<Date[]> weekPartnerTimes, Output<Integer[]> weekPartnerAmounts
-            , Output<Date[]> monthPartnerTimes, Output<Integer[]> monthPartnerAmounts
+            , Output<Integer[]> todayPartnerAmounts
+            , Output<Integer[]> weekPartnerAmounts
+            , Output<Integer[]> monthPartnerAmounts
     ) throws Exception;
 
     /**
