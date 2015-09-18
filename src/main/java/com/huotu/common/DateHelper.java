@@ -1,10 +1,9 @@
 package com.huotu.common;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * Created by lgh on 2015/9/1.
@@ -104,4 +103,43 @@ public class DateHelper {
         return StringToDate(s, "yyyy-MM-dd hh:mm:ss");
     }
 
+
+    /**
+     * 获取月的每个周末
+     *
+     * @param year  年
+     * @param month 月
+     * @return
+     * @throws ParseException
+     */
+    public static List<Date> getMonthWeekEnd(Integer year, Integer month) throws ParseException {
+        List<Date> list = new ArrayList<>();
+        String curMonth = year.toString() + "-" + month.toString();
+
+        //获取总天数
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(dateFormat.parse(curMonth));
+        int days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        for (int i = 1; i <= days; i++) {
+            //获取每日数据
+            calendar = new GregorianCalendar();
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            calendar.setTime(dateFormat.parse(curMonth + "-" + i));
+
+            int k = new Integer(calendar.get(Calendar.DAY_OF_WEEK));
+            if (k == 1) {
+                // 若当天是周日
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                list.add(df.parse(curMonth + "-" + i));
+            }
+            if (k != 1 && i == days) {
+                // 若是本月最后一天，且不是周日
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                list.add(df.parse(curMonth + "-" + i));
+            }
+        }
+        return list;
+    }
 }

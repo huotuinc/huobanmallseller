@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.controller;
 
+import com.huotu.common.DateHelper;
 import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
@@ -21,10 +22,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -90,7 +90,7 @@ public class ReportControllerTest extends SpringAppTest {
     private GoodsRepository goodsRepository;
 
     @Autowired
-    private  OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Before
     public void prepareDevice() {
@@ -112,18 +112,18 @@ public class ReportControllerTest extends SpringAppTest {
             countTodayOrder.setMerchantId(mockMerchant.getId());
             countTodayOrder.setAmount(100 + i * 2);
             countTodayOrder.setHour(i);
-            countTodayOrderRepository.saveAndFlush(countTodayOrder);
+            countTodayOrderRepository.save(countTodayOrder);
         }
 
-        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
+        Date date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
         for (int i = 0; i <= 12; i++) {
             CountDayOrder countDayOrder = new CountDayOrder();
             countDayOrder.setMerchantId(mockMerchant.getId());
             countDayOrder.setAmount(100 + i * 22);
             countDayOrder.setDate(date);
-            countDayOrderRepository.saveAndFlush(countDayOrder);
+            countDayOrderRepository.save(countDayOrder);
 
-            date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
+            date = new Date(date.getTime() + 1000 * 60 * 60 * 24);
         }
 
 
@@ -143,7 +143,7 @@ public class ReportControllerTest extends SpringAppTest {
             countTodaySalesRepository.saveAndFlush(countTodaySales);
         }
 
-        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
+        Date date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
         for (int i = 0; i <= 12; i++) {
             CountDaySales countDaySales = new CountDaySales();
             countDaySales.setMerchantId(mockMerchant.getId());
@@ -180,7 +180,7 @@ public class ReportControllerTest extends SpringAppTest {
         }
 
 
-        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
+        Date date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
         for (int i = 0; i <= 12; i++) {
             CountDayMember countDayMember = new CountDayMember();
             countDayMember.setMerchantId(mockMerchant.getId());
@@ -192,7 +192,7 @@ public class ReportControllerTest extends SpringAppTest {
         }
 
 
-        date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 12);
+        date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
         for (int i = 0; i <= 12; i++) {
             CountDayPartner countDayPartner = new CountDayPartner();
             countDayPartner.setMerchantId(mockMerchant.getId());
@@ -260,14 +260,14 @@ public class ReportControllerTest extends SpringAppTest {
 //            userRepository.save(user);
 //        }
         Goods goods;
-        for(int i=0;i<10;i++){
-            goods=new Goods();
+        for (int i = 0; i < 10; i++) {
+            goods = new Goods();
             goods.setOwner(mockMerchant);
             goods.setStatus(1);
             goodsRepository.save(goods);
         }
-        for(int i=0;i<6;i++){
-            goods=new Goods();
+        for (int i = 0; i < 6; i++) {
+            goods = new Goods();
             goods.setOwner(mockMerchant);
             goods.setStatus(0);
             goodsRepository.save(goods);
@@ -292,76 +292,74 @@ public class ReportControllerTest extends SpringAppTest {
         Calendar dt = Calendar.getInstance();
         dt.setTime(new Date());
         dt.set(Calendar.HOUR_OF_DAY, 0);
-        dt.set(Calendar.SECOND,0);
-        dt.set(Calendar.MINUTE,0);
-        dt.set(Calendar.DATE,-20);
-        CountDayMember countDayMember=new CountDayMember();
+        dt.set(Calendar.SECOND, 0);
+        dt.set(Calendar.MINUTE, 0);
+        dt.set(Calendar.DATE, -20);
+        CountDayMember countDayMember = new CountDayMember();
         countDayMember.setMerchantId(mockMerchant.getId());
         countDayMember.setDate(dt.getTime());
         countDayMember.setAmount(10);
         countDayMemberRepository.save(countDayMember);
 
-        CountDayOrder countDayOrder=new CountDayOrder();
+        CountDayOrder countDayOrder = new CountDayOrder();
         countDayOrder.setMerchantId(mockMerchant.getId());
         countDayOrder.setDate(dt.getTime());
         countDayOrder.setAmount(10);
         countDayOrderRepository.save(countDayOrder);
 
 
-        CountDayPartner countDayPartner=new CountDayPartner();
+        CountDayPartner countDayPartner = new CountDayPartner();
         countDayPartner.setMerchantId(mockMerchant.getId());
         countDayPartner.setDate(dt.getTime());
         countDayPartner.setAmount(10);
         countDayPartnerRepository.save(countDayPartner);
 
 
-
-
         //准备测试环境END
-       mockMvc.perform(device.getApi("otherStatistics")
+        mockMvc.perform(device.getApi("otherStatistics")
                 .build())
                 .andDo(print())
-               .andExpect(jsonPath("$.resultData.otherInfoList.discributorAmount").value(10))
-               .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(10))
-               .andExpect(jsonPath("$.resultData.otherInfoList.billAmount").value(10))
-               .andExpect(jsonPath("$.resultData.otherInfoList.goodsAmount").value(10));
+                .andExpect(jsonPath("$.resultData.otherInfoList.discributorAmount").value(10))
+                .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(10))
+                .andExpect(jsonPath("$.resultData.otherInfoList.billAmount").value(10))
+                .andExpect(jsonPath("$.resultData.otherInfoList.goodsAmount").value(10));
     }
 
     @Test
     public void testTopScore() throws Exception {
 //准备测试环境
-        Random random=new Random();
+        Random random = new Random();
         //设置时间
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
         //获取当前小时
-        int nowHour=date.get(Calendar.HOUR_OF_DAY);
+        int nowHour = date.get(Calendar.HOUR_OF_DAY);
         date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND,0);
-        date.set(Calendar.MINUTE,0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MINUTE, 0);
         //获取今天起始时间
-        Date today=date.getTime();
+        Date today = date.getTime();
 
 
         //新增商品
-        Goods goods=new Goods();
+        Goods goods = new Goods();
         goods.setOwner(mockMerchant);
         goods.setStatus(1);
         goods.setPrice(100);
         goodsRepository.save(goods);
 
 
-        User user=new User();
+        User user = new User();
         user.setRegTime(new Date());
         user.setPassword("11");
         user.setUsername("22");
         user.setType(0);
         user.setMerchant(mockMerchant);
-        user =userRepository.saveAndFlush(user);
+        user = userRepository.saveAndFlush(user);
 
         Order order;
-        for(int i=0;i<20;i++){
-            order=new Order();
+        for (int i = 0; i < 20; i++) {
+            order = new Order();
             order.setId("ffffff");
             order.setMerchant(mockMerchant);
             order.setPayStatus(1);
@@ -389,4 +387,75 @@ public class ReportControllerTest extends SpringAppTest {
     public void testTopSales() throws Exception {
 
     }
+
+    @Test
+    public void TestMonthToWeek() throws Exception {
+//        Calendar calendar = Calendar.getInstance();
+//        Date date = new Date();
+//        date.setHours(-24 * 30);
+//        log.info(date);
+//        calendar.setTime(date);
+//        log.info(calendar.getTime());
+//        log.info(calendar.get(Calendar.WEEK_OF_MONTH));
+
+
+        List<Date> list = new ArrayList<>();
+        Date curDate = DateHelper.getThisDayBegin();
+
+        String curMonth = "2015-7";
+
+        //获取总天数
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(dateFormat.parse(curMonth));
+        int days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        log.info("days:" + days);
+
+        int count = 0;
+        for (int i = 1; i <= days; i++) {
+            //获取每日数据
+            calendar = new GregorianCalendar();
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            calendar.setTime(dateFormat.parse(curMonth + "-" + i));
+
+            int k = new Integer(calendar.get(Calendar.DAY_OF_WEEK));
+            if (k == 1) {// 若当天是周日
+                count++;
+                System.out.println("-----------------------------------");
+                System.out.println("第" + count + "周");
+                if (i - 6 <= 1) {
+                    System.out.println("本周开始日期:" + curMonth + "-" + 1);
+                } else {
+                    System.out.println("本周开始日期:" + curMonth + "-" + (i - 6));
+                }
+                System.out.println("本周结束日期:" + curMonth + "-" + i);
+                System.out.println("-----------------------------------");
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                list.add(df.parse(curMonth + "-" + i));
+            }
+            if (k != 1 && i == days) {// 若是本月最后一天，且不是周日
+                count++;
+                System.out.println("-----------------------------------");
+                System.out.println("第" + count + "周");
+                System.out.println("本周开始日期:" + curMonth + "-" + (i - k + 2));
+                System.out.println("本周结束日期:" + curMonth + "-" + i);
+                System.out.println("-----------------------------------");
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                list.add(df.parse(curMonth + "-" + i));
+            }
+        }
+
+        for (Date date:list)
+        {
+            log.info(date);
+        }
+
+        if (curDate.getTime() >= calendar.getTime().getTime()) {
+
+        }
+
+    }
+
 }

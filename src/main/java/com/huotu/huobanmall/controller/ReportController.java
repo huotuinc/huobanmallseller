@@ -14,14 +14,15 @@ import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.service.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
+
 
 /**
  * Created by lgh on 2015/8/27.
@@ -75,6 +76,8 @@ public class ReportController implements ReportSystem {
         //本周订单
         Map<Date, Integer> mapWeek = countService.getWeekOrder(apm.getCurrentUser());
         mapWeek.put(DateHelper.getThisDayBegin(), todayCountAmount.intValue());
+
+
         weekTimes.outputData(mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]));
         weekAmounts.outputData(mapWeek.values().toArray(new Integer[mapWeek.values().size()]));
         weekAmount.outputData(mapWeek.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
@@ -83,6 +86,8 @@ public class ReportController implements ReportSystem {
         //本月订单
         Map<Date, Integer> mapMonth = countService.getMonthOrder(apm.getCurrentUser());
         mapMonth.put(DateHelper.getThisDayBegin(), todayCountAmount.intValue());
+        //月转周
+        mapMonth = MonthToWeek(mapMonth, Integer.class);
         monthTimes.outputData(mapMonth.keySet().toArray(new Date[mapMonth.keySet().size()]));
         monthAmounts.outputData(mapMonth.values().toArray(new Integer[mapMonth.values().size()]));
         monthAmount.outputData(mapMonth.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
@@ -123,11 +128,12 @@ public class ReportController implements ReportSystem {
         //月销售数据
         Map<Date, Float> mapMonth = countService.getMonthSales(apm.getCurrentUser());
         mapMonth.put(DateHelper.getThisDayBegin(), todayCountSales);
+        //月转周
+        mapMonth = MonthToWeek(mapMonth, Float.class);
         monthTimes.outputData(mapMonth.keySet().toArray(new Date[mapMonth.keySet().size()]));
         monthAmounts.outputData(mapMonth.values().toArray(new Float[mapMonth.values().size()]));
         monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
 
-          totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser()));//todo
 
         totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser()) + todayCountSales);
 
@@ -162,6 +168,9 @@ public class ReportController implements ReportSystem {
         Long todayCountPartnerAmount = mapTodayPartner.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
         todayPartnerAmount.outputData(todayCountPartnerAmount);
 
+        
+
+
         //周会员量
         Map<Date, Integer> mapWeekMember = countService.getWeekMember(apm.getCurrentUser());
         mapWeekMember.put(DateHelper.getThisDayBegin(), todayCountMemberAmount.intValue());
@@ -172,6 +181,7 @@ public class ReportController implements ReportSystem {
         //月会员量
         Map<Date, Integer> mapMonthMember = countService.getMonthMember(apm.getCurrentUser());
         mapMonthMember.put(DateHelper.getThisDayBegin(), todayCountMemberAmount.intValue());
+        mapMonthMember = MonthToWeek(mapMonthMember, Integer.class);
         monthMemberTimes.outputData(mapMonthMember.keySet().toArray(new Date[mapMonthMember.keySet().size()]));
         monthMemberAmounts.outputData(mapMonthMember.values().toArray(new Integer[mapMonthMember.values().size()]));
         monthMemberAmount.outputData(mapMonthMember.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
@@ -187,6 +197,8 @@ public class ReportController implements ReportSystem {
         //月分销商
         Map<Date, Integer> mapMonthPartner = countService.getMonthPartner(apm.getCurrentUser());
         mapMonthPartner.put(DateHelper.getThisDayBegin(), todayCountPartnerAmount.intValue());
+        //月转周
+        mapMonthPartner = MonthToWeek(mapMonthPartner, Integer.class);
         monthPartnerTimes.outputData(mapMonthPartner.keySet().toArray(new Date[mapMonthPartner.keySet().size()]));
         monthPartnerAmounts.outputData(mapMonthPartner.values().toArray(new Integer[mapMonthPartner.values().size()]));
         monthPartnerAmount.outputData(mapMonthPartner.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
@@ -198,6 +210,48 @@ public class ReportController implements ReportSystem {
         totalPartner.outputData(countService.getTotalPartner(apm.getCurrentUser()) + todayCountPartnerAmount);
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    /**
+     * 月转周
+     * 以周末为分界点
+     * 周数据为空的补上数据
+     *
+     * @param map
+     * @return
+     */
+    private <T> Map<Date, T> MonthToWeek(Map<Date, T> map, Class<T> cls) throws ParseException {
+        if (map.size() <= 0) return null;
+        //只处理当月的数据
+        Date curMonth = map.keySet().toArray(new Date[map.keySet().size()])[0];
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(curMonth);
+
+        //获取当月每个周末
+        List<Date> listWeekend = DateHelper.getMonthWeekEnd(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+        Map<Date, T> result = new TreeMap<>();
+//        for (Date date : result.keySet()) {
+//            result.put(date,(T)0 );
+//        }
+
+        //统计每个周末数据
+        for (Date date : map.keySet()) {
+            T value = map.get(date);
+            for (Date weekend : listWeekend)
+                if (date.getTime() <= weekend.getTime()) {
+                    if (Integer.class.equals(cls)) {
+                        Integer t = result.get(weekend) == null ? 0 : (Integer) result.get(weekend) + (Integer) value;
+                        result.put(weekend, (T) t);
+                        break;
+                    }
+                    if (Float.class.equals(cls)) {
+                        Float t = result.get(weekend) == null ? 0 : (Float) result.get(weekend) + (Float) value;
+                        result.put(weekend, (T) t);
+                        break;
+                    }
+                }
+        }
+        return result;
     }
 
     @Override
