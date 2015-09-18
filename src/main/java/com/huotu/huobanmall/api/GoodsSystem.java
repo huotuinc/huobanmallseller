@@ -91,7 +91,9 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult orderList(Output<AppOrderListModel[]> list, Integer status, @RequestParam(required = false) Date lastDate) throws Exception;
+    ApiResult orderList(Output<AppOrderListModel[]> list, Integer status,
+                        @RequestParam(required = false) Date lastDate,
+                        @RequestParam(required = false) String keyword) throws Exception;
 
 
     /**

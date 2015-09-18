@@ -1,5 +1,7 @@
 package com.huotu.huobanmall.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.huotu.common.HttpHelper;
 import com.huotu.huobanmall.api.GoodsSystem;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
@@ -9,12 +11,6 @@ import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
-import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
@@ -221,14 +217,16 @@ public class GoodsController implements GoodsSystem {
 
     @RequestMapping("/orderList")
     @Override
-    public ApiResult orderList(Output<AppOrderListModel[]> list, Integer status, @RequestParam(required = false) Date lastDate) throws Exception {
+    public ApiResult orderList(Output<AppOrderListModel[]> list, Integer status,
+                               @RequestParam(required = false) Date lastDate,
+                               @RequestParam(required = false) String keyword) throws Exception {
         Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
         if(lastDate==null){
             Calendar date = Calendar.getInstance();
             date.add(Calendar.DATE,1);
             lastDate=date.getTime();
         }
-        List<Order> orderList=orderService.searchOrders(merchant.getId(),lastDate,PAGE_SIZE,status).getContent();
+        List<Order> orderList=orderService.searchOrders(merchant.getId(),lastDate,PAGE_SIZE,status,keyword).getContent();
         AppOrderListModel[] appOrderListModels=new AppOrderListModel[orderList.size()];
         int i=0;
         for(Order o:orderList){
@@ -292,7 +290,8 @@ public class GoodsController implements GoodsSystem {
         }
         appOrderDetailModel.setList(appOrderListProductModels);
         appOrderDetailModel.setAmount(order.getAmount());
-        appOrderDetailModel.setBuyer(order.getReceiver());
+        appOrderDetailModel.setBuyer(user.getNickname());
+        appOrderDetailModel.setReceiver(order.getReceiver());
         appOrderDetailModel.setContact(user.getMobile());
         appOrderDetailModel.setOrderNo(order.getId());
         appOrderDetailModel.setAddress("");//todo 收货地址
@@ -306,28 +305,44 @@ public class GoodsController implements GoodsSystem {
     public ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data, String orderNo) throws Exception {
         String appId ="73d29a4c9a6d389a0b7288ec27b4c4c4";
         String encryption="9389e8a5c32eefa3134340640fb4ceaa";
-        String sign= DigestUtils.md5DigestAsHex((appId+ orderNo + encryption).getBytes());
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-//        String param = "appid="+ appId + "&sign=" +sign+"&number="+orderNo;
-//        String returnData=HttpHelper.getRequest("http://express.51flashmall.com/express/logisty", param);
+        String sign= DigestUtils.md5DigestAsHex(("appid="+appId+"&number="+ orderNo + encryption).getBytes());
+        String url="http://express.51flashmall.com/express/logisty";
+        //获取订单
+        Order order=orderRepository.findOne(orderNo);
+        //获取该订单的顶单项
+        List<OrderItems> orderItemses=orderItemsRepository.findByOrder(order);
+        List<AppOrderListProductModel> appOrderListProductModels=new ArrayList<AppOrderListProductModel>();
+        for(int i=0;i<orderItemses.size();i++){
+            OrderItems orderItems=orderItemses.get(i);
+            Product product=productRepository.findOne(orderItems.getProductId());
+            Goods goods=goodsRepository.findOne(orderItems.getGoodsId());
+            AppOrderListProductModel appOrderListProductModel=new AppOrderListProductModel();
+            appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+            appOrderListProductModel.setMoney(product.getPrice());
+            appOrderListProductModel.setAmount(orderItems.getAmount());
+            appOrderListProductModel.setTitle(product.getName());
+            appOrderListProductModel.setSpec(product.getSpec());
+            appOrderListProductModels.add(appOrderListProductModel);
+        }
 
-        HttpPost post = new HttpPost("http://express.51flashmall.com/express/logisty");
-        post.setEntity(
-                EntityBuilder.create()
-                .setContentEncoding("UTF-8")
-                .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
-                .setParameters(
-                        new BasicNameValuePair("appid", appId),
-                        new BasicNameValuePair("sign", sign),
-                        new BasicNameValuePair("number",orderNo)
-                )
-                .build()
-        );
-//        HttpResponseProxy resultData=httpClient.execute(post);
+        Map<String,String> map=new HashMap<String,String>();
+        map.put("appid",appId);
+        map.put("sign",sign);
+        map.put("number","运单编号");//todo 运单编号设置
 
-
-
-
+        //调用post方法
+        String Data = HttpHelper.postRequest(url,map);
+        AppLogisticsModel result =  JSON.parseObject(Data,AppLogisticsModel.class);
+        AppLogisticsDetailModel appLogisticsDetailModel=new AppLogisticsDetailModel();
+        //物流信息集合
+        List<AppLogisticsDataModel> appLogisticsDataModels=result.getData();
+        appLogisticsDetailModel.setSource(appLogisticsDataModels.get(0).getCompany());
+        appLogisticsDetailModel.setStatus(appLogisticsDataModels.get(0).getStatus());
+        appLogisticsDetailModel.setNo("运单编号");
+        appLogisticsDetailModel.setTrack(appLogisticsDataModels);
+        appLogisticsDetailModel.setList(appOrderListProductModels);
+        appLogisticsDetailModel.setPictureURL("物流图片");
+        data.outputData(appLogisticsDetailModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -336,7 +351,7 @@ public class GoodsController implements GoodsSystem {
     public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate) throws Exception {
         Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
         Date date=new Date(lastDate);
-        List<Order> orderList=orderService.searchOrders(merchant.getId(),date,PAGE_SIZE,1).getContent();
+        List<Order> orderList=orderService.searchOrders(merchant.getId(),date,PAGE_SIZE,1,"").getContent();
         AppSalesListModel[] appSalesListModels=new AppSalesListModel[orderList.size()];
         for(int i=0;i<orderList.size();i++){
             AppSalesListModel appSalesListModel=new AppSalesListModel();
