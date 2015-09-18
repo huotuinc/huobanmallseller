@@ -14,6 +14,11 @@ public class AppOrderDetailModel {
     private String buyer;
 
     /**
+     * 收货人
+     */
+    private String receiver;
+
+    /**
      * 地址
      */
     private String address;
@@ -110,5 +115,13 @@ public class AppOrderDetailModel {
 
     public void setPaid(float paid) {
         this.paid = paid;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

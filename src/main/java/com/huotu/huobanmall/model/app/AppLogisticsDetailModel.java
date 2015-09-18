@@ -14,6 +14,11 @@ public class AppLogisticsDetailModel {
     private String status;
 
     /**
+     * 物流(快递)图片
+     */
+    private String pictureURL;
+
+    /**
      * 信息来源
      */
     private String source;
@@ -31,7 +36,7 @@ public class AppLogisticsDetailModel {
     /**
      * 物流跟踪
      */
-    private String track;
+    private List<AppLogisticsDataModel> track;
 
     public String getStatus() {
         return status;
@@ -65,11 +70,19 @@ public class AppLogisticsDetailModel {
         this.list = list;
     }
 
-    public String getTrack() {
+    public List<AppLogisticsDataModel> getTrack() {
         return track;
     }
 
-    public void setTrack(String track) {
+    public void setTrack(List<AppLogisticsDataModel> track) {
         this.track = track;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 }
