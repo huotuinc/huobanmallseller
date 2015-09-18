@@ -9,8 +9,15 @@ import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
+import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -297,6 +304,30 @@ public class GoodsController implements GoodsSystem {
     @Override
     @RequestMapping("/logisticsDetail")
     public ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data, String orderNo) throws Exception {
+        String appId ="73d29a4c9a6d389a0b7288ec27b4c4c4";
+        String encryption="9389e8a5c32eefa3134340640fb4ceaa";
+        String sign= DigestUtils.md5DigestAsHex((appId+ orderNo + encryption).getBytes());
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+//        String param = "appid="+ appId + "&sign=" +sign+"&number="+orderNo;
+//        String returnData=HttpHelper.getRequest("http://express.51flashmall.com/express/logisty", param);
+
+        HttpPost post = new HttpPost("http://express.51flashmall.com/express/logisty");
+        post.setEntity(
+                EntityBuilder.create()
+                .setContentEncoding("UTF-8")
+                .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                .setParameters(
+                        new BasicNameValuePair("appid", appId),
+                        new BasicNameValuePair("sign", sign),
+                        new BasicNameValuePair("number",orderNo)
+                )
+                .build()
+        );
+//        HttpResponseProxy resultData=httpClient.execute(post);
+
+
+
+
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
