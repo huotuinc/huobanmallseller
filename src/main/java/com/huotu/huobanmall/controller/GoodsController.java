@@ -57,6 +57,8 @@ public class GoodsController implements GoodsSystem {
     ProductService productService;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    DeliveryRepository deliveryRepository;
 
 
 
@@ -271,6 +273,8 @@ public class GoodsController implements GoodsSystem {
         //获取订单
         Order order=orderRepository.findOne(orderNo);
         User user=userRepository.findOne(order.getUserId());
+        Delivery delivery=deliveryRepository.findByOrder(order).get(0);
+
 
 
         //获取该订单的顶单项
@@ -294,8 +298,9 @@ public class GoodsController implements GoodsSystem {
         appOrderDetailModel.setReceiver(order.getReceiver());
         appOrderDetailModel.setContact(user.getMobile());
         appOrderDetailModel.setOrderNo(order.getId());
-        appOrderDetailModel.setAddress("");//todo 收货地址
+        appOrderDetailModel.setAddress(delivery.getAddress());
         appOrderDetailModel.setPaid(order.getPrice());
+        appOrderDetailModel.setScore(0);//todo 返利积分如何统计
         data.outputData(appOrderDetailModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -309,6 +314,7 @@ public class GoodsController implements GoodsSystem {
         String url="http://express.51flashmall.com/express/logisty";
         //获取订单
         Order order=orderRepository.findOne(orderNo);
+        Delivery delivery=deliveryRepository.findByOrder(order).get(0);
         //获取该订单的顶单项
         List<OrderItems> orderItemses=orderItemsRepository.findByOrder(order);
         List<AppOrderListProductModel> appOrderListProductModels=new ArrayList<AppOrderListProductModel>();
@@ -328,20 +334,20 @@ public class GoodsController implements GoodsSystem {
         Map<String,String> map=new HashMap<String,String>();
         map.put("appid",appId);
         map.put("sign",sign);
-        map.put("number","运单编号");//todo 运单编号设置
+        map.put("number",delivery.getNo());
 
-        //调用post方法
+        //调用post方法获得物流信息字符串
         String Data = HttpHelper.postRequest(url,map);
         AppLogisticsModel result =  JSON.parseObject(Data,AppLogisticsModel.class);
         AppLogisticsDetailModel appLogisticsDetailModel=new AppLogisticsDetailModel();
-        //物流信息集合
+        //获取物流信息集合
         List<AppLogisticsDataModel> appLogisticsDataModels=result.getData();
-        appLogisticsDetailModel.setSource(appLogisticsDataModels.get(0).getCompany());
-        appLogisticsDetailModel.setStatus(appLogisticsDataModels.get(0).getStatus());
-        appLogisticsDetailModel.setNo("运单编号");
+        appLogisticsDetailModel.setSource(delivery.getDeliveryName());
+        appLogisticsDetailModel.setStatus(delivery.getStatus());
+        appLogisticsDetailModel.setNo(delivery.getNo());
         appLogisticsDetailModel.setTrack(appLogisticsDataModels);
         appLogisticsDetailModel.setList(appOrderListProductModels);
-        appLogisticsDetailModel.setPictureURL("物流图片");
+        appLogisticsDetailModel.setPictureURL("http://pic25.nipic.com/20121121/7020518_160535378000_2.jpg");//todo 到时候图片需要修改
         data.outputData(appLogisticsDetailModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
