@@ -305,7 +305,7 @@ public class SystemCountingImpl implements SystemCounting {
 
 
     /**
-     * 初始化历史数据
+     * 初始化历史数据 todo 上线前需要初始化
      * 包含当前的销售数据
      *
      * @throws ParseException

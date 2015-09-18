@@ -16,7 +16,7 @@
         <property name="jpaPropertyMap">
             <map>
                 <entry key="javax.persistence.jdbc.url"
-                       value="jdbc:jtds:sqlserver://192.168.1.56:1433/fanmall"/>
+                       value="jdbc:jtds:sqlserver://127.0.0.1:1433/huobanmall"/>
                 <entry key="javax.persistence.jdbc.user" value="sa"/>
                 <entry key="javax.persistence.jdbc.driver" value="net.sourceforge.jtds.jdbc.Driver"/>
                 <entry key="javax.persistence.jdbc.password" value="123456"/>
