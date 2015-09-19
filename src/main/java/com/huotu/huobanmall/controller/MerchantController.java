@@ -290,10 +290,14 @@ public class MerchantController implements MerchantSystem {
 
             operator.setPassword(newPassword);
             operatorRepository.save(operator);
-        }
-        else
-        {
-            
+        } else {
+            Merchant merchant = pms.getCurrentUser();
+            if (!oldPassword.equals(merchant.getPassword())) {
+                return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_PASSWORD);
+            }
+
+            merchant.setPassword(newPassword);
+            merchantRepository.save(merchant);
         }
 
 

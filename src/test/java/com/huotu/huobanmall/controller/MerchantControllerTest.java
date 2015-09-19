@@ -14,6 +14,7 @@ import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -135,6 +136,31 @@ public class MerchantControllerTest extends SpringAppTest {
 
     @Test
     public void testSendSMS() throws Exception {
+
+    }
+
+    @Test
+    public void testModifyPassword() throws Exception {
+
+        String newPassword = DigestUtils.md5DigestAsHex(UUID.randomUUID().toString().getBytes());
+        mockMvc.perform(
+                device.getApi("modifyPassword")
+                        .param("oldPassword", mockMerchantPassword)
+                        .param("newPassword", newPassword)
+                        .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS));
+
+        Merchant merchant = merchantRepository.findByName(mockMerchantName);
+        Assert.assertEquals("密码修改成功", newPassword, merchant.getPassword());
+
+
+        mockMvc.perform(
+                device.getApi("modifyPassword")
+                        .param("oldPassword", mockMerchantPassword)
+                        .param("newPassword", newPassword)
+                        .build()
+        ).andExpect(huobanmallStatus(CommonEnum.AppCode.ERROR_WRONG_PASSWORD));
+
 
     }
 }
