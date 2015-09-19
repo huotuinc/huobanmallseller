@@ -23,7 +23,7 @@ import com.huotu.huobanmall.repository.ConfigAppVersionRepository;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.service.MerchantService;
-import com.huotu.huobanmall.service.SystemService;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +57,7 @@ public class MerchantController implements MerchantSystem {
     @Autowired
     private ConfigAppVersionRepository configAppVersionRepository;
 
-    @Autowired
-    private SystemService systemService;
+
 
     @Autowired
     private MerchantService merchantService;
@@ -124,7 +123,7 @@ public class MerchantController implements MerchantSystem {
 
             // 获取全局 强制客户端更新（针对用户所有版本）
 
-            Boolean isAppForcedUpdating = "1".equals(systemService.systemConfigVor("AppForcedUpdating", ""));
+            Boolean isAppForcedUpdating =  false;
 
             // 检查版本跨度 如2.1.6 版本前2位变化则整包更新 否则只增量更新
             Boolean isBigChange = true;// 1.2.1 版本修改

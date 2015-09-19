@@ -337,7 +337,7 @@ public class ReportController implements ReportSystem {
             User user = userRepository.findOne(rebate.getId());
             appTopScoreModel.setMobile(user.getMobile());
             appTopScoreModel.setName(user.getUsername());
-            appTopScoreModel.setNickName(user.getNickname());
+
             appTopScoreModel.setScore(rebate.getScore());
             appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
             appTopScoreModels[i] = appTopScoreModel;
@@ -360,7 +360,7 @@ public class ReportController implements ReportSystem {
             double money = (Double) objects[1];
             long amount = (Long) objects[2];
             appTopConsumeModel.setPictureUrl(user.getUserFace());
-            appTopConsumeModel.setNickName(user.getNickname());
+
             appTopConsumeModel.setName(user.getUsername());
             appTopConsumeModel.setMoney((float) money);
             appTopConsumeModel.setMobile(user.getMobile());

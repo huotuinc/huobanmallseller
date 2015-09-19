@@ -10,6 +10,8 @@ import java.util.Date;
  */
 
 @Entity
+@Table(name = "Mall_Member_ChangeLog")
+@Cacheable(value = false)
 public class UserChangeLog {
 
     @Id

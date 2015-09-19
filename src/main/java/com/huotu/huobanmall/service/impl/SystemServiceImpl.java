@@ -30,8 +30,8 @@ public class SystemServiceImpl implements SystemService {
     }
 
 
-
     @Override
+    @Deprecated
     public String systemConfigVor(String key, String defaultValue) {
         try {
             return systemConfigRepository.getOne(key).getValueForCode();
@@ -41,11 +41,12 @@ public class SystemServiceImpl implements SystemService {
     }
 
     @Override
+    @Deprecated
     public void putSystemConfig(String key, String value) {
         SystemConfig systemConfig;
-        try{
+        try {
             systemConfig = systemConfigRepository.getOne(key);
-        }catch (Exception e){
+        } catch (Exception e) {
             systemConfig = new SystemConfig();
             systemConfig.setCode(key);
         }

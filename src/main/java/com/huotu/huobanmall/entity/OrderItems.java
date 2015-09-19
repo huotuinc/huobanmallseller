@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Cacheable(value = false)
+@Table(name = "Mall_Order_Items")
 public class OrderItems {
 
     @Id

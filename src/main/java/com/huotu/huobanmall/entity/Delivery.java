@@ -81,37 +81,37 @@ public class Delivery {
 
     /**
      * 状态
-     *  /// <summary>
-     /// 成功到达
-     /// </summary>
-     succ,
-     /// <summary>
-     /// 发货失败
-     /// </summary>
-     failed,
-     /// <summary>
-     /// 已取消
-     /// </summary>
-     cancel,
-     /// <summary>
-     /// 货物丢失
-     /// </summary>
-     lost,
-     /// <summary>
-     /// 运送中
-     /// </summary>
-     progress,
-     /// <summary>
-     /// 超时
-     /// </summary>
-     timeout,
-     /// <summary>
-     /// 准备发货
-     /// </summary>
-     ready
+     * <p>
+     * 成功到达
+     * <p>
+     * succ,
+     * <p>
+     * 发货失败
+     * <p>
+     * failed,
+     * <p>
+     * 已取消
+     * <p>
+     * cancel,
+     * <p>
+     * 货物丢失
+     * <p>
+     * lost,
+     * <p>
+     * 运送中
+     * <p>
+     * progress,
+     * <p>
+     * 超时
+     * <p>
+     * timeout,
+     * <p>
+     * 准备发货
+     * <p>
+     * ready
      */
     @Column(name = "Status")
-    private String  status;
+    private String status;
 
     public Integer getId() {
         return id;

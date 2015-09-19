@@ -9,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "Mall_Goods_Cat")
+@Cacheable(value = false)
 public class Category {
 
     @Id

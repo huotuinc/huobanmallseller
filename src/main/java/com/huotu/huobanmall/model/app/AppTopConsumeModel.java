@@ -15,10 +15,6 @@ public class AppTopConsumeModel {
      */
     private String name;
 
-    /**
-     * 用户昵称
-     */
-    private String nickName;
 
     /**
      * 手机号
@@ -51,13 +47,7 @@ public class AppTopConsumeModel {
         this.name = name;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
 
     public String getMobile() {
         return mobile;

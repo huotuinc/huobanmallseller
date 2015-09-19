@@ -10,6 +10,7 @@ import javax.persistence.Id;
  */
 @Entity
 @Cacheable(value = false)
+@Deprecated
 public class SystemConfig {
     @Id
     @Column(length = 50)

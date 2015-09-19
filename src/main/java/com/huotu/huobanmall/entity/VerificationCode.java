@@ -1,8 +1,6 @@
 package com.huotu.huobanmall.entity;
 
 
-
-
 import com.huotu.common.model.CodeType;
 import com.huotu.common.model.VerificationType;
 
@@ -10,31 +8,37 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 验证码 todo 对应数据库
+ * 验证码
+ * 对应Swt_SmsVerification SwtSmsVerificationModel
  */
 @Entity
 @Cacheable(value = false)
-@Table(indexes = {@Index(columnList = "mobile"),@Index(columnList = "sendTime")})
+@Table(name = "Swt_SmsVerification", indexes = {@Index(columnList = "mobile"), @Index(columnList = "sendTime")})
 public class VerificationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SSV_ID")
     private Long id;
 
-    @Column(nullable = false,length = 11)
+    @Column(name = "SSV_Phone")
     private String mobile;
 
-    @Column(nullable = false)
     private VerificationType type;
 
     private CodeType codeType;
 
-    @Column(nullable = false,length = 8)
+    @Column(name = "SSV_Verification")
     private String code;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(name = "SSV_AddTime")
     private Date sendTime;
 
+    /**
+     * 商家
+     */
+    @Column(name = "SSV_CustomerId")
+    private Merchant merchant;
 
     public Long getId() {
         return id;
@@ -82,5 +86,13 @@ public class VerificationCode {
 
     public void setSendTime(Date sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }
