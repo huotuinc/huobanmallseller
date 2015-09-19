@@ -9,6 +9,12 @@ import org.springframework.data.domain.Page;
  */
 public interface RebateService {
 
-    Page<Rebate> showTopScore(Merchant merchant,Integer status);
+    /**
+     * 最高返利会员
+     * @param merchant      所属商家
+     * @param status        状态
+     * @return
+     */
+    Page<Rebate> searchUserScore(Merchant merchant,Integer status);
 
 }

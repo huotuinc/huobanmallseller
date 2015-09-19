@@ -257,7 +257,6 @@ public class GoodsController implements GoodsSystem {
             appOrderListModel.setAmount(o.getAmount());
             appOrderListModel.setStatus(o.getStatus());
             appOrderListModel.setTime(o.getTime());
-            appOrderListModel.setScore(0);//todo 返利积分怎么计算
             appOrderListModels[i]=appOrderListModel;
             i++;
         }
@@ -294,7 +293,7 @@ public class GoodsController implements GoodsSystem {
         }
         appOrderDetailModel.setList(appOrderListProductModels);
         appOrderDetailModel.setAmount(order.getAmount());
-        appOrderDetailModel.setBuyer(user.getNickname());
+        appOrderDetailModel.setBuyer(userService.getViewUserName(user));
         appOrderDetailModel.setReceiver(order.getReceiver());
         appOrderDetailModel.setContact(user.getMobile());
         appOrderDetailModel.setOrderNo(order.getId());

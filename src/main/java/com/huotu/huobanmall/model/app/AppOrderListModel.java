@@ -26,10 +26,10 @@ public class AppOrderListModel {
     private List<AppOrderListProductModel> list;
 
 
-    /**
-     * 返利积分
-     */
-    private Integer score;
+//    /**
+//     * 返利积分
+//     */
+//    private Integer score;
 
     /**
      * 商品数量
@@ -70,14 +70,6 @@ public class AppOrderListModel {
 
     public void setList(List<AppOrderListProductModel> list) {
         this.list = list;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
     }
 
     public Integer getAmount() {

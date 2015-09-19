@@ -124,8 +124,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable) {
-        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,1,pageable);
-//          return null;
+//        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,1,pageable);
+          return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.User;
 
 import java.util.Date;
 
@@ -42,6 +43,13 @@ public interface UserService {
      * @return
      */
     public Integer countTodayPartner(Merchant merchant);
+
+    /**
+     * Create by shiliting on 2015/9/19
+     * 获取显示的用户名(按照优先级显示)
+     * @return
+     */
+    String getViewUserName(User user);
 
 
 

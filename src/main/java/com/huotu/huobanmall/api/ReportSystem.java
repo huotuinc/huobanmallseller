@@ -148,26 +148,26 @@ public interface ReportSystem {
 
     /**
      * 返利积分统计
-     * top 20
+     *
      *
      * @param list
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception;
+    ApiResult userScoreList(Output<AppTopScoreModel[]> list) throws Exception;
 
 
     /**
      * 消费统计
-     * top 20
+     *
      *
      * @param list
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception;
+    ApiResult userConsumeList(Output<AppTopConsumeModel[]> list) throws Exception;
 
 
     /**

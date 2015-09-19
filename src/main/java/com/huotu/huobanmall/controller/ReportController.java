@@ -33,7 +33,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/app")
 public class ReportController implements ReportSystem {
-    static final int TOP_PAGE = 20;
+    static final int TOP_PAGE = 10;
 
     @Autowired
     UserRepository userRepository;
@@ -326,10 +326,10 @@ public class ReportController implements ReportSystem {
     }
 
     @Override
-    @RequestMapping("/topScore")
-    public ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception {
+    @RequestMapping("/userScoreList")
+    public ApiResult userScoreList(Output<AppTopScoreModel[]> list) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        List<Rebate> rebates = rebateService.showTopScore(apm.getCurrentUser(), 1).getContent();
+        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1).getContent();
         AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
         for (int i = 0; i < rebates.size(); i++) {
             AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
@@ -347,8 +347,8 @@ public class ReportController implements ReportSystem {
     }
 
     @Override
-    @RequestMapping("/topConsume")
-    public ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception {
+    @RequestMapping("/userConsumeList")
+    public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         List<Object[]> toplist = orderService.countUserExpenditureList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
         AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
@@ -375,7 +375,7 @@ public class ReportController implements ReportSystem {
     @RequestMapping("/topSales")
     public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Object[]> toplist = orderItemsService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE - 10)).getContent();
+        List<Object[]> toplist = orderItemsService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
         AppTopSalesModel[] appTopSalesModels = new AppTopSalesModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             AppTopSalesModel appTopSalesModel = new AppTopSalesModel();

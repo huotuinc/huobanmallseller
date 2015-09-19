@@ -3,6 +3,7 @@ package com.huotu.huobanmall.service.impl;
 import com.huotu.huobanmall.entity.CountTodayMember;
 import com.huotu.huobanmall.entity.CountTodayPartner;
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.repository.CountTodayMemberRepository;
 import com.huotu.huobanmall.repository.CountTodayPartnerRepository;
 import com.huotu.huobanmall.repository.UserRepository;
@@ -57,5 +58,26 @@ public class UserServiceImpl implements UserService{
             todayPartners+=p.getAmount();
         }
         return todayPartners;
+    }
+
+    @Override
+    public String getViewUserName(User user) {
+        String realName=user.getRealName();
+        String wxNickName=user.getWxNickName();
+        String mobile=user.getMobile();
+        String userName=user.getUsername();
+        if(realName==null||realName==""){
+            if(wxNickName==null||wxNickName==""){
+                if(mobile==null||mobile==""){
+                    return userName;
+                }else {
+                    return mobile;
+                }
+            }else {
+                return wxNickName;
+            }
+        }else {
+            return realName;
+        }
     }
 }

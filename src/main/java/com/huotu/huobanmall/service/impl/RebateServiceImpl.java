@@ -18,8 +18,11 @@ public class RebateServiceImpl implements RebateService {
     @Autowired
     RebateRepository rebateRepository;
     @Override
-    public Page<Rebate> showTopScore(Merchant merchant, Integer status) {
+    public Page<Rebate> searchUserScore(Merchant merchant, Integer status) {
+//        return null;
         return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,status,new PageRequest(0,20));
+
+
     }
 
 }
