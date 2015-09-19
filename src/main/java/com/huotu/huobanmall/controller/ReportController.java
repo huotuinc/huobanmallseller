@@ -14,14 +14,11 @@ import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.service.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.sql.Connection;
 import java.text.ParseException;
 import java.util.*;
 
@@ -336,8 +333,7 @@ public class ReportController implements ReportSystem {
             Rebate rebate = rebates.get(i);
             User user = userRepository.findOne(rebate.getId());
             appTopScoreModel.setMobile(user.getMobile());
-            appTopScoreModel.setName(user.getUsername());
-
+            appTopScoreModel.setName(userService.getViewUserName(user));
             appTopScoreModel.setScore(rebate.getScore());
             appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
             appTopScoreModels[i] = appTopScoreModel;
@@ -360,8 +356,7 @@ public class ReportController implements ReportSystem {
             double money = (Double) objects[1];
             long amount = (Long) objects[2];
             appTopConsumeModel.setPictureUrl(user.getUserFace());
-
-            appTopConsumeModel.setName(user.getUsername());
+            appTopConsumeModel.setName(userService.getViewUserName(user));
             appTopConsumeModel.setMoney((float) money);
             appTopConsumeModel.setMobile(user.getMobile());
             appTopConsumeModel.setAmount((int) amount);
