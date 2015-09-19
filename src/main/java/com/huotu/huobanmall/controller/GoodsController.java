@@ -120,7 +120,11 @@ public class GoodsController implements GoodsSystem {
             appGoodListModel.setPictureUrl(good.getPictureUrl());
             appGoodListModel.setStock(good.getStock());
             appGoodListModel.setPrice(good.getStock());
-            appGoodListModel.setCategory(good.getCategory().getTitle());
+            if(good.getCategory()==null){
+                appGoodListModel.setCategory("未分类");
+            }else {
+                appGoodListModel.setCategory(good.getCategory().getTitle());
+            }
             appGoodListModels[i]=appGoodListModel;
         }
         list.outputData(appGoodListModels);
