@@ -30,7 +30,7 @@ public class Rebate {
     private Merchant merchant;
 
     /**
-     * 用户
+     * 获得积分的用户
      */
     @Column(name = "UTIH_UserID")
     private Integer userId;
@@ -48,9 +48,38 @@ public class Rebate {
     @Column(name = "UTIH_Status")
     private Integer status;
 
+    /**
+     * 生成时间
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UTIH_AddTime")
     private Date time;
+
+    /**
+     * 预计转正时间
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "UTIH_Estimate_PosTime")
+    private Date scheduledTime;
+
+    /**
+     * 实际转正时间
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "UTIH_PositiveTime")
+    private Date actualTime;
+
+    /**
+     *  获取返利积分人员
+     *  购买商品获得 = 1,
+     *  下线购买商品提成 = 2,
+     *  下下线购买商品提成 = 201,
+     *  下下下线购买商品提成 = 202,
+     */
+    @Column(name = "UTIH_NewType")
+    private Integer gainer;
+
+
 
     public Integer getId() {
         return id;
@@ -106,5 +135,29 @@ public class Rebate {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Date getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(Date scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
+    public Date getActualTime() {
+        return actualTime;
+    }
+
+    public void setActualTime(Date actualTime) {
+        this.actualTime = actualTime;
+    }
+
+    public Integer getGainer() {
+        return gainer;
+    }
+
+    public void setGainer(Integer gainer) {
+        this.gainer = gainer;
     }
 }
