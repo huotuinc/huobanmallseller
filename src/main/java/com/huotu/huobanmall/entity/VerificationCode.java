@@ -37,7 +37,8 @@ public class VerificationCode {
     /**
      * 商家
      */
-    @Column(name = "SSV_CustomerId")
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH})
+    @JoinColumn(name = "SSV_CustomerId")
     private Merchant merchant;
 
     public Long getId() {

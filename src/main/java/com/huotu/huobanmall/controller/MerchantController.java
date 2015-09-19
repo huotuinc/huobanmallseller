@@ -58,7 +58,6 @@ public class MerchantController implements MerchantSystem {
     private ConfigAppVersionRepository configAppVersionRepository;
 
 
-
     @Autowired
     private MerchantService merchantService;
 
@@ -123,7 +122,7 @@ public class MerchantController implements MerchantSystem {
 
             // 获取全局 强制客户端更新（针对用户所有版本）
 
-            Boolean isAppForcedUpdating =  false;
+            Boolean isAppForcedUpdating = false;
 
             // 检查版本跨度 如2.1.6 版本前2位变化则整包更新 否则只增量更新
             Boolean isBigChange = true;// 1.2.1 版本修改
@@ -279,28 +278,30 @@ public class MerchantController implements MerchantSystem {
         }
     }
 
-    //todo
     @Override
     @RequestMapping("/modifyPassword")
     public ApiResult modifyPassword(Output<AppMerchantModel> user, String oldPassword, String newPassword) throws Exception {
+        AppPublicModel pms = PublicParameterHolder.getParameters();
+        if (pms.getCurrentOprator() != null) {
+            Operator operator = pms.getCurrentOprator();
+            if (!oldPassword.equals(operator.getPassword())) {
+                return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_PASSWORD);
+            }
 
-//        AppPublicModel pms = PublicParameterHolder.getParameters();
-//
-//        User userData = pms.getCurrentUser();
-//        if (userData == null) {
-//            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_USER_LOGIN_FAIL);
-//        }
-//
-//        if (newPassword.length() != 32) {
-//            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_PASSWORD);
-//        }
-//
-//        if (!userData.getPassword().equals(password)) {
-//            return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_PASSWORD);
-//        }
-//
-//        userService.updatePassword(userData, newPassword);
-//        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+            operator.setPassword(newPassword);
+            operatorRepository.save(operator);
+        }
+        else
+        {
+            
+        }
+
+
+        if (pms.getCurrentOprator() == null) {
+            user.outputData(merchantService.getAppMerchantModel(false, pms.getCurrentUser().getId()));
+        } else {
+            user.outputData(merchantService.getAppMerchantModel(true, pms.getCurrentOprator().getId()));
+        }
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
