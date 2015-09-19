@@ -33,14 +33,26 @@ public class User {
     /**
      * 手机号
      */
-    @Column(name="UB_UserMobile")
+    @Column(name = "UB_UserMobile")
     private String mobile;
 
     /**
-     * 昵称
+     * 真实姓名
      */
-    @Column(name = "UB_UserNickName")
-    private String nickname;
+    @Column(name = "UB_UserRealName")
+    private String realName;
+
+    /**
+     * 微信头像
+     */
+    @Column(name = "UB_WxHeadImg")
+    private String wxHeadUrl;
+
+    /**
+     * 微信昵称
+     */
+    @Column(name = "UB_WxNickName")
+    private String wxNickName;
 
     /**
      * 注册时间
@@ -131,11 +143,28 @@ public class User {
         this.mobile = mobile;
     }
 
-    public String getNickname() {
-        return nickname;
+
+    public String getRealName() {
+        return realName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getWxHeadUrl() {
+        return wxHeadUrl;
+    }
+
+    public void setWxHeadUrl(String wxHeadUrl) {
+        this.wxHeadUrl = wxHeadUrl;
+    }
+
+    public String getWxNickName() {
+        return wxNickName;
+    }
+
+    public void setWxNickName(String wxNickName) {
+        this.wxNickName = wxNickName;
     }
 }
