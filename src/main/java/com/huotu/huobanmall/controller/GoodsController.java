@@ -17,6 +17,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -203,10 +204,10 @@ public class GoodsController implements GoodsSystem {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         AppOrderDetailModel appOrderDetailModel = new AppOrderDetailModel();
         //获取订单
-        Order order=orderRepository.findOne(orderNo);
-        User user=userRepository.findOne(order.getUserId());
-        List<Delivery> deliveries=deliveryRepository.findByOrder(order);
-        List<Rebate> rebates=rebateRepository.findByMerchantAndOrder(merchant, order);
+        Order order = orderRepository.findOne(orderNo);
+        User user = userRepository.findOne(order.getUserId());
+        List<Delivery> deliveries = deliveryRepository.findByOrder(order);
+        List<Rebate> rebates = rebateRepository.findByMerchantAndOrder(merchant, order);
 
 
         //获取该订单的顶单项
@@ -224,11 +225,11 @@ public class GoodsController implements GoodsSystem {
             appOrderListProductModel.setSpec(product.getSpec());
             appOrderListProductModels.add(appOrderListProductModel);
         }
-        List<AppUserRebateModel> appUserRebateModels=new ArrayList<>();
-        for(int i=0;i<rebates.size();i++){
-            Rebate rebate=rebates.get(i);
-            AppUserRebateModel appUserRebateModel=new AppUserRebateModel();
-            User rebateUser=userRepository.findOne(rebate.getUserId());
+        List<AppUserRebateModel> appUserRebateModels = new ArrayList<>();
+        for (int i = 0; i < rebates.size(); i++) {
+            Rebate rebate = rebates.get(i);
+            AppUserRebateModel appUserRebateModel = new AppUserRebateModel();
+            User rebateUser = userRepository.findOne(rebate.getUserId());
             appUserRebateModel.setUserName(userService.getViewUserName(rebateUser));
             appUserRebateModel.setScore(rebate.getScore());
             appUserRebateModel.setGetTime(rebate.getTime());
@@ -244,7 +245,7 @@ public class GoodsController implements GoodsSystem {
         appOrderDetailModel.setReceiver(order.getReceiver());
         appOrderDetailModel.setContact(user.getMobile());
         appOrderDetailModel.setOrderNo(order.getId());
-        appOrderDetailModel.setAddress(deliveries.size()>0? deliveries.get(0).getAddress():"暂无地址");
+        appOrderDetailModel.setAddress(deliveries.size() > 0 ? deliveries.get(0).getAddress() : "暂无地址");
         appOrderDetailModel.setPaid(order.getPrice());
         appOrderDetailModel.setScoreList(appUserRebateModels);
         data.outputData(appOrderDetailModel);
@@ -260,7 +261,7 @@ public class GoodsController implements GoodsSystem {
         String url = "http://express.51flashmall.com/express/logisty";
         //获取订单
         Order order = orderRepository.findOne(orderNo);
-        List<Delivery> deliveries=deliveryRepository.findByOrder(order);
+        List<Delivery> deliveries = deliveryRepository.findByOrder(order);
 
         //获取该订单的顶单项
         List<OrderItems> orderItemses = orderItemsRepository.findByOrder(order);
@@ -279,28 +280,43 @@ public class GoodsController implements GoodsSystem {
         }
 
         Delivery delivery;
-        if(deliveries.size()!=0){
+        if (deliveries.size() != 0) {
             delivery = deliveryRepository.findByOrder(order).get(0);
-        }else{
-            delivery=new Delivery();
+        } else {
+            delivery = new Delivery();
         }
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("appid", appId);
-        map.put("sign", sign);
-        map.put("number", delivery.getNo());
 
-        //调用post方法获得物流信息字符串
-        String Data = HttpHelper.postRequest(url, map);
-        AppLogisticsModel result = JSON.parseObject(Data, AppLogisticsModel.class);
+
         AppLogisticsDetailModel appLogisticsDetailModel = new AppLogisticsDetailModel();
-        //获取物流信息集合
-        List<AppLogisticsDataModel> appLogisticsDataModels = result.getData();
-        appLogisticsDetailModel.setSource(delivery.getDeliveryName()==null?"无":delivery.getDeliveryName());
-        appLogisticsDetailModel.setStatus(delivery.getStatus()==null?"无":delivery.getStatus());
-        appLogisticsDetailModel.setNo(delivery.getNo()==null?"无":delivery.getStatus());
-        appLogisticsDetailModel.setTrack(appLogisticsDataModels);
+        appLogisticsDetailModel.setSource(delivery.getDeliveryName() == null ? "无" : delivery.getDeliveryName());
+        appLogisticsDetailModel.setStatus(delivery.getStatus() == null ? "无" : delivery.getStatus());
+        appLogisticsDetailModel.setNo(delivery.getNo() == null ? "无" : delivery.getStatus());
+
         appLogisticsDetailModel.setList(appOrderListProductModels);
         appLogisticsDetailModel.setPictureURL("http://pic25.nipic.com/20121121/7020518_160535378000_2.jpg");//todo 到时候图片需要修改
+
+        List<AppLogisticsDataModel> appLogisticsDataModels = new ArrayList<>();
+        try {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("appid", appId);
+            map.put("sign", sign);
+            map.put("number", delivery.getNo());
+            //调用post方法获得物流信息字符串
+            String Data = null;
+
+            Data = HttpHelper.postRequest(url, map);
+
+            AppLogisticsModel result = JSON.parseObject(Data, AppLogisticsModel.class);
+            //获取物流信息集合
+            appLogisticsDataModels = result.getData();
+
+        } catch (IOException e) {
+
+        }
+
+
+        appLogisticsDetailModel.setTrack(appLogisticsDataModels);
+
         data.outputData(appLogisticsDetailModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
