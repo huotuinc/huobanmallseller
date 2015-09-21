@@ -78,6 +78,7 @@ public class SellLog {
      * 时间
      */
     @Column(name = "Createtime")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
     public Integer getId() {
