@@ -220,7 +220,6 @@ public class SystemCountingImplTest extends SpringAppTest {
 
 
     @Test
-    @Rollback(value = true)
     public void testInitHistoryDayAndToday() throws Exception {
         systemCounting.InitHistoryDayAndToday();
     }
