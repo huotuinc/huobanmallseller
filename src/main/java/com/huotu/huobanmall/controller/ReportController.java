@@ -73,44 +73,44 @@ public class ReportController implements ReportSystem {
                               Output<Integer[]> memberAmount,
                               Output<Integer[]> partnerHour,
                               Output<Integer[]> partnerAmount,
-                              Output<Integer>   todayOrderAmount,
-                              Output<Integer>   todayMemberAmount,
-                              Output<Integer>   todayPartnerAmount
+                              Output<Integer> todayOrderAmount,
+                              Output<Integer> todayMemberAmount,
+                              Output<Integer> todayPartnerAmount
 
     ) throws Exception {
         //获取当前商家信息
-        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         //将Map结果分解成两个时间和数量的数组
         //计算今天各个时间段新增的订单数量
-        int n=0;
-        Map<Integer,Integer> map=countService.todayOrder(merchant);
-        Integer[] hoursOrder=new Integer[map.size()];
-        Integer[] orders=new Integer[map.size()];
+        int n = 0;
+        Map<Integer, Integer> map = countService.todayOrder(merchant);
+        Integer[] hoursOrder = new Integer[map.size()];
+        Integer[] orders = new Integer[map.size()];
 
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursOrder[n]=(entry.getKey());
-            orders[n]=entry.getValue();
+            hoursOrder[n] = (entry.getKey());
+            orders[n] = entry.getValue();
             n++;
         }
 
         //计算今天各个时间段新增的会员数量
-        n=0;
-        map=countService.todayMember(merchant);
-        Integer[] hoursMember=new Integer[map.size()];
-        Integer[] members=new Integer[map.size()];
+        n = 0;
+        map = countService.todayMember(merchant);
+        Integer[] hoursMember = new Integer[map.size()];
+        Integer[] members = new Integer[map.size()];
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursMember[n]=(entry.getKey());
-            members[n]=entry.getValue();
+            hoursMember[n] = (entry.getKey());
+            members[n] = entry.getValue();
             n++;
         }
         //计算今天各个时间段新增的小伙伴数量
-        n=0;
-        map=countService.todayPartner(merchant);
-        Integer[] hoursPartner=new Integer[map.size()];
-        Integer[] partners=new Integer[map.size()];
+        n = 0;
+        map = countService.todayPartner(merchant);
+        Integer[] hoursPartner = new Integer[map.size()];
+        Integer[] partners = new Integer[map.size()];
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursPartner[n]=(entry.getKey());
-            partners[n]=entry.getValue();
+            hoursPartner[n] = (entry.getKey());
+            partners[n] = entry.getValue();
             n++;
         }
 
@@ -127,9 +127,10 @@ public class ReportController implements ReportSystem {
         //返回小伙伴时间段值数组
         partnerAmount.outputData(partners);
         //返回今日销售额
-        todaySales.outputData(orderService.countSale(merchant));
+        float countDodaySales = orderService.countSale(merchant);
+        todaySales.outputData(countDodaySales);
         //返回总销售额
-        totalSales.outputData(countService.getTotalSales(merchant));
+        totalSales.outputData(countService.getTotalSales(merchant) + countDodaySales);
         //返回今日新增订单数
         todayOrderAmount.outputData(orderService.countOrderQuantity(merchant));
         //返回今日新增会员数
@@ -519,10 +520,13 @@ public class ReportController implements ReportSystem {
     public ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         AppOtherInfoModel appOtherInfoModel = new AppOtherInfoModel();
-        appOtherInfoModel.setBillAmount(countService.getTotalOrders(merchant));
+        appOtherInfoModel.setBillAmount(countService.getTotalOrders(merchant)
+                + countService.todayOrder(merchant).values().stream().mapToInt(x->x).summaryStatistics().getSum());
         appOtherInfoModel.setGoodsAmount(goodsService.countByMerchant(merchant));
-        appOtherInfoModel.setDiscributorAmount(countService.getTotalPartner(merchant));
-        appOtherInfoModel.setMemberAmount(countService.getTotalMembers(merchant));
+        appOtherInfoModel.setDiscributorAmount(countService.getTotalPartner(merchant)
+                + countService.todayPartner(merchant).values().stream().mapToInt(x->x).summaryStatistics().getSum());
+        appOtherInfoModel.setMemberAmount(countService.getTotalMembers(merchant)
+                + countService.todayMember(merchant).values().stream().mapToInt(x->x).summaryStatistics().getSum());
         otherInfoList.outputData(appOtherInfoModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
