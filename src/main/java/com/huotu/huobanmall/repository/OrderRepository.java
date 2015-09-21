@@ -24,6 +24,7 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
     List<Order> findByMerchant(Merchant merchant);
     List<Order> findByMerchantAndTimeGreaterThan(Merchant merchant,Date lastTime);
+    Page<Order> findByMerchantAndPayStatusLessThanOrderByTimeDesc(Merchant merchant,Integer payStatus,Date time,Pageable pageable);
 
     @Query(value = "select count(order) from Order order where order.time>=?1")
     Integer countByWeekOrMonth(Date startDate);
@@ -33,6 +34,6 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
 //    @Query(value = "select order.user.username,sum(order.score) from Order order where order.orderStatus<>1 group by order.user.username order by sum(order.score) desc")
 //    List<Object[]> countUserScore();
-    @Query(value = "select o.userId,sum(o.price),count(o.amount) from Order o where o.payStatus=1 and o.merchant=?1 group by o.userId order by sum(o.price) desc")
+    @Query(value = "select o.userId,sum(o.price),count(o) from Order o where o.payStatus=1 and o.merchant=?1 group by o.userId order by sum(o.price) desc")
     Page<Object[]> countUserExpenditure(Merchant merchant,Pageable pageable);
 }

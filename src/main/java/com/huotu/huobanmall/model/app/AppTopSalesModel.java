@@ -11,9 +11,20 @@ public class AppTopSalesModel {
     private String name;
 
     /**
-     * 商品数量
+     * 购买数量
      */
     private Integer amount;
+
+    /**
+     * 价格
+     */
+    private float price;
+
+    /**
+     * 图片地址
+     */
+    private String pictureUrl;
+
 
     public String getName() {
         return name;
@@ -29,5 +40,21 @@ public class AppTopSalesModel {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

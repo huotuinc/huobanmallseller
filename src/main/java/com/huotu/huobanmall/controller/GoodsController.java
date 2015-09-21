@@ -59,6 +59,10 @@ public class GoodsController implements GoodsSystem {
     ProductRepository productRepository;
     @Autowired
     DeliveryRepository deliveryRepository;
+    @Autowired
+    RebateRepository rebateRepository;
+    @Autowired
+    RebateService rebateService;
 
 
 //    @Override
@@ -199,9 +203,10 @@ public class GoodsController implements GoodsSystem {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         AppOrderDetailModel appOrderDetailModel = new AppOrderDetailModel();
         //获取订单
-        Order order = orderRepository.findOne(orderNo);
-        User user = userRepository.findOne(order.getUserId());
-        Delivery delivery = deliveryRepository.findByOrder(order).get(0);
+        Order order=orderRepository.findOne(orderNo);
+        User user=userRepository.findOne(order.getUserId());
+        List<Delivery> deliveries=deliveryRepository.findByOrder(order);
+        List<Rebate> rebates=rebateRepository.findByMerchantAndOrder(merchant, order);
 
 
         //获取该订单的顶单项
@@ -219,15 +224,29 @@ public class GoodsController implements GoodsSystem {
             appOrderListProductModel.setSpec(product.getSpec());
             appOrderListProductModels.add(appOrderListProductModel);
         }
+        List<AppUserRebateModel> appUserRebateModels=new ArrayList<>();
+        for(int i=0;i<rebates.size();i++){
+            Rebate rebate=rebates.get(i);
+            AppUserRebateModel appUserRebateModel=new AppUserRebateModel();
+            User rebateUser=userRepository.findOne(rebate.getUserId());
+            appUserRebateModel.setUserName(userService.getViewUserName(rebateUser));
+            appUserRebateModel.setScore(rebate.getScore());
+            appUserRebateModel.setGetTime(rebate.getTime());
+            appUserRebateModel.setRegularization(rebate.getActualTime());
+            appUserRebateModel.setPresent(rebateService.getScoreStatus(rebate.getStatus()));
+            appUserRebateModels.add(appUserRebateModel);
+
+        }
+
         appOrderDetailModel.setList(appOrderListProductModels);
         appOrderDetailModel.setAmount(order.getAmount());
         appOrderDetailModel.setBuyer(userService.getViewUserName(user));
         appOrderDetailModel.setReceiver(order.getReceiver());
         appOrderDetailModel.setContact(user.getMobile());
         appOrderDetailModel.setOrderNo(order.getId());
-        appOrderDetailModel.setAddress(delivery.getAddress());
+        appOrderDetailModel.setAddress(deliveries.size()>0? deliveries.get(0).getAddress():"暂无地址");
         appOrderDetailModel.setPaid(order.getPrice());
-        appOrderDetailModel.setScore(0);//todo 返利积分如何统计
+        appOrderDetailModel.setScoreList(appUserRebateModels);
         data.outputData(appOrderDetailModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -241,7 +260,8 @@ public class GoodsController implements GoodsSystem {
         String url = "http://express.51flashmall.com/express/logisty";
         //获取订单
         Order order = orderRepository.findOne(orderNo);
-        Delivery delivery = deliveryRepository.findByOrder(order).get(0);
+        List<Delivery> deliveries=deliveryRepository.findByOrder(order);
+
         //获取该订单的顶单项
         List<OrderItems> orderItemses = orderItemsRepository.findByOrder(order);
         List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<AppOrderListProductModel>();
@@ -258,6 +278,12 @@ public class GoodsController implements GoodsSystem {
             appOrderListProductModels.add(appOrderListProductModel);
         }
 
+        Delivery delivery;
+        if(deliveries.size()!=0){
+            delivery = deliveryRepository.findByOrder(order).get(0);
+        }else{
+            delivery=new Delivery();
+        }
         Map<String, String> map = new HashMap<String, String>();
         map.put("appid", appId);
         map.put("sign", sign);
@@ -269,9 +295,9 @@ public class GoodsController implements GoodsSystem {
         AppLogisticsDetailModel appLogisticsDetailModel = new AppLogisticsDetailModel();
         //获取物流信息集合
         List<AppLogisticsDataModel> appLogisticsDataModels = result.getData();
-        appLogisticsDetailModel.setSource(delivery.getDeliveryName());
-        appLogisticsDetailModel.setStatus(delivery.getStatus());
-        appLogisticsDetailModel.setNo(delivery.getNo());
+        appLogisticsDetailModel.setSource(delivery.getDeliveryName()==null?"无":delivery.getDeliveryName());
+        appLogisticsDetailModel.setStatus(delivery.getStatus()==null?"无":delivery.getStatus());
+        appLogisticsDetailModel.setNo(delivery.getNo()==null?"无":delivery.getStatus());
         appLogisticsDetailModel.setTrack(appLogisticsDataModels);
         appLogisticsDetailModel.setList(appOrderListProductModels);
         appLogisticsDetailModel.setPictureURL("http://pic25.nipic.com/20121121/7020518_160535378000_2.jpg");//todo 到时候图片需要修改

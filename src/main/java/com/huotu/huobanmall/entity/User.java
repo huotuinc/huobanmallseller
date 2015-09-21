@@ -167,4 +167,6 @@ public class User {
     public void setWxNickName(String wxNickName) {
         this.wxNickName = wxNickName;
     }
+
+
 }

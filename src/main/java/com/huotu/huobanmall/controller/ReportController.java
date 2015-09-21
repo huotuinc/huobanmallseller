@@ -6,12 +6,11 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.entity.Goods;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Rebate;
-import com.huotu.huobanmall.entity.User;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.GoodsRepository;
+import com.huotu.huobanmall.repository.ProductRepository;
+import com.huotu.huobanmall.repository.SellLogRepository;
 import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +53,15 @@ public class ReportController implements ReportSystem {
     private RebateService rebateService;
     @Autowired
     private OrderItemsService orderItemsService;
+
+    @Autowired
+    private SellLogService sellLogService;
+
+    @Autowired
+    private SellLogRepository sellLogRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Override
     @RequestMapping("/newToday")
@@ -400,15 +408,14 @@ public class ReportController implements ReportSystem {
 
     @Override
     @RequestMapping("/userScoreList")
-    public ApiResult userScoreList(Output<AppTopScoreModel[]> list) throws Exception {
+    public ApiResult userScoreList(Output<AppTopScoreModel[]> list,Date lastTime) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1).getContent();
+        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1,lastTime).getContent();
         AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
         for (int i = 0; i < rebates.size(); i++) {
             AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
             Rebate rebate = rebates.get(i);
             User user = userRepository.findOne(rebate.getId());
-            appTopScoreModel.setMobile(user.getMobile());
             appTopScoreModel.setName(userService.getViewUserName(user));
             appTopScoreModel.setScore(rebate.getScore());
             appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
@@ -419,10 +426,31 @@ public class ReportController implements ReportSystem {
     }
 
     @Override
-    @RequestMapping("/userConsumeList")
-    public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list) throws Exception {
+    @RequestMapping("/topScore")
+    public ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception {
+
+        AppPublicModel apm = PublicParameterHolder.getParameters();
+        List<Object[]> rebates = rebateService.searchTopScore(apm.getCurrentUser(), 1).getContent();
+        AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
+        for (int i = 0; i < rebates.size(); i++) {
+            AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
+            Object[] userAndScore=rebates.get(i);
+            User user=userRepository.findOne((Integer)userAndScore[0]);
+            Integer score=(Integer)userAndScore[1];
+            appTopScoreModel.setName(userService.getViewUserName(user));
+            appTopScoreModel.setScore(score);
+            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
+            appTopScoreModels[i] = appTopScoreModel;
+        }
+        list.outputData(appTopScoreModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Override
+    @RequestMapping("/topConsume")
+    public ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Object[]> toplist = orderService.countUserExpenditureList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
+        List<Object[]> toplist = orderService.searchTopExpenditure(merchant, new PageRequest(0, TOP_PAGE+10)).getContent();
         AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
@@ -443,19 +471,43 @@ public class ReportController implements ReportSystem {
     }
 
     @Override
+    @RequestMapping("/userConsumeList")
+    public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list, Date time) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        List<Order> toplist = orderService.searchExpenditureList(merchant,1,time, new PageRequest(0, TOP_PAGE)).getContent();
+        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
+        for (int i = 0; i < toplist.size(); i++) {
+            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
+            Order order=toplist.get(i);
+            Integer userId = order.getUserId();
+            User user = userRepository.findOne(userId);
+            appTopConsumeModel.setPictureUrl(user.getUserFace());
+            appTopConsumeModel.setName(userService.getViewUserName(user));
+            appTopConsumeModel.setMoney(order.getPrice());
+            appTopConsumeModel.setMobile(user.getMobile());
+            appTopConsumeModel.setAmount(1);
+            appTopConsumeModels[i] = appTopConsumeModel;
+        }
+        list.outputData(appTopConsumeModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Override
     @RequestMapping("/topSales")
     public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Object[]> toplist = orderItemsService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
+        List<Object[]> toplist = sellLogService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
         AppTopSalesModel[] appTopSalesModels = new AppTopSalesModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             AppTopSalesModel appTopSalesModel = new AppTopSalesModel();
             Object[] objects = toplist.get(i);
-            Integer goodId = (Integer) objects[0];
-            Goods goods = goodsRepository.findOne(goodId);
+            Integer productId = (Integer) objects[0];
+            Product product = productRepository.findOne(productId);
             long amount = (Long) objects[1];
-            appTopSalesModel.setName(goods.getTitle());
+            appTopSalesModel.setName(product.getName());
             appTopSalesModel.setAmount((int) amount);
+            appTopSalesModel.setPrice(product.getPrice());
+            appTopSalesModel.setPictureUrl(product.getGoods().getPictureUrl());
             appTopSalesModels[i] = appTopSalesModel;
         }
         list.outputData(appTopSalesModels);

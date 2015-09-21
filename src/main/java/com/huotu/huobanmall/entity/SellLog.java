@@ -56,7 +56,7 @@ public class SellLog {
     private Integer goodsId;
 
     /**
-     * 商品名称
+     * 名称
      */
     @Column(name = "Product_Name")
     private String productName;

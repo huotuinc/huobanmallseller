@@ -18,6 +18,9 @@ public class Rebate {
     @Column(name = "UTIH_ID")
     private Integer id;
 
+    /**
+     * 所属订单
+     */
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "UTIH_Order_Id")
     private Order order;

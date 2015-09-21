@@ -1,11 +1,8 @@
 package com.huotu.huobanmall.service.impl;
 
-import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.repository.OrderItemsRepository;
 import com.huotu.huobanmall.service.OrderItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,8 +16,8 @@ public class OrderItemsServiceImpl implements OrderItemsService{
     @Autowired
     OrderItemsRepository orderItemsRepository;
 
-    @Override
-    public Page<Object[]> countTopGoodList(Merchant merchant, Pageable pageable) {
-        return orderItemsRepository.countTopGoods(merchant,pageable);
-    }
+//    @Override
+//    public Page<Object[]> countTopGoodList(Merchant merchant, Pageable pageable) {
+//        return orderItemsRepository.countTopGoods(merchant,pageable);
+//    }
 }

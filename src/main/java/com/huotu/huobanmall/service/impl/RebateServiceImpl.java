@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * Created by lgh on 2015/9/1.
  */
@@ -18,11 +20,33 @@ public class RebateServiceImpl implements RebateService {
     @Autowired
     RebateRepository rebateRepository;
     @Override
-    public Page<Rebate> searchUserScore(Merchant merchant, Integer status) {
-//        return null;
-        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,status,new PageRequest(0,20));
+    public Page<Object[]> searchTopScore(Merchant merchant, Integer status) {
+        return rebateRepository.findTopScore(merchant,status,new PageRequest(0,20));
 
 
     }
+
+    @Override
+    public Page<Rebate> searchUserScore(Merchant merchant, Integer status, Date time) {
+        return rebateRepository.findByMerchantAndStatusLessThanOrderByTimeDesc(merchant, status, time, new PageRequest(0, 20));
+    }
+
+
+    @Override
+    public String getScoreStatus(Integer status) {
+        switch (status){
+            case 0:
+                return "待转正";
+            case 1:
+                return "已转正";
+            case -1:
+                return "待转正状态下被作废";
+            case -2:
+                return "已转正状态下被作废";
+            default:
+                return "无";
+        }
+    }
+
 
 }

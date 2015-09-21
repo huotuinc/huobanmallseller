@@ -40,7 +40,7 @@ public class AppOrderDetailModel {
     /**
      * 返利积分
      */
-    private Integer score;
+    private List<AppUserRebateModel> scoreList;
 
     /**
      * 商品数量
@@ -93,12 +93,12 @@ public class AppOrderDetailModel {
         this.list = list;
     }
 
-    public Integer getScore() {
-        return score;
+    public List<AppUserRebateModel> getScoreList() {
+        return scoreList;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setScoreList(List<AppUserRebateModel> scoreList) {
+        this.scoreList = scoreList;
     }
 
     public Integer getAmount() {

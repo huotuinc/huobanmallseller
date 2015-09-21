@@ -122,14 +122,19 @@ public class OrderServiceImpl implements OrderService{
 //        return sum;
 //    }
 
+//    @Override
+//    public Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable) {
+////        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,1,pageable);
+//          return null;
+//    }
+
     @Override
-    public Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable) {
-//        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,1,pageable);
-          return null;
+    public Page<Object[]> searchTopExpenditure(Merchant merchant,Pageable pageable) {
+        return orderRepository.countUserExpenditure(merchant,pageable);
     }
 
     @Override
-    public Page<Object[]> countUserExpenditureList(Merchant merchant,Pageable pageable) {
-        return orderRepository.countUserExpenditure(merchant,pageable);
+    public Page<Order> searchExpenditureList(Merchant merchant,Integer payStatus, Date time, Pageable pageable) {
+        return orderRepository.findByMerchantAndPayStatusLessThanOrderByTimeDesc(merchant,payStatus,time,pageable);
     }
 }

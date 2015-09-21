@@ -16,15 +16,15 @@ public class AppTopScoreModel {
      */
     private String name;
 
-    /**
-     * 用户昵称
-     */
-    private String nickName;
-
-    /**
-     * 手机号
-     */
-    private  String mobile;
+//    /**
+//     * 用户昵称
+//     */
+//    private String nickName;
+//
+//    /**
+//     * 手机号
+//     */
+//    private  String mobile;
 
 
     /**
@@ -46,22 +46,6 @@ public class AppTopScoreModel {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public Integer getScore() {

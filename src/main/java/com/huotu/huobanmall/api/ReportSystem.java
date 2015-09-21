@@ -175,15 +175,25 @@ public interface ReportSystem {
 
 
     /**
-     * 返利积分统计
+     * 返利积分列表
      *
-     *
+     * @param time
      * @param list
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userScoreList(Output<AppTopScoreModel[]> list) throws Exception;
+    ApiResult userScoreList(Output<AppTopScoreModel[]> list,Date time) throws Exception;
+
+
+    /**
+     * 返利积分统计
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult topScore(Output<AppTopScoreModel[]>list) throws Exception;
 
 
     /**
@@ -195,7 +205,19 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userConsumeList(Output<AppTopConsumeModel[]> list) throws Exception;
+    ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception;
+
+
+    /**
+     * 用户消费列表
+     * @param list
+     * @param time
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult userConsumeList(Output<AppTopConsumeModel[]>list,Date time)throws Exception;
+
 
 
     /**
