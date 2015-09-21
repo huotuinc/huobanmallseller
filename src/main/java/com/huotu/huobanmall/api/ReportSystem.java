@@ -16,6 +16,34 @@ import java.util.Date;
  */
 public interface ReportSystem {
 
+    /**
+     * 今日新增信息
+     *
+     * @param totalSales            总销售额
+     * @param todaySales            今日销售额
+     * @param orderHour             订单时间段数组
+     * @param orderAmount           订单时间段值数组
+     * @param memberHour            会员时间段数组
+     * @param memberAmount          会员时间段值数组
+     * @param partnerHour           小伙伴时间段数组
+     * @param partnerAmount         小伙伴时间段值数组
+     * @param todayMemberAmount     今日新增会员数
+     * @param todayOrderAmount      今日新增订单数
+     * @param todayPartnerAmount    今日新增小伙伴数
+     * @return                      今日新增信息
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult newToday(Output<Float> totalSales, Output<Float> todaySales
+            , Output<Integer[]> orderHour, Output<Integer[]> orderAmount
+            , Output<Integer[]> memberHour, Output<Integer[]> memberAmount
+            , Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount
+            , Output<Integer> todayOrderAmount
+            , Output<Integer> todayMemberAmount
+            , Output<Integer> todayPartnerAmount
+    ) throws Exception;
+
+
 //    /**
 //     * 订单统计报表
 //     * <b>：罗国华</b>

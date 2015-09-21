@@ -56,6 +56,82 @@ public class ReportController implements ReportSystem {
     private OrderItemsService orderItemsService;
 
     @Override
+    @RequestMapping("/newToday")
+    public ApiResult newToday(Output<Float> totalSales,
+                              Output<Float> todaySales,
+                              Output<Integer[]> orderHour,
+                              Output<Integer[]> orderAmount,
+                              Output<Integer[]> memberHour,
+                              Output<Integer[]> memberAmount,
+                              Output<Integer[]> partnerHour,
+                              Output<Integer[]> partnerAmount,
+                              Output<Integer>   todayOrderAmount,
+                              Output<Integer>   todayMemberAmount,
+                              Output<Integer>   todayPartnerAmount
+
+    ) throws Exception {
+        //获取当前商家信息
+        Merchant merchant=PublicParameterHolder.getParameters().getCurrentUser();
+        //将Map结果分解成两个时间和数量的数组
+        //计算今天各个时间段新增的订单数量
+        int n=0;
+        Map<Integer,Integer> map=countService.todayOrder(merchant);
+        Integer[] hoursOrder=new Integer[map.size()];
+        Integer[] orders=new Integer[map.size()];
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            hoursOrder[n]=(entry.getKey());
+            orders[n]=entry.getValue();
+            n++;
+        }
+
+        //计算今天各个时间段新增的会员数量
+        n=0;
+        map=countService.todayMember(merchant);
+        Integer[] hoursMember=new Integer[map.size()];
+        Integer[] members=new Integer[map.size()];
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            hoursMember[n]=(entry.getKey());
+            members[n]=entry.getValue();
+            n++;
+        }
+        //计算今天各个时间段新增的小伙伴数量
+        n=0;
+        map=countService.todayPartner(merchant);
+        Integer[] hoursPartner=new Integer[map.size()];
+        Integer[] partners=new Integer[map.size()];
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            hoursPartner[n]=(entry.getKey());
+            partners[n]=entry.getValue();
+            n++;
+        }
+
+        //返回订单时间段数组
+        orderHour.outputData(hoursOrder);
+        //返回会员时间段数组
+        memberHour.outputData(hoursMember);
+        //返回小伙伴时间段数组
+        partnerHour.outputData(hoursPartner);
+        //返回订单时间段值数组
+        orderAmount.outputData(orders);
+        //返回会员时间段值数组
+        memberAmount.outputData(members);
+        //返回小伙伴时间段值数组
+        partnerAmount.outputData(partners);
+        //返回今日销售额
+        todaySales.outputData(orderService.countSale(merchant));
+        //返回总销售额
+        totalSales.outputData(countService.getTotalSales(merchant));
+        //返回今日新增订单数
+        todayOrderAmount.outputData(orderService.countOrderQuantity(merchant));
+        //返回今日新增会员数
+        todayMemberAmount.outputData(userService.countTodayMember(merchant));
+        //返回今日新增小伙伴数
+        todayPartnerAmount.outputData(userService.countTodayPartner(merchant));
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Override
     @RequestMapping("/orderReport")
     public ApiResult orderReport(Output<Long> totalAmount, Output<Long> todayAmount, Output<Long> weekAmount, Output<Long> monthAmount
             , Output<Integer[]> todayTimes, Output<Integer[]> todayAmounts

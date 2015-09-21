@@ -244,8 +244,11 @@ public class SystemCountingImplTest extends SpringAppTest {
 //        order.setTime(new Date());
 //        orderRepository.save(order);
 
-        log.info(DateHelper.getThisDayBegin(2015, 8, 31));
-        log.info(new Date(2015, 8, 31));
+//        log.info(DateHelper.getThisDayBegin(2015, 8, 31));
+//        log.info(new Date(2015, 8, 31));
+
+        Date date = new Date(1442419200000L);
+        log.info(date);
 
     }
 }

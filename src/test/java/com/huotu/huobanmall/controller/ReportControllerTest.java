@@ -104,6 +104,118 @@ public class ReportControllerTest extends SpringAppTest {
 
 
     @Test
+    public void testNewToday() throws Exception {
+        //准备测试环境
+        Random random = new Random();
+        //设置时间
+        Calendar date = Calendar.getInstance();
+        date.setTime(new Date());
+        //获取当前小时
+        int nowHour = date.get(Calendar.HOUR_OF_DAY);
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MINUTE, 0);
+        //获取今天起始时间
+        Date today = date.getTime();
+
+
+        //新增商品
+        Goods goods = new Goods();
+        goods.setOwner(mockMerchant);
+        goods.setStatus(1);
+        goods.setPrice(100);
+        goods = goodsRepository.save(goods);
+
+        User user = new User();
+        user.setRegTime(new Date());
+        user.setPassword("11");
+        user.setUsername("22");
+        user.setType(0);
+        user.setMerchant(mockMerchant);
+
+        User user1;
+        for (int i = 0; i < 5; i++) {
+            user1 = new User();
+            user1.setRegTime(new Date());
+            user1.setPassword("11");
+            user1.setUsername("22");
+            user1.setType(0);
+            user1.setMerchant(mockMerchant);
+        }
+        for (int i = 0; i < 4; i++) {
+            user1 = new User();
+            user1.setRegTime(new Date());
+            user1.setPassword("11");
+            user1.setUsername("22");
+            user1.setType(0);
+            user1.setMerchant(mockMerchant);
+        }
+
+        Order order;
+        for (int i = 0; i < 20; i++) {
+            order = new Order();
+            order.setMerchant(mockMerchant);
+            order.setPayStatus(1);
+            order.setUserId(user.getId());
+            order.setPrice(50);
+            order.setAmount(2);
+            order.setTime(new Date());
+            order.setUserType(0);
+        }
+        CountTodayOrder countTodayOrder;
+        for (int i = 0; i < 24; i++) {
+            countTodayOrder = new CountTodayOrder();
+            countTodayOrder.setMerchantId(mockMerchant.getId());
+            countTodayOrder.setHour(i + 1);
+            countTodayOrder.setAmount(i + 1);
+            countTodayOrderRepository.save(countTodayOrder);
+        }
+        CountTodayPartner countTodayPartner;
+        for (int i = 0; i < 24; i++) {
+            countTodayPartner = new CountTodayPartner();
+            countTodayPartner.setMerchantId(mockMerchant.getId());
+            countTodayPartner.setHour(i + 1);
+            countTodayPartner.setAmount(i + 1);
+            countTodayPartnerRepository.save(countTodayPartner);
+        }
+        CountTodayMember countTodayMember;
+        for (int i = 0; i < 24; i++) {
+            countTodayMember = new CountTodayMember();
+            countTodayMember.setMerchantId(mockMerchant.getId());
+            countTodayMember.setHour(i + 1);
+            countTodayMember.setAmount(i + 1);
+            countTodayMemberRepository.save(countTodayMember);
+        }
+        CountTodaySales countTodaySales;
+        for (int i = 0; i < 10; i++) {
+            countTodaySales = new CountTodaySales();
+            countTodaySales.setMerchantId(mockMerchant.getId());
+            countTodaySales.setHour(i + 1);
+            countTodaySales.setMoney(i + 1);
+            countTodaySalesRepository.save(countTodaySales);
+        }
+        CountDaySales countDaySales;
+        Calendar dt = Calendar.getInstance();
+        dt.setTime(new Date());
+        dt.set(Calendar.HOUR_OF_DAY, 0);
+        dt.set(Calendar.SECOND, 0);
+        dt.set(Calendar.MINUTE, 0);
+        for (int i = 0; i < 6; i++) {
+            countDaySales = new CountDaySales();
+            countDaySales.setMerchantId(mockMerchant.getId());
+            dt.set(Calendar.DATE, -5);
+            countDaySales.setDate(dt.getTime());
+            countDaySales.setMoney(100);
+            countDaySalesRepository.save(countDaySales);
+        }
+        //准备测试环境END
+        mockMvc.perform(
+                device.getApi("newToday")
+                        .build()).andDo(print());
+
+    }
+
+    @Test
     public void testOrderReport() throws Exception {
 
         //创建统计数据
