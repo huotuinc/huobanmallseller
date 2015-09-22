@@ -3,7 +3,7 @@ package com.huotu.huobanmall.model.app;
 import java.util.Date;
 
 /**
- * 销售明细数据
+ * 订单销售明细数据
  * Created by lgh on 2015/9/11.
  */
 public class AppSalesListModel {
@@ -27,7 +27,6 @@ public class AppSalesListModel {
      * 订单图片
      */
     private String pictureUrl;
-
 
     public String getOrderNo() {
         return orderNo;

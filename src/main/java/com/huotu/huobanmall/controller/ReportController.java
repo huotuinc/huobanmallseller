@@ -408,6 +408,22 @@ public class ReportController implements ReportSystem {
     }
 
 
+    @Override
+    @RequestMapping("/otherStatistics")
+    public ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        AppOtherInfoModel appOtherInfoModel = new AppOtherInfoModel();
+        appOtherInfoModel.setBillAmount(countService.getTotalOrders(merchant)
+                + countService.todayOrder(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+        appOtherInfoModel.setGoodsAmount(goodsService.countByMerchant(merchant));
+        appOtherInfoModel.setDiscributorAmount(countService.getTotalPartner(merchant)
+                + countService.todayPartner(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+        appOtherInfoModel.setMemberAmount(countService.getTotalMembers(merchant)
+                + countService.todayMember(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+        otherInfoList.outputData(appOtherInfoModel);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
 
     @Override
     @RequestMapping("/topScore")
@@ -418,9 +434,9 @@ public class ReportController implements ReportSystem {
         AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
         for (int i = 0; i < rebates.size(); i++) {
             AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
-            Object[] userAndScore=rebates.get(i);
-            User user=userRepository.findOne((Integer)userAndScore[0]);
-            Integer score=(Integer)userAndScore[1];
+            Object[] userAndScore = rebates.get(i);
+            User user = userRepository.findOne((Integer) userAndScore[0]);
+            Integer score = (Integer) userAndScore[1];
             appTopScoreModel.setName(userService.getViewUserName(user));
             appTopScoreModel.setScore(score);
             appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
@@ -430,11 +446,32 @@ public class ReportController implements ReportSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
+
+    @Override
+    @RequestMapping("/topSales")
+    public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        List<Order> orderList = orderService.searchTopOrder(merchant, 1, new PageRequest(0, 20)).getContent();
+        AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
+        for (int i = 0; i < orderList.size(); i++) {
+            AppSalesListModel appSalesListModel = new AppSalesListModel();
+            Order order = orderList.get(i);
+            appSalesListModel.setOrderNo(order.getId());
+            appSalesListModel.setMoney(order.getPrice());
+            appSalesListModel.setTime(order.getTime());
+            appSalesListModel.setPictureUrl("");//todo 订单图片设置
+            appSalesListModels[i] = appSalesListModel;
+        }
+        list.outputData(appSalesListModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+
     @Override
     @RequestMapping("/topConsume")
     public ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Object[]> toplist = orderService.searchTopExpenditure(merchant, new PageRequest(0, TOP_PAGE+10)).getContent();
+        List<Object[]> toplist = orderService.searchTopExpenditure(merchant, new PageRequest(0, TOP_PAGE + 10)).getContent();
         AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
@@ -454,34 +491,10 @@ public class ReportController implements ReportSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
-    @Override
-    @RequestMapping("/userConsumeList")
-    public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list, Date time,String name) throws Exception {
-        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List toplist = orderService.searchExpenditureList(merchant,name,time,TOP_PAGE);
-        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
-        for (int i = 0; i < toplist.size(); i++) {
-            Object[] objects=(Object[])toplist.get(i);
-            Order order =(Order)objects[0];
-            User user= objects[1]!=null?(User)objects[1]:null;
-            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
-//            Order order=toplist.get(i);
-//            Integer userId = order.getUserId();
-//            User user = userRepository.findOne(userId);
-            appTopConsumeModel.setPictureUrl(user==null?"":user.getUserFace());
-            appTopConsumeModel.setName(userService.getViewUserName(user));
-            appTopConsumeModel.setMoney(order.getPrice());
-//            appTopConsumeModel.setMobile(user.getMobile());
-            appTopConsumeModel.setAmount(1);
-            appTopConsumeModels[i] = appTopConsumeModel;
-        }
-        list.outputData(appTopConsumeModels);
-        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-    }
 
     @Override
-    @RequestMapping("/topSales")
-    public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
+    @RequestMapping("/topGoods")
+    public ApiResult topGoods(Output<AppTopGoodsModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         List<Object[]> toplist = sellLogService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
         AppTopSalesModel[] appTopSalesModels = new AppTopSalesModel[toplist.size()];
@@ -501,20 +514,5 @@ public class ReportController implements ReportSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
-    @Override
-    @RequestMapping("/otherStatistics")
-    public ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
-        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        AppOtherInfoModel appOtherInfoModel = new AppOtherInfoModel();
-        appOtherInfoModel.setBillAmount(countService.getTotalOrders(merchant)
-                + countService.todayOrder(merchant).values().stream().mapToInt(x->x).summaryStatistics().getSum());
-        appOtherInfoModel.setGoodsAmount(goodsService.countByMerchant(merchant));
-        appOtherInfoModel.setDiscributorAmount(countService.getTotalPartner(merchant)
-                + countService.todayPartner(merchant).values().stream().mapToInt(x->x).summaryStatistics().getSum());
-        appOtherInfoModel.setMemberAmount(countService.getTotalMembers(merchant)
-                + countService.todayMember(merchant).values().stream().mapToInt(x->x).summaryStatistics().getSum());
-        otherInfoList.outputData(appOtherInfoModel);
-        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-    }
 
 }

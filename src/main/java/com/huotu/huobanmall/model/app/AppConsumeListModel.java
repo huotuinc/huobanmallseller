@@ -1,9 +1,11 @@
 package com.huotu.huobanmall.model.app;
 
+import java.util.Date;
+
 /**
- * Created by lgh on 2015/9/11.
+ * Created by lgh on 2015/9/22.
  */
-public class AppTopSalesModel {
+public class AppConsumeListModel {
 
     /**
      * 订单号
@@ -15,7 +17,10 @@ public class AppTopSalesModel {
      */
     private Float money;
 
-
+    /**
+     * 下单时间
+     */
+    private Date time;
 
     /**
      * 订单图片
@@ -37,6 +42,14 @@ public class AppTopSalesModel {
 
     public void setMoney(Float money) {
         this.money = money;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public String getPictureUrl() {

@@ -50,7 +50,6 @@ public interface GoodsSystem {
     ApiResult operGoods(Integer type, String goods) throws Exception;
 
 
-
 //    @RequestMapping(method = RequestMethod.GET)
 //    ApiResult otherInfo(Output<AppGoodListModel[]> list) throws Exception;
 
@@ -95,6 +94,19 @@ public interface GoodsSystem {
 
 
     /**
+     * 返利积分列表 (含搜索)
+     *
+     * @param list
+     * @param lastId 上一页的最后的Id
+     * @param key    搜索关键字
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception;
+
+
+    /**
      * 销售明细
      *
      * @param list     返回销售明细列表
@@ -108,24 +120,14 @@ public interface GoodsSystem {
 
 
     /**
-     * 返利积分列表 (含搜索)
-     *
+     * 用户消费明细
      * @param list
-     * @param lastId 上一页的最后的Id
-     * @param key    搜索关键字
+     * @param lastDate  上一个消费的时间
+     * @param key 搜索关键字
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception;
-    /**
-     * 销售统计，最高消费额订单
-     * @param list      返回数条最高销售订单
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    ApiResult getTopSales(Output<AppSalesListModel[]>list)throws Exception;
-
+    ApiResult userConsumeList(Output<AppConsumeListModel[]> list, Long lastDate, String key) throws Exception;
 
 }

@@ -322,53 +322,13 @@ public class GoodsController implements GoodsSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
-    @RequestMapping("/salesList")
-    @Override
-    public ApiResult salesList(Output<AppSalesListModel[]> list,
-                               @RequestParam(required = false)String id,
-                               @RequestParam(required = false) Long lastDate) throws Exception {
-        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        Date date = new Date(lastDate);
-        List<Order> orderList = orderService.searchOrders(merchant.getId(), date, PAGE_SIZE, 1, id).getContent();
-        AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
-        for (int i = 0; i < orderList.size(); i++) {
-            AppSalesListModel appSalesListModel = new AppSalesListModel();
-            Order order = orderList.get(i);
-            appSalesListModel.setOrderNo(order.getId());
-            appSalesListModel.setMoney(order.getPrice());
-            appSalesListModel.setTime(order.getTime());
-            appSalesListModel.setPictureUrl("");//todo 订单图片设置
-            appSalesListModels[i] = appSalesListModel;
-        }
-        list.outputData(appSalesListModels);
-        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-    }
-
-    @Override
-    public ApiResult getTopSales(Output<AppSalesListModel[]> list) throws Exception {
-        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Order> orderList=orderService.searchTopOrder(merchant,1,new PageRequest(0,20)).getContent();
-        AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
-        for (int i = 0; i < orderList.size(); i++) {
-            AppSalesListModel appSalesListModel = new AppSalesListModel();
-            Order order = orderList.get(i);
-            appSalesListModel.setOrderNo(order.getId());
-            appSalesListModel.setMoney(order.getPrice());
-            appSalesListModel.setTime(order.getTime());
-            appSalesListModel.setPictureUrl("");//todo 订单图片设置
-            appSalesListModels[i] = appSalesListModel;
-        }
-        list.outputData(appSalesListModels);
-        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-    }
-
 
     @Override
     @RequestMapping("/userScoreList")
     public ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
-        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1,lastId).getContent();
+        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1, lastId).getContent();
         AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
         for (int i = 0; i < rebates.size(); i++) {
             AppUserScoreModel appTopScoreModel = new AppUserScoreModel();
@@ -380,6 +340,53 @@ public class GoodsController implements GoodsSystem {
             appTopScoreModels[i] = appTopScoreModel;
         }
         list.outputData(appTopScoreModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+
+    @RequestMapping("/salesList")
+    @Override
+    public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        Date date = new Date(lastDate);
+        List<Order> orderList = orderService.searchOrders(merchant.getId(), date, PAGE_SIZE, 1, key).getContent();
+        AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
+        for (int i = 0; i < orderList.size(); i++) {
+            AppSalesListModel appSalesListModel = new AppSalesListModel();
+            Order order = orderList.get(i);
+            appSalesListModel.setOrderNo(order.getId());
+            appSalesListModel.setMoney(order.getPrice());
+            appSalesListModel.setTime(order.getTime());
+            appSalesListModel.setPictureUrl("");//todo 订单图片设置
+            appSalesListModels[i] = appSalesListModel;
+        }
+        list.outputData(appSalesListModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+
+    @Override
+    @RequestMapping("/userConsumeList")
+    public ApiResult userConsumeList(Output<AppConsumeListModel[]> list, Long lastDate, String key) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        List toplist = orderService.searchExpenditureList(merchant, name, time, TOP_PAGE);
+        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
+        for (int i = 0; i < toplist.size(); i++) {
+            Object[] objects = (Object[]) toplist.get(i);
+            Order order = (Order) objects[0];
+            User user = objects[1] != null ? (User) objects[1] : null;
+            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
+//            Order order=toplist.get(i);
+//            Integer userId = order.getUserId();
+//            User user = userRepository.findOne(userId);
+            appTopConsumeModel.setPictureUrl(user == null ? "" : user.getUserFace());
+            appTopConsumeModel.setName(userService.getViewUserName(user));
+            appTopConsumeModel.setMoney(order.getPrice());
+//            appTopConsumeModel.setMobile(user.getMobile());
+            appTopConsumeModel.setAmount(1);
+            appTopConsumeModels[i] = appTopConsumeModel;
+        }
+        list.outputData(appTopConsumeModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 }

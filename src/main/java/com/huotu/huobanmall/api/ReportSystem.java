@@ -2,10 +2,7 @@ package com.huotu.huobanmall.api;
 
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
-import com.huotu.huobanmall.model.app.AppOtherInfoModel;
-import com.huotu.huobanmall.model.app.AppTopConsumeModel;
-import com.huotu.huobanmall.model.app.AppTopSalesModel;
-import com.huotu.huobanmall.model.app.AppTopScoreModel;
+import com.huotu.huobanmall.model.app.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -186,9 +183,18 @@ public interface ReportSystem {
     @RequestMapping(method = RequestMethod.GET)
     ApiResult topScore(Output<AppTopScoreModel[]>list) throws Exception;
 
+    /**
+     * 销售统计，最高消费额订单
+     * @param list      返回数条最高销售订单
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult topSales(Output<AppTopSalesModel[]>list)throws Exception;
+
 
     /**
-     * 消费统计
+     * 用户消费统计
      *
      *
      * @param list
@@ -200,25 +206,24 @@ public interface ReportSystem {
 
 
     /**
-     * 用户消费列表
-     * @param list
-     * @param time
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    ApiResult userConsumeList(Output<AppTopConsumeModel[]>list,Date time,String name)throws Exception;
-
-
-
-    /**
-     * 商品销量前10排行
-     * 按照数量排序
-     *
+     * 商品销售前10
      * @param list
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception;
+    ApiResult topGoods(Output<AppTopGoodsModel[]> list) throws Exception;
+
+
+
+//    /**
+//     * 商品销量前10排行
+//     * 按照数量排序
+//     *
+//     * @param list
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(method = RequestMethod.GET)
+//    ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception;
 }
