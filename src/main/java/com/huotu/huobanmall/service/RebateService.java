@@ -23,10 +23,10 @@ public interface RebateService {
      * 会员返利列表
      * @param merchant      所属商家
      * @param status        积分状态
-     * @param time          最后一条显示的时间
+     * @param lastId          最后一条显示的id
      * @return
      */
-    Page<Rebate> searchUserScore(Merchant merchant, Integer status,Date time);
+    Page<Rebate> searchUserScore(Merchant merchant, Integer status,Integer lastId);
 
     /**
      * 返回积分状态

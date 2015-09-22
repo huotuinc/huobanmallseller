@@ -174,16 +174,7 @@ public interface ReportSystem {
     ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception;
 
 
-    /**
-     * 返利积分列表
-     *
-     * @param time
-     * @param list
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    ApiResult userScoreList(Output<AppTopScoreModel[]> list,Date time) throws Exception;
+
 
 
     /**

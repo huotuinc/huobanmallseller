@@ -407,24 +407,7 @@ public class ReportController implements ReportSystem {
         return result;
     }
 
-    @Override
-    @RequestMapping("/userScoreList")
-    public ApiResult userScoreList(Output<AppTopScoreModel[]> list,Date lastTime) throws Exception {
-        AppPublicModel apm = PublicParameterHolder.getParameters();
-        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1,lastTime).getContent();
-        AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
-        for (int i = 0; i < rebates.size(); i++) {
-            AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
-            Rebate rebate = rebates.get(i);
-            User user = userRepository.findOne(rebate.getId());
-            appTopScoreModel.setName(userService.getViewUserName(user));
-            appTopScoreModel.setScore(rebate.getScore());
-            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
-            appTopScoreModels[i] = appTopScoreModel;
-        }
-        list.outputData(appTopScoreModels);
-        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-    }
+
 
     @Override
     @RequestMapping("/topScore")

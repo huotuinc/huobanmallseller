@@ -498,7 +498,7 @@ public class ReportControllerTest extends SpringAppTest {
             goodsRepository.save(goods);
         }
 
-        log.info("分销商" +totalPartnerAmount);
+        log.info("分销商" + totalPartnerAmount);
 
         //准备测试环境END
         mockMvc.perform(device.getApi("otherStatistics")
@@ -508,6 +508,30 @@ public class ReportControllerTest extends SpringAppTest {
                 .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(NumberMatcher.numberEquals(totalMemberAmount)))
                 .andExpect(jsonPath("$.resultData.otherInfoList.billAmount").value(NumberMatcher.numberEquals(totalOrderAmount)))
                 .andExpect(jsonPath("$.resultData.otherInfoList.goodsAmount").value(10));
+    }
+
+
+    public void testUserScoreList() throws Exception {
+        User user = generateUser(userRepository, mockMerchant);
+        Order order = generateOrder(orderRepository, mockMerchant, user);
+
+        Date date = new Date();
+        for (int i = 0; i < 15; i++) {
+            Rebate rebate = new Rebate();
+            rebate.setOrder(order);
+            rebate.setTime(date);
+            rebate.setActualTime(date);
+            rebate.setGainer(1);
+            rebate.setMerchant(mockMerchant);
+            rebate.setScheduledTime(date);
+            rebate.setScore(100);
+            rebate.setStatus(1);
+            rebate.setUserId(user.getId());
+        }
+
+
+
+
     }
 
     @Test
@@ -641,5 +665,6 @@ public class ReportControllerTest extends SpringAppTest {
         }
 
     }
+
 
 }

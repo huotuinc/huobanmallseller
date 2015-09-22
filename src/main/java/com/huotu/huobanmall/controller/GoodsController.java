@@ -361,4 +361,25 @@ public class GoodsController implements GoodsSystem {
         list.outputData(appSalesListModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
+
+
+    @Override
+    @RequestMapping("/userScoreList")
+    public ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception {
+        AppPublicModel apm = PublicParameterHolder.getParameters();
+
+        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1,lastId).getContent();
+        AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
+        for (int i = 0; i < rebates.size(); i++) {
+            AppUserScoreModel appTopScoreModel = new AppUserScoreModel();
+            Rebate rebate = rebates.get(i);
+            User user = userRepository.findOne(rebate.getId());
+            AppUserScoreModel.setName(userService.getViewUserName(user));
+            appTopScoreModel.setScore(rebate.getScore());
+            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
+            appTopScoreModels[i] = appTopScoreModel;
+        }
+        list.outputData(appTopScoreModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
 }

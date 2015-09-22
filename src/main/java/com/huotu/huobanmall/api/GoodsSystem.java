@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
+
 /**
  * 商品系统
  */
@@ -70,26 +72,26 @@ public interface GoodsSystem {
 
     /**
      * 订单管理详情
-     * @param data 返回订单管理详情
+     *
+     * @param data    返回订单管理详情
      * @param orderNo 订单号
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult orderDetail(Output<AppOrderDetailModel> data,String orderNo) throws  Exception;
+    ApiResult orderDetail(Output<AppOrderDetailModel> data, String orderNo) throws Exception;
 
 
     /**
      * 物流详情
-     * @param data 返回物流详情数据
+     *
+     * @param data    返回物流详情数据
      * @param orderNo 订单号
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data,String orderNo) throws  Exception;
-
-
+    ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data, String orderNo) throws Exception;
 
 
     /**
@@ -97,13 +99,25 @@ public interface GoodsSystem {
      *
      * @param list     返回销售明细列表
      * @param lastDate 上一个订单的下单时间
+     * @param key      搜索关键字
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesList(Output<AppSalesListModel[]> list,String id, @RequestParam(required = false) Long lastDate) throws Exception;
+    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key) throws Exception;
 
 
+    /**
+     * 返利积分列表 (含搜索)
+     *
+     * @param list
+     * @param lastId 上一页的最后的Id
+     * @param key    搜索关键字
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception;
     /**
      * 销售统计，最高消费额订单
      * @param list      返回数条最高销售订单
