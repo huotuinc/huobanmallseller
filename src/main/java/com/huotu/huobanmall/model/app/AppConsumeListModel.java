@@ -1,46 +1,61 @@
 package com.huotu.huobanmall.model.app;
 
+
 import java.util.Date;
 
 /**
  * Created by lgh on 2015/9/22.
  */
+
 public class AppConsumeListModel {
-
     /**
-     * 订单号
-     */
-    private String orderNo;
-
-    /**
-     * 付款金额
-     */
-    private Float money;
-
-    /**
-     * 下单时间
-     */
-    private Date time;
-
-    /**
-     * 订单图片
+     * 用户头像地址
      */
     private String pictureUrl;
 
+    /**
+     * 用户姓名
+     */
+    private String name;
 
-    public String getOrderNo() {
-        return orderNo;
+
+//    /**
+//     * 手机号
+//     */
+//    private String mobile;
+
+    /**
+     * 消费额
+     */
+    private float money;
+
+
+    /**
+     * 时间
+     */
+    private  Date time;
+
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
-    public Float getMoney() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public float getMoney() {
         return money;
     }
 
-    public void setMoney(Float money) {
+    public void setMoney(float money) {
         this.money = money;
     }
 
@@ -50,13 +65,5 @@ public class AppConsumeListModel {
 
     public void setTime(Date time) {
         this.time = time;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
     }
 }
