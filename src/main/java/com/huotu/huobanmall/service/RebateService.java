@@ -1,10 +1,9 @@
 package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Rebate;
 import org.springframework.data.domain.Page;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lgh on 2015/9/1.
@@ -26,7 +25,7 @@ public interface RebateService {
      * @param lastId          最后一条显示的id
      * @return
      */
-    Page<Rebate> searchUserScore(Merchant merchant, Integer status,Integer lastId);
+    List searchUserScore(Merchant merchant, Integer status,Integer lastId);
 
     /**
      * 返回积分状态

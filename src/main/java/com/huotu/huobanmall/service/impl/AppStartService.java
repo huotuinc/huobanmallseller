@@ -94,6 +94,13 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         merchant.setNickName("伙伴商城abc");
         merchant = merchantRepository.save(merchant);
 
+//        SellLog sellLog;
+//        for(int i=0;i<9;i++){
+//            sellLog=new SellLog();
+//            sellLog.setMerchantId();
+//
+//        }
+
 
         Operator operator = new Operator();
         operator.setPassword("e10adc3949ba59abbe56e057f20f883e");

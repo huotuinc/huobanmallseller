@@ -1,7 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Rebate;
 import com.huotu.huobanmall.repository.RebateRepository;
 import com.huotu.huobanmall.service.RebateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lgh on 2015/9/1.
@@ -27,8 +26,41 @@ public class RebateServiceImpl implements RebateService {
     }
 
     @Override
-    public Page<Rebate> searchUserScore(Merchant merchant, Integer status, Date time) {
-        return rebateRepository.findByMerchantAndStatusLessThanOrderByTimeDesc(merchant, status, time, new PageRequest(0, 20));
+    public List searchUserScore(Merchant merchant, Integer status,Integer lastId) {
+//        StringBuffer hql = new StringBuffer();
+//        hql.append("select top :pageSize  rebate,user from Rebate rebate left join User user on rebate.userId=user.id where rebate.merchant.id=:merchantId");
+//        hql.append(" and order.time<:time and (user.name like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
+//        hql.append(" order by order.time");
+//        List list = orderRepository.queryHql(hql.toString(), query -> {
+//            query.setParameter("merchantId", merchant.getId());
+//            query.setParameter("time",time);
+//            query.setParameter("name", name);
+//            query.setParameter("pageSize",pageSize);
+//
+//        });
+
+//        list.forEach(data->{
+//            Object[] objects = (Object[])data;
+//            Order order =(Order)objects[0];
+//            User user= objects[1]!=null?(User)objects[1]:null;
+//            AppTopConsumeModel appTopConsumeModel=new AppTopConsumeModel();
+//            appTopConsumeModel.setPictureUrl(user.getUserFace());
+//            appTopConsumeModel.setName();
+//
+//        });
+
+        return null;
+
+
+
+
+//        return rebateRepository.findAll(new Specification<Rebate>() {
+//            @Override
+//            public Predicate toPredicate(Root<Rebate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+//                return null;
+//            }
+//        },new PageRequest(0,20));
+//        return rebateRepository.findByMerchantAndStatusLessThanOrderByTimeDesc(merchant, status, time, new PageRequest(0, 20));
     }
 
 
