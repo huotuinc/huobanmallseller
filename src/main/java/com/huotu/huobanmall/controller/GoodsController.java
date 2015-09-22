@@ -12,6 +12,7 @@ import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -323,10 +324,12 @@ public class GoodsController implements GoodsSystem {
 
     @RequestMapping("/salesList")
     @Override
-    public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate) throws Exception {
+    public ApiResult salesList(Output<AppSalesListModel[]> list,
+                               @RequestParam(required = false)String id,
+                               @RequestParam(required = false) Long lastDate) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         Date date = new Date(lastDate);
-        List<Order> orderList = orderService.searchOrders(merchant.getId(), date, PAGE_SIZE, 1, "").getContent();
+        List<Order> orderList = orderService.searchOrders(merchant.getId(), date, PAGE_SIZE, 1, id).getContent();
         AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
         for (int i = 0; i < orderList.size(); i++) {
             AppSalesListModel appSalesListModel = new AppSalesListModel();
@@ -334,6 +337,25 @@ public class GoodsController implements GoodsSystem {
             appSalesListModel.setOrderNo(order.getId());
             appSalesListModel.setMoney(order.getPrice());
             appSalesListModel.setTime(order.getTime());
+            appSalesListModel.setPictureUrl("");//todo 订单图片设置
+            appSalesListModels[i] = appSalesListModel;
+        }
+        list.outputData(appSalesListModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Override
+    public ApiResult getTopSales(Output<AppSalesListModel[]> list) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+        List<Order> orderList=orderService.searchTopOrder(merchant,1,new PageRequest(0,20)).getContent();
+        AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
+        for (int i = 0; i < orderList.size(); i++) {
+            AppSalesListModel appSalesListModel = new AppSalesListModel();
+            Order order = orderList.get(i);
+            appSalesListModel.setOrderNo(order.getId());
+            appSalesListModel.setMoney(order.getPrice());
+            appSalesListModel.setTime(order.getTime());
+            appSalesListModel.setPictureUrl("");//todo 订单图片设置
             appSalesListModels[i] = appSalesListModel;
         }
         list.outputData(appSalesListModels);

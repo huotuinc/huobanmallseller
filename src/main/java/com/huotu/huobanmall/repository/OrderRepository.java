@@ -24,7 +24,7 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
     List<Order> findByMerchant(Merchant merchant);
     List<Order> findByMerchantAndTimeGreaterThan(Merchant merchant,Date lastTime);
-    Page<Order> findByMerchantAndPayStatusLessThanOrderByTimeDesc(Merchant merchant,Integer payStatus,Date time,Pageable pageable);
+    Page<Order> findByMerchantAndPayStatusOrderByPriceDesc(Merchant merchant,Integer payStatus,Pageable pageable);
 
     @Query(value = "select count(order) from Order order where order.time>=?1")
     Integer countByWeekOrMonth(Date startDate);

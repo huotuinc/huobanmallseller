@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
-
 /**
  * 商品系统
  */
@@ -103,9 +101,17 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate) throws Exception;
+    ApiResult salesList(Output<AppSalesListModel[]> list,String id, @RequestParam(required = false) Long lastDate) throws Exception;
 
 
+    /**
+     * 销售统计，最高消费额订单
+     * @param list      返回数条最高销售订单
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult getTopSales(Output<AppSalesListModel[]>list)throws Exception;
 
 
 }

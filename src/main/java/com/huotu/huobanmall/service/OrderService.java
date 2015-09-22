@@ -81,6 +81,15 @@ public interface OrderService {
      */
     List searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize);
 
+    /**
+     * 返回金额最高的前几条订单
+     * @param merchant      所属商家
+     * @param payStatus     订单支付状态(已支付)
+     * @param pageable      订单条数
+     * @return
+     */
+    Page<Order>searchTopOrder(Merchant merchant,Integer payStatus,Pageable pageable);
+
 
 
 }

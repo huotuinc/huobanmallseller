@@ -23,6 +23,11 @@ public class AppSalesListModel {
      */
     private Date time;
 
+    /**
+     * 订单图片
+     */
+    private String pictureUrl;
+
 
     public String getOrderNo() {
         return orderNo;
@@ -46,5 +51,13 @@ public class AppSalesListModel {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

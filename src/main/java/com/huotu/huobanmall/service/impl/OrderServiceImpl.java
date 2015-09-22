@@ -166,4 +166,9 @@ public class OrderServiceImpl implements OrderService{
 //        },new PageRequest(0,pageSize,new Sort(Sort.Direction.DESC,"time")));
 ////        return orderRepository.findByMerchantAndPayStatusLessThanOrderByTimeDesc(merchant,payStatus,time,pageable);
     }
+
+    @Override
+    public Page<Order> searchTopOrder(Merchant merchant, Integer payStatus, Pageable pageable) {
+        return orderRepository.findByMerchantAndPayStatusOrderByPriceDesc(merchant,payStatus,pageable);
+    }
 }
