@@ -4,19 +4,23 @@ import com.huotu.common.DateHelper;
 import com.huotu.common.StringHelper;
 import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
+import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.luffy.test.matcher.NumberMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,6 +31,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.huotu.huobanmall.test.base.Device.huobanmallStatus;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -92,6 +97,9 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private RebateRepository rebateRepository;
 
     @Before
     public void prepareDevice() {
@@ -227,6 +235,7 @@ public class ReportControllerTest extends SpringAppTest {
         mockMvc.perform(device.getApi("orderReport")
                 .build())
                 .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andExpect(jsonPath("$.resultData.totalAmount").value(NumberMatcher.numberEquals(totalAmount)))
                 .andExpect(jsonPath("$.resultData.todayAmount").value(NumberMatcher.numberEquals(todayAmount)))
                 .andExpect(jsonPath("$.resultData.weekAmount").value(NumberMatcher.numberEquals(weekAmount)))
@@ -278,6 +287,7 @@ public class ReportControllerTest extends SpringAppTest {
         mockMvc.perform(device.getApi("salesReport")
                 .build())
                 .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andExpect(jsonPath("$.resultData.totalAmount").value(NumberMatcher.numberEquals(totalAmount)))
                 .andExpect(jsonPath("$.resultData.todayAmount").value(NumberMatcher.numberEquals(todayAmount)))
                 .andExpect(jsonPath("$.resultData.weekAmount").value(NumberMatcher.numberEquals(weekAmount)))
@@ -361,6 +371,7 @@ public class ReportControllerTest extends SpringAppTest {
         mockMvc.perform(device.getApi("userReport")
                 .build())
                 .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andExpect(jsonPath("$.resultData.totalMember").value(NumberMatcher.numberEquals(totalMemberAmount)))
                 .andExpect(jsonPath("$.resultData.todayMemberAmount").value(NumberMatcher.numberEquals(todayMemberAmount)))
                 .andExpect(jsonPath("$.resultData.weekMemberAmount").value(NumberMatcher.numberEquals(weekMemberAmount)))
@@ -479,6 +490,7 @@ public class ReportControllerTest extends SpringAppTest {
         mockMvc.perform(device.getApi("otherStatistics")
                 .build())
                 .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andExpect(jsonPath("$.resultData.otherInfoList.discributorAmount").value(NumberMatcher.numberEquals(totalPartnerAmount)))
                 .andExpect(jsonPath("$.resultData.otherInfoList.memberAmount").value(NumberMatcher.numberEquals(totalMemberAmount)))
                 .andExpect(jsonPath("$.resultData.otherInfoList.billAmount").value(NumberMatcher.numberEquals(totalOrderAmount)))
@@ -486,57 +498,48 @@ public class ReportControllerTest extends SpringAppTest {
     }
 
 
-
     @Test
     public void testTopScore() throws Exception {
-//准备测试环境
-        Random random = new Random();
-        //设置时间
-        Calendar date = Calendar.getInstance();
-        date.setTime(new Date());
-        //获取当前小时
-        int nowHour = date.get(Calendar.HOUR_OF_DAY);
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MINUTE, 0);
-        //获取今天起始时间
-        Date today = date.getTime();
 
+        List<Long> listScore = new ArrayList<>();
+        for (int n = 0; n < 15; n++) {
+            List<Rebate> rebateList = new ArrayList<>();
+            User user = generateUser(userRepository, mockMerchant);
+            Order order = generateOrder(orderRepository, mockMerchant, user);
 
-        //新增商品
-        Goods goods = new Goods();
-        goods.setOwner(mockMerchant);
-        goods.setStatus(1);
-        goods.setPrice(100);
-        goodsRepository.save(goods);
+            Date date = new Date();
+            Random random = new Random();
+            for (int i = 0; i < 5; i++) {
+                Rebate rebate = new Rebate();
+                rebate.setOrder(order);
+                rebate.setTime(date);
+                rebate.setActualTime(date);
+                rebate.setGainer(1);
+                rebate.setMerchant(mockMerchant);
+                rebate.setScheduledTime(date);
+                rebate.setScore(random.nextInt());
+                rebate.setStatus(1);
+                rebate.setUserId(user.getId());
+                rebateRepository.saveAndFlush(rebate);
+                rebateList.add(rebate);
+            }
 
-
-        User user = new User();
-        user.setRegTime(new Date());
-        user.setPassword("11");
-        user.setUsername("22");
-        user.setType(0);
-        user.setMerchant(mockMerchant);
-        user = userRepository.saveAndFlush(user);
-
-        Order order;
-        for (int i = 0; i < 20; i++) {
-            order = new Order();
-            order.setId("ffffff");
-            order.setMerchant(mockMerchant);
-            order.setPayStatus(1);
-            order.setUserId(user.getId());
-            order.setPrice(50);
-            order.setAmount(2);
-            order.setTime(new Date());
-            order.setUserType(0);
-            orderRepository.save(order);
+            listScore.add(rebateList.stream().mapToInt(x -> x.getScore()).summaryStatistics().getSum());
         }
 
-        mockMvc.perform(device.getApi("topConsume")
+        String result = mockMvc.perform(device.getApi("topScore")
                 .build())
-                .andDo(print());
+                .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andReturn().getResponse().getContentAsString();
 
+        List<Object> list = JsonPath.read(result, "$.resultData.list");
+
+        Assert.assertEquals("总条数", 10, list.size());
+        //判断对一个top
+        Assert.assertEquals("top one"
+                , listScore.stream().mapToLong(x -> x).summaryStatistics().getMax()
+                , JsonPath.read(list.get(0), "$.score").toString());
 
     }
 
@@ -553,8 +556,6 @@ public class ReportControllerTest extends SpringAppTest {
     public void testTopGoods() throws Exception {
 
     }
-
-
 
 
     @Test

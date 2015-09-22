@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.*;
 
@@ -430,19 +431,8 @@ public class ReportController implements ReportSystem {
     public ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception {
 
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        List<Object[]> rebates = rebateService.searchTopScore(apm.getCurrentUser(), 1).getContent();
-        AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
-        for (int i = 0; i < rebates.size(); i++) {
-            AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
-            Object[] userAndScore = rebates.get(i);
-            User user = userRepository.findOne((Integer) userAndScore[0]);
-            Integer score = (Integer) userAndScore[1];
-            appTopScoreModel.setName(userService.getViewUserName(user));
-            appTopScoreModel.setScore(score);
-            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
-            appTopScoreModels[i] = appTopScoreModel;
-        }
-        list.outputData(appTopScoreModels);
+        List<AppTopScoreModel> list1 =  rebateService.topScore(apm.getCurrentUser(), 1);
+        list.outputData(list1.toArray(new AppTopScoreModel[list1.size()]));
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 

@@ -1,14 +1,19 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Rebate;
+import com.huotu.huobanmall.entity.User;
+import com.huotu.huobanmall.model.app.AppTopScoreModel;
 import com.huotu.huobanmall.repository.RebateRepository;
 import com.huotu.huobanmall.service.RebateService;
+import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +25,37 @@ public class RebateServiceImpl implements RebateService {
     @Autowired
     RebateRepository rebateRepository;
 
+    @Autowired
+    private UserService userService;
+
+    @Override
+    public List<AppTopScoreModel> topScore(Merchant merchant, Integer status) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select user,sum(r.score) amount from Rebate r left join User user on user.id=r.userId " +
+                " where r.merchant.id=:merchantId and r.status=:status" +
+                " group by user order by amount desc");
+        List list = rebateRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("merchantId", merchant.getId());
+            query.setParameter("status", status);
+            query.setMaxResults(10);
+        });
+
+        List<AppTopScoreModel> result = new ArrayList<>();
+        list.forEach(data -> {
+            Object[] objects = (Object[]) data;
+            User user = (User) objects[0];
+            AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
+            appTopScoreModel.setName(userService.getViewUserName(user));
+            appTopScoreModel.setScore(Integer.parseInt(objects[0].toString()));
+            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
+            result.add(appTopScoreModel);
+        });
+        return result;
+    }
+
     @Override
     public Page<Object[]> searchTopScore(Merchant merchant, Integer status) {
-        return rebateRepository.findTopScore(merchant, status, new PageRequest(0, 20));
-
-
+        return rebateRepository.findTopScore(merchant.getId(), status, new PageRequest(0, 20));
     }
 
     @Override

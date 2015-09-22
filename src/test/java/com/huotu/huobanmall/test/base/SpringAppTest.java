@@ -69,10 +69,14 @@ public class SpringAppTest {
     }
 
     protected User generateUser(UserRepository userRepository, Merchant merchant) {
+        return  generateUser(userRepository, merchant, UUID.randomUUID().toString());
+    }
+
+    protected User generateUser(UserRepository userRepository, Merchant merchant, String userName) {
         User user = new User();
         user.setRegTime(new Date());
-        user.setPassword("11");
-        user.setUsername("22");
+        user.setPassword(UUID.randomUUID().toString());
+        user.setUsername(userName);
         user.setType(0);
         user.setMerchant(merchant);
         return userRepository.saveAndFlush(user);

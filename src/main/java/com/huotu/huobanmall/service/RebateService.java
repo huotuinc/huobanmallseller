@@ -1,6 +1,7 @@
 package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.model.app.AppTopScoreModel;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -9,6 +10,14 @@ import java.util.List;
  * Created by lgh on 2015/9/1.
  */
 public interface RebateService {
+
+    /**
+     * 返利积分排行 10
+     * @param merchant
+     * @param status
+     * @return
+     */
+    List<AppTopScoreModel> topScore(Merchant merchant,Integer status);
 
     /**
      * 最高返利会员
