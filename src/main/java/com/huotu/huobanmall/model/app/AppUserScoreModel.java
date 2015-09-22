@@ -7,6 +7,11 @@ import java.util.Date;
  */
 public class AppUserScoreModel {
 
+
+    /**
+     * id
+     */
+    private Integer id;
     /**
      * 用户头像地址
      */
@@ -57,5 +62,13 @@ public class AppUserScoreModel {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

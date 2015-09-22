@@ -107,7 +107,7 @@ public interface GoodsSystem {
 
 
     /**
-     * 销售明细
+     * 销售明细列表 (含搜索)
      *
      * @param list     返回销售明细列表
      * @param lastDate 上一个订单的下单时间
@@ -120,7 +120,7 @@ public interface GoodsSystem {
 
 
     /**
-     * 用户消费明细
+     * 用户消费明细列表 (含搜索)
      * @param list
      * @param lastDate  上一个消费的时间
      * @param key 搜索关键字

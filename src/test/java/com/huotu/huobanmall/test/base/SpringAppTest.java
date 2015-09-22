@@ -81,6 +81,7 @@ public class SpringAppTest {
     protected Order generateOrder(OrderRepository orderRepository, Merchant merchant, User user) {
         Calendar calendar = Calendar.getInstance();
         Order order = new Order();
+        order.setId(UUID.randomUUID().toString());
         order.setTime(calendar.getTime());
         order.setPayTime(calendar.getTime());
         order.setUserId(user.getId());

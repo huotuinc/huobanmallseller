@@ -79,6 +79,9 @@ public class GoodsControllerTest extends SpringAppTest {
     @Autowired
     private DeliveryRepository deliveryRepository;
 
+    @Autowired
+    private RebateRepository rebateRepository;
+
     @Before
     public void prepareDevice() {
         device = Device.newDevice(DeviceType.Android);
@@ -417,6 +420,110 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andExpect(jsonPath("$.resultData.data").exists())
                 .andDo(print());
 
+
+    }
+
+
+    public void testOrderDetail() throws Exception {
+
+    }
+
+
+    @Test
+    public void testUserScoreList() throws Exception {
+        User user = generateUser(userRepository, mockMerchant);
+        Order order = generateOrder(orderRepository, mockMerchant, user);
+
+        List<Rebate> rebateList = new ArrayList<>();
+//        System.out.println();
+
+        Date date = new Date();
+        for (int i = 0; i < 25; i++) {
+            Rebate rebate = new Rebate();
+            rebate.setOrder(order);
+            rebate.setTime(date);
+            rebate.setActualTime(date);
+            rebate.setGainer(1);
+            rebate.setMerchant(mockMerchant);
+            rebate.setScheduledTime(date);
+            rebate.setScore(100);
+            rebate.setStatus(1);
+            rebate.setUserId(user.getId());
+            rebateRepository.saveAndFlush(rebate);
+            rebateList.add(rebate);
+        }
+
+        String result = mockMvc.perform(device.getApi("userScoreList")
+                .param("lastId", "")
+                .param("key", "").build())
+                .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andReturn().getResponse().getContentAsString();
+
+        List<Object> list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("第一条数据"
+                , String.valueOf(rebateList.get(rebateList.size() - 1).getId().toString())
+                , JsonPath.read(list.get(0), "$.id").toString());
+
+
+        //测试下一页
+        result = mockMvc.perform(
+                device.getApi("userScoreList")
+                        .param("lastId", String.valueOf(rebateList.get(rebateList.size() - 10).getId()))
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("返回条数", list.size(), 10);
+        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.id").toString()
+                , rebateList.get(rebateList.size() - 11).getId().toString());
+
+
+        //搜索测试
+        String userName = UUID.randomUUID().toString();
+        user.setUsername(userName);
+        userRepository.save(user);
+
+        result = mockMvc.perform(
+                device.getApi("userScoreList")
+                        .param("lastId", "")
+                        .param("key", userName)
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("第一条数据"
+                , String.valueOf(rebateList.get(rebateList.size() - 1).getId().toString())
+                , JsonPath.read(list.get(0), "$.id").toString());
+
+        //搜索无数据
+        result = mockMvc.perform(
+                device.getApi("userScoreList")
+                        .param("lastId", "")
+                        .param("key", userName + "abcttt")
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 0, list.size());
+
+    }
+
+    @Test
+    public void testSalesList() throws Exception {
+
+    }
+
+    @Test
+    public void testUserConsumeList() throws Exception {
 
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -18,25 +19,30 @@ import java.util.List;
 public class RebateServiceImpl implements RebateService {
     @Autowired
     RebateRepository rebateRepository;
+
     @Override
     public Page<Object[]> searchTopScore(Merchant merchant, Integer status) {
-        return rebateRepository.findTopScore(merchant,status,new PageRequest(0,20));
+        return rebateRepository.findTopScore(merchant, status, new PageRequest(0, 20));
 
 
     }
 
     @Override
-    public List searchUserScore(Merchant merchant,Integer lastId,String name,Integer pageSize) {
+    public List searchUserScore(Merchant merchant, Integer lastId, String name, Integer pageSize) {
         StringBuffer hql = new StringBuffer();
-        hql.append("select top :pageSize rebate,user from Rebate rebate left join User user on rebate.userId=user.id where rebate.merchant.id=:merchantId");
-        hql.append(" and rebate.id<:Id and (user.name like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
-        hql.append(" order by rebate.time");
+        hql.append("select rebate,user from Rebate rebate left join User user on rebate.userId=user.id" +
+                " where rebate.merchant.id=:merchantId");
+        if (lastId != null && lastId > 0) hql.append(" and rebate.id<:Id");
+        if (!StringUtils.isEmpty(name))
+            hql.append(" and (user.username like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
+        hql.append(" order by rebate.id desc");
         List list = rebateRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId", merchant.getId());
-            query.setParameter("Id",lastId);
-            query.setParameter("name", name);
-            query.setParameter("pageSize",pageSize);
-
+            if (lastId != null && lastId > 0)
+                query.setParameter("Id", lastId);
+            if (!StringUtils.isEmpty(name))
+                query.setParameter("name", "%" + name + "%");
+            query.setMaxResults(pageSize);
         });
 
 //        list.forEach(data->{
@@ -52,8 +58,6 @@ public class RebateServiceImpl implements RebateService {
         return list;
 
 
-
-
 //        return rebateRepository.findAll(new Specification<Rebate>() {
 //            @Override
 //            public Predicate toPredicate(Root<Rebate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -66,7 +70,7 @@ public class RebateServiceImpl implements RebateService {
 
     @Override
     public String getScoreStatus(Integer status) {
-        switch (status){
+        switch (status) {
             case 0:
                 return "待转正";
             case 1:
