@@ -2,10 +2,12 @@ package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
+import com.huotu.huobanmall.model.app.AppTopConsumeModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Shiliting on 2015/8/27.
@@ -76,10 +78,9 @@ public interface OrderService {
      * 返回会员消费额列表
      * @param merchant      所属商家
      * @param time          最后一条显示的时间
-     * @param pageable
      * @return
      */
-    Page<Order> searchExpenditureList(Merchant merchant,Integer payStatus,Date time,Pageable pageable);
+    List<AppTopConsumeModel> searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize);
 
 
 

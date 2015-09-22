@@ -216,7 +216,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult userConsumeList(Output<AppTopConsumeModel[]>list,Date time)throws Exception;
+    ApiResult userConsumeList(Output<AppTopConsumeModel[]>list,Date time,String name)throws Exception;
 
 
 

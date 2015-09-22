@@ -5,7 +5,6 @@ import com.huotu.huobanmall.bootconfig.MvcConfig;
 import com.huotu.huobanmall.bootconfig.RootConfig;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.*;
-import com.huotu.huobanmall.model.app.AppGoodListModel;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
@@ -24,7 +23,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static com.huotu.huobanmall.test.base.Device.huobanmallStatus;
@@ -421,6 +419,4 @@ public class GoodsControllerTest extends SpringAppTest {
 
 
     }
-
-
 }

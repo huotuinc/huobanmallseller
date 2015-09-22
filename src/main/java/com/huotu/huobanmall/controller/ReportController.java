@@ -473,23 +473,23 @@ public class ReportController implements ReportSystem {
 
     @Override
     @RequestMapping("/userConsumeList")
-    public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list, Date time) throws Exception {
+    public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list, Date time,String name) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Order> toplist = orderService.searchExpenditureList(merchant,1,time, new PageRequest(0, TOP_PAGE)).getContent();
-        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
-        for (int i = 0; i < toplist.size(); i++) {
-            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
-            Order order=toplist.get(i);
-            Integer userId = order.getUserId();
-            User user = userRepository.findOne(userId);
-            appTopConsumeModel.setPictureUrl(user.getUserFace());
-            appTopConsumeModel.setName(userService.getViewUserName(user));
-            appTopConsumeModel.setMoney(order.getPrice());
-            appTopConsumeModel.setMobile(user.getMobile());
-            appTopConsumeModel.setAmount(1);
-            appTopConsumeModels[i] = appTopConsumeModel;
-        }
-        list.outputData(appTopConsumeModels);
+        List<AppTopConsumeModel> toplist = orderService.searchExpenditureList(merchant,name,time,TOP_PAGE);
+//        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
+//        for (int i = 0; i < toplist.size(); i++) {
+//            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
+//            Order order=toplist.get(i);
+//            Integer userId = order.getUserId();
+//            User user = userRepository.findOne(userId);
+//            appTopConsumeModel.setPictureUrl(user.getUserFace());
+//            appTopConsumeModel.setName(userService.getViewUserName(user));
+//            appTopConsumeModel.setMoney(order.getPrice());
+//            appTopConsumeModel.setMobile(user.getMobile());
+//            appTopConsumeModel.setAmount(1);
+//            appTopConsumeModels[i] = appTopConsumeModel;
+//        }
+        list.outputData(toplist.toArray(new AppTopConsumeModel[toplist.size()]));
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
