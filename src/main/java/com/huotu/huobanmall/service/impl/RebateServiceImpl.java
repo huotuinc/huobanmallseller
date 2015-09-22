@@ -26,18 +26,18 @@ public class RebateServiceImpl implements RebateService {
     }
 
     @Override
-    public List searchUserScore(Merchant merchant, Integer status,Integer lastId) {
-//        StringBuffer hql = new StringBuffer();
-//        hql.append("select top :pageSize  rebate,user from Rebate rebate left join User user on rebate.userId=user.id where rebate.merchant.id=:merchantId");
-//        hql.append(" and order.time<:time and (user.name like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
-//        hql.append(" order by order.time");
-//        List list = orderRepository.queryHql(hql.toString(), query -> {
-//            query.setParameter("merchantId", merchant.getId());
-//            query.setParameter("time",time);
-//            query.setParameter("name", name);
-//            query.setParameter("pageSize",pageSize);
-//
-//        });
+    public List searchUserScore(Merchant merchant,Integer lastId,String name,Integer pageSize) {
+        StringBuffer hql = new StringBuffer();
+        hql.append("select top :pageSize rebate,user from Rebate rebate left join User user on rebate.userId=user.id where rebate.merchant.id=:merchantId");
+        hql.append(" and rebate.id<:Id and (user.name like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
+        hql.append(" order by rebate.time");
+        List list = rebateRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("merchantId", merchant.getId());
+            query.setParameter("Id",lastId);
+            query.setParameter("name", name);
+            query.setParameter("pageSize",pageSize);
+
+        });
 
 //        list.forEach(data->{
 //            Object[] objects = (Object[])data;
@@ -49,7 +49,7 @@ public class RebateServiceImpl implements RebateService {
 //
 //        });
 
-        return null;
+        return list;
 
 
 

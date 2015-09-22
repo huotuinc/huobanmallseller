@@ -12,7 +12,6 @@ import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -328,18 +327,19 @@ public class GoodsController implements GoodsSystem {
     public ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
-        List<Rebate> rebates = rebateService.searchUserScore(apm.getCurrentUser(), 1, lastId).getContent();
-        AppTopScoreModel[] appTopScoreModels = new AppTopScoreModel[rebates.size()];
+        List rebates = rebateService.searchUserScore(apm.getCurrentUser(),lastId,key,PAGE_SIZE);
+        AppUserScoreModel[] appUserScoreModels = new AppUserScoreModel[rebates.size()];
         for (int i = 0; i < rebates.size(); i++) {
-            AppUserScoreModel appTopScoreModel = new AppUserScoreModel();
-            Rebate rebate = rebates.get(i);
-            User user = userRepository.findOne(rebate.getId());
-            AppUserScoreModel.setName(userService.getViewUserName(user));
-            appTopScoreModel.setScore(rebate.getScore());
-            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
-            appTopScoreModels[i] = appTopScoreModel;
+            AppUserScoreModel appUserScoreModel = new AppUserScoreModel();
+            Object[] objects=(Object[])rebates.get(i);
+            Rebate rebate=(Rebate)objects[0];
+            User user=objects[1]==null?null:(User)objects[1];
+            appUserScoreModel.setName(userService.getViewUserName(user));
+            appUserScoreModel.setScore(rebate.getScore());
+            appUserScoreModel.setPictureUrl(user==null?"":user.getUserFace());  //todo 图片路径需要修改
+            appUserScoreModels[i]=appUserScoreModel;
         }
-        list.outputData(appTopScoreModels);
+        list.outputData(appUserScoreModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -369,24 +369,29 @@ public class GoodsController implements GoodsSystem {
     @RequestMapping("/userConsumeList")
     public ApiResult userConsumeList(Output<AppConsumeListModel[]> list, Long lastDate, String key) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List toplist = orderService.searchExpenditureList(merchant, name, time, TOP_PAGE);
-        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
+        Date date;
+        if(lastDate==null){
+            date=new Date();
+        }else {
+            date=new Date(lastDate);
+        }
+        if(key==null){
+            key="";
+        }
+        List toplist = orderService.searchExpenditureList(merchant,key,date,PAGE_SIZE);
+        AppConsumeListModel[] appConsumeListModels = new AppConsumeListModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             Object[] objects = (Object[]) toplist.get(i);
             Order order = (Order) objects[0];
             User user = objects[1] != null ? (User) objects[1] : null;
-            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
-//            Order order=toplist.get(i);
-//            Integer userId = order.getUserId();
-//            User user = userRepository.findOne(userId);
-            appTopConsumeModel.setPictureUrl(user == null ? "" : user.getUserFace());
-            appTopConsumeModel.setName(userService.getViewUserName(user));
-            appTopConsumeModel.setMoney(order.getPrice());
-//            appTopConsumeModel.setMobile(user.getMobile());
-            appTopConsumeModel.setAmount(1);
-            appTopConsumeModels[i] = appTopConsumeModel;
+            AppConsumeListModel appConsumeListModel = new AppConsumeListModel();
+            appConsumeListModel.setPictureUrl(user == null ? "" : user.getUserFace());
+            appConsumeListModel.setName(userService.getViewUserName(user));
+            appConsumeListModel.setMoney(order.getPrice());
+            appConsumeListModel.setTime(order.getTime());
+            appConsumeListModels[i] = appConsumeListModel;
         }
-        list.outputData(appTopConsumeModels);
+        list.outputData(appConsumeListModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 }

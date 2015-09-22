@@ -452,17 +452,19 @@ public class ReportController implements ReportSystem {
     public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         List<Order> orderList = orderService.searchTopOrder(merchant, 1, new PageRequest(0, 20)).getContent();
-        AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
+        AppTopSalesModel[] appTopSalesModels = new AppTopSalesModel[orderList.size()];
         for (int i = 0; i < orderList.size(); i++) {
-            AppSalesListModel appSalesListModel = new AppSalesListModel();
+            AppTopSalesModel appTopSalesModel = new AppTopSalesModel();
             Order order = orderList.get(i);
-            appSalesListModel.setOrderNo(order.getId());
-            appSalesListModel.setMoney(order.getPrice());
-            appSalesListModel.setTime(order.getTime());
-            appSalesListModel.setPictureUrl("");//todo 订单图片设置
-            appSalesListModels[i] = appSalesListModel;
+            appTopSalesModel.setOrderNo(order.getId());
+            appTopSalesModel.setMoney(order.getPrice());
+//            appTopSalesModel.setTime(order.getTime());
+            appTopSalesModel.setPictureUrl("");//todo 订单图片设置
+            appTopSalesModel.setTime(order.getTime());
+
+            appTopSalesModels[i] = appTopSalesModel;
         }
-        list.outputData(appSalesListModels);
+        list.outputData(appTopSalesModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -497,20 +499,20 @@ public class ReportController implements ReportSystem {
     public ApiResult topGoods(Output<AppTopGoodsModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         List<Object[]> toplist = sellLogService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
-        AppTopSalesModel[] appTopSalesModels = new AppTopSalesModel[toplist.size()];
+        AppTopGoodsModel[] appTopGoodsModels = new AppTopGoodsModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
-            AppTopSalesModel appTopSalesModel = new AppTopSalesModel();
+            AppTopGoodsModel appTopGoodsModel = new AppTopGoodsModel();
             Object[] objects = toplist.get(i);
             Integer productId = (Integer) objects[0];
             Product product = productRepository.findOne(productId);
             long amount = (Long) objects[1];
-            appTopSalesModel.setName(product.getName());
-            appTopSalesModel.setAmount((int) amount);
-            appTopSalesModel.setPrice(product.getPrice());
-            appTopSalesModel.setPictureUrl(product.getGoods().getPictureUrl());
-            appTopSalesModels[i] = appTopSalesModel;
+            appTopGoodsModel.setTitle(product.getName());
+            appTopGoodsModel.setAmount((int) amount);
+            appTopGoodsModel.setPrice(product.getPrice());
+            appTopGoodsModel.setPicture(product.getGoods().getPictureUrl());
+            appTopGoodsModels[i] = appTopGoodsModel;
         }
-        list.outputData(appTopSalesModels);
+        list.outputData(appTopGoodsModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 

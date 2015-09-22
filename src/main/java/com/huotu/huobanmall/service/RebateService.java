@@ -21,11 +21,11 @@ public interface RebateService {
     /**
      * 会员返利列表
      * @param merchant      所属商家
-     * @param status        积分状态
      * @param lastId          最后一条显示的id
+     * @param name          搜索关键字
      * @return
      */
-    List searchUserScore(Merchant merchant, Integer status,Integer lastId);
+    List searchUserScore(Merchant merchant,Integer lastId,String name,Integer pageSize);
 
     /**
      * 返回积分状态
