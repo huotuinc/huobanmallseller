@@ -2,7 +2,6 @@ package com.huotu.huobanmall.service;
 
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.model.app.AppTopConsumeModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -80,7 +79,7 @@ public interface OrderService {
      * @param time          最后一条显示的时间
      * @return
      */
-    List<AppTopConsumeModel> searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize);
+    List searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize);
 
 
 

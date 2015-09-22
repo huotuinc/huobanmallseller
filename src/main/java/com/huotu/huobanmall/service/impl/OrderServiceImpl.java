@@ -1,7 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.*;
-import com.huotu.huobanmall.model.app.AppTopConsumeModel;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ public class OrderServiceImpl implements OrderService{
     CountDayOrderRepository countDayOrderRepository;
     @Autowired
     CountTodayOrderRepository countTodayOrderRepository;
-
 
 
     @Override
@@ -135,27 +133,30 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<AppTopConsumeModel> searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize) {
+    public List searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize) {
         StringBuffer hql = new StringBuffer();
         hql.append("select top :pageSize  order,user from Order order left join User user on order.userId=user.id where order.merchant.id=:merchantId");
          hql.append(" and order.time<:time and (user.name like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
         hql.append(" order by order.time");
        List list = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId", merchant.getId());
-           query.setParameter("time",time);
+            query.setParameter("time",time);
             query.setParameter("name", name);
-           query.setParameter("pageSize",pageSize);
+            query.setParameter("pageSize",pageSize);
 
         });
 
-        list.forEach(data->{
-            Object[] objects = (Object[])data;
-            Order order =(Order)objects[0];
-            User user= objects[1]!=null?(User)objects[1]:null;
+//        list.forEach(data->{
+//            Object[] objects = (Object[])data;
+//            Order order =(Order)objects[0];
+//            User user= objects[1]!=null?(User)objects[1]:null;
+//            AppTopConsumeModel appTopConsumeModel=new AppTopConsumeModel();
+//            appTopConsumeModel.setPictureUrl(user.getUserFace());
+//            appTopConsumeModel.setName();
+//
+//        });
 
-        });
-
-        return null;
+        return list;
 
 //        return orderRepository.findAll(new Specification<Order>() {
 //            @Override

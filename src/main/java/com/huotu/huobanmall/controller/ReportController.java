@@ -463,7 +463,7 @@ public class ReportController implements ReportSystem {
             appTopConsumeModel.setPictureUrl(user.getUserFace());
             appTopConsumeModel.setName(userService.getViewUserName(user));
             appTopConsumeModel.setMoney((float) money);
-            appTopConsumeModel.setMobile(user.getMobile());
+//            appTopConsumeModel.setMobile(user.getMobile());
             appTopConsumeModel.setAmount((int) amount);
             appTopConsumeModels[i] = appTopConsumeModel;
         }
@@ -475,21 +475,24 @@ public class ReportController implements ReportSystem {
     @RequestMapping("/userConsumeList")
     public ApiResult userConsumeList(Output<AppTopConsumeModel[]> list, Date time,String name) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<AppTopConsumeModel> toplist = orderService.searchExpenditureList(merchant,name,time,TOP_PAGE);
-//        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
-//        for (int i = 0; i < toplist.size(); i++) {
-//            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
+        List toplist = orderService.searchExpenditureList(merchant,name,time,TOP_PAGE);
+        AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
+        for (int i = 0; i < toplist.size(); i++) {
+            Object[] objects=(Object[])toplist.get(i);
+            Order order =(Order)objects[0];
+            User user= objects[1]!=null?(User)objects[1]:null;
+            AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
 //            Order order=toplist.get(i);
 //            Integer userId = order.getUserId();
 //            User user = userRepository.findOne(userId);
-//            appTopConsumeModel.setPictureUrl(user.getUserFace());
-//            appTopConsumeModel.setName(userService.getViewUserName(user));
-//            appTopConsumeModel.setMoney(order.getPrice());
+            appTopConsumeModel.setPictureUrl(user==null?"":user.getUserFace());
+            appTopConsumeModel.setName(userService.getViewUserName(user));
+            appTopConsumeModel.setMoney(order.getPrice());
 //            appTopConsumeModel.setMobile(user.getMobile());
-//            appTopConsumeModel.setAmount(1);
-//            appTopConsumeModels[i] = appTopConsumeModel;
-//        }
-        list.outputData(toplist.toArray(new AppTopConsumeModel[toplist.size()]));
+            appTopConsumeModel.setAmount(1);
+            appTopConsumeModels[i] = appTopConsumeModel;
+        }
+        list.outputData(appTopConsumeModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 

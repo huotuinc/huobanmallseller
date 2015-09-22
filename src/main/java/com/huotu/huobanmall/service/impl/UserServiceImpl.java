@@ -62,6 +62,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String getViewUserName(User user) {
+        if(user==null){
+            return "";
+        }
         String realName=user.getRealName();
         String wxNickName=user.getWxNickName();
         String mobile=user.getMobile();

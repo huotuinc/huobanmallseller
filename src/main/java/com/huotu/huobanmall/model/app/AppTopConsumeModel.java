@@ -16,10 +16,10 @@ public class AppTopConsumeModel {
     private String name;
 
 
-    /**
-     * 手机号
-     */
-    private String mobile;
+//    /**
+//     * 手机号
+//     */
+//    private String mobile;
 
     /**
      * 消费额
@@ -48,14 +48,14 @@ public class AppTopConsumeModel {
     }
 
 
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
+//
+//    public String getMobile() {
+//        return mobile;
+//    }
+//
+//    public void setMobile(String mobile) {
+//        this.mobile = mobile;
+//    }
 
     public float getMoney() {
         return money;
