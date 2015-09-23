@@ -60,7 +60,7 @@ public class CommonInterceptor implements HandlerInterceptor {
             PhysicalApiResult result = new PhysicalApiResult();
             result.setSystemResultCode(1);
             result.setResultCode(CommonEnum.AppCode.SYSTEM_BAD_REQUEST_50601.getValue());
-
+            result.setResultDescription("系统请求失败");
             PrintWriter out = null;
             try {
                 response.setCharacterEncoding("UTF-8");
@@ -84,7 +84,7 @@ public class CommonInterceptor implements HandlerInterceptor {
             PhysicalApiResult result = new PhysicalApiResult();
             result.setSystemResultCode(1);
             result.setResultCode(CommonEnum.AppCode.ERROR_USER_TOKEN_FAIL.getValue());
-
+            result.setResultDescription(CommonEnum.AppCode.ERROR_USER_TOKEN_FAIL.getName());
             PrintWriter out = null;
             try {
                 response.setCharacterEncoding("UTF-8");

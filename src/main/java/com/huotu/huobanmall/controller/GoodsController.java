@@ -300,7 +300,7 @@ public class GoodsController implements GoodsSystem {
             appUserScoreModel.setScore(rebate.getScore());
             appUserScoreModel.setPictureUrl(user==null?"":user.getUserFace());  //todo 图片路径需要修改
             appUserScoreModel.setTime(rebate.getTime());
-            appUserScoreModel.setId(rebate.getId());
+            appUserScoreModel.setPid(rebate.getId());
             appUserScoreModels[i]=appUserScoreModel;
 
         }

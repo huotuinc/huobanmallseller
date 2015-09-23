@@ -151,6 +151,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         shop.setDiscription("");
         shop.setLogo("");
         shopRepository.save(shop);
+
         User user = new User();
         user.setUsername(userName);
         user.setPassword("e10adc3949ba59abbe56e057f20f883e");
@@ -174,17 +175,6 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         goods.setCategory(category);
         goodsRepository.save(goods);
 
-        for (int i = 0; i < 29; i++) {
-            goods = new Goods();
-            goods.setTitle("商品" + i + "(上架)");
-            goods.setOwner(merchant);
-            goods.setPictureUrl("");
-            goods.setPrice(i * 10);
-            goods.setStatus(1);
-            goods.setStock(i * 100);
-            goods.setCategory(category);
-            goodsRepository.save(goods);
-        }
 
         goods = new Goods();
         goods.setTitle("商品(下架)");
@@ -197,7 +187,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         goods = goodsRepository.save(goods);
 
         Order order = new Order();
-        order.setId("201505061223033843");
+        order.setId(UUID.randomUUID().toString());
         order.setMerchant(merchant);
         order.setUserId(user.getId());
         order.setUserType(0);
@@ -222,7 +212,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
 
         order = new Order();
-        order.setId("201505061723033841");
+        order.setId(UUID.randomUUID().toString());
         order.setMerchant(merchant);
         order.setUserId(user.getId());
         order.setUserType(1);
