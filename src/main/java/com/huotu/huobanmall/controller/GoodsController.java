@@ -370,16 +370,15 @@ public class GoodsController implements GoodsSystem {
 
     @Override
     @RequestMapping("/userConsumeList")
-    public ApiResult userConsumeList(Output<AppConsumeListModel[]> list, Long lastDate, String key) throws Exception {
+    public ApiResult userConsumeList(Output<AppConsumeListModel[]> list,
+                                     @RequestParam(required = false)Long lastDate,
+                                     @RequestParam(required = false)String key) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         Date date;
-        if(lastDate==null){
-            date=new Date();
-        }else {
+        if(lastDate!=null){
             date=new Date(lastDate);
-        }
-        if(key==null){
-            key="";
+        }else {
+            date=null;
         }
         List toplist = orderService.searchExpenditureList(merchant,key,date,PAGE_SIZE);
         AppConsumeListModel[] appConsumeListModels = new AppConsumeListModel[toplist.size()];

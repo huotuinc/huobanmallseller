@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -522,8 +523,98 @@ public class GoodsControllerTest extends SpringAppTest {
 
     }
 
+
     @Test
+    @Rollback
     public void testUserConsumeList() throws Exception {
+        User[] users=new User[15];
+
+
+        for(int i=0;i<15;i++){
+            User user=new User();
+            user.setMerchant(mockMerchant);
+            user.setUsername("shiliting");
+            user.setRealName("史利挺"+i);
+            user.setMobile("18069770175"+i);
+            user.setWxNickName("si挺"+i);
+            user.setRegTime(new Date());
+            user.setType(0);
+            user.setPassword("123456");
+            users[i]=userRepository.saveAndFlush(user);
+        }
+
+
+
+        Category category=new Category();
+        category.setTitle("干果");
+        category.setParentId(2);
+        category.setSortId(4);
+        category=categoryRepository.saveAndFlush(category);
+
+
+        Goods goods=new Goods();
+        goods.setCategory(category);
+        goods.setPrice(50);
+        goods.setTitle("核桃");
+        goods.setOwner(mockMerchant);
+        goods.setStatus(1);
+        goods.setStock(-1);
+        goods.setPictureUrl("");
+        goods=goodsRepository.saveAndFlush(goods);
+
+        Order order=new Order();
+        order.setId(UUID.randomUUID().toString());
+        order.setMerchant(mockMerchant);
+        order.setStatus(0);
+        order.setPictureUrl("");
+        order.setUserType(0);
+        order.setPayStatus(1);
+        order.setTime(new Date());
+        order.setAmount(10);
+        order.setDeliverStatus(0);
+        order.setPayTime(new Date());
+        order.setPrice(100);
+        order.setReceiver("史利挺");
+        order.setUserId(users[0].getId());
+        order.setAmount(5);
+        order.setTitle("史利挺买了一些东西");
+        order=orderRepository.saveAndFlush(order);
+        long[] orderTime=new long[25];
+        for(int i=0;i<25;i++){
+            order=new Order();
+            order.setId(UUID.randomUUID().toString());
+            order.setMerchant(mockMerchant);
+            order.setStatus(0);
+            order.setPictureUrl("");
+            order.setUserType(0);
+            order.setPayStatus(1);
+            orderTime[i]=new Date().getTime();
+            order.setTime(new Date(orderTime[i]));
+            order.setAmount(10);
+            order.setDeliverStatus(0);
+            order.setPayTime(new Date());
+            order.setPrice(100);
+            order.setReceiver("史利挺"+i);
+            order.setUserId(users[i%15].getId());
+            order.setAmount(5);
+            order.setTitle("史利挺买了一些东西");
+            order=orderRepository.saveAndFlush(order);
+        }
+
+
+        long time=new Date().getTime();
+        mockMvc.perform(
+                device.getApi("userConsumeList")
+                        .param("key","史")
+                        .param("lastDate",String.valueOf(orderTime[5]))
+                        .build())
+                .andDo(print());
+
+
+        mockMvc.perform(
+                device.getApi("topConsume")
+                        .build())
+                .andDo(print());
 
     }
 }

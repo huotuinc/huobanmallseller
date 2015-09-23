@@ -179,4 +179,7 @@ public class OrderServiceImplTest extends WebTestBase {
 
     }
 
+    @Test
+    public void testSearchExpenditureList() throws Exception {
+    }
 }

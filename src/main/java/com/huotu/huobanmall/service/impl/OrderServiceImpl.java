@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -100,7 +101,6 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public float countSale(Merchant merchant) {
         List<CountTodaySales> countTodayOrderList=countTodaySalesRepository.findAllByMerchantIdOrderByHour(merchant.getId());
-//        List<Order> list=orderRepository.findByMerchantAndTimeGreaterThan(merchant, lastTime);
         float sum=0;
         for(CountTodaySales sales:countTodayOrderList){
             sum+=sales.getMoney();
@@ -108,24 +108,6 @@ public class OrderServiceImpl implements OrderService{
         return sum;
     }
 
-//    @Override
-//    public float countSale(Merchant merchant) {
-//        List<Order> list=orderRepository.findByMerchant(merchant);
-//        float sum=0;
-//        for(Order o:list){
-//            if(o.getOrderStatus()==3){
-//                sum=sum+o.getPrice();
-//            }
-//
-//        }
-//        return sum;
-//    }
-
-//    @Override
-//    public Page<Rebate> countUserScoreList(Merchant merchant,Pageable pageable) {
-////        return rebateRepository.findByMerchantAndStatusOrderByScoreDesc(merchant,1,pageable);
-//          return null;
-//    }
 
     @Override
     public Page<Object[]> searchTopExpenditure(Merchant merchant,Pageable pageable) {
@@ -135,36 +117,27 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List searchExpenditureList(Merchant merchant,String name, Date time, Integer pageSize) {
         StringBuffer hql = new StringBuffer();
-        hql.append("select top :pageSize  order,user from Order order left join User user on order.userId=user.id where order.merchant.id=:merchantId");
-         hql.append(" and order.time<:time and (user.name like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
-        hql.append(" order by order.time");
-       List list = orderRepository.queryHql(hql.toString(), query -> {
+        hql.append("select order,user from Order order left join User user on order.userId=user.id where order.merchant.id=:merchantId");
+        if(!StringUtils.isEmpty(time)){
+            hql.append(" and order.time<:time");
+        }
+        if(!StringUtils.isEmpty(name)){
+            hql.append(" and (user.username like :name or user.realName like :name or user.mobile like :name or user.wxNickName like :name)");
+        }
+        hql.append(" order by order.time desc");
+        List list = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId", merchant.getId());
-            query.setParameter("time",time);
-            query.setParameter("name", name);
-            query.setParameter("pageSize",pageSize);
+           if(!StringUtils.isEmpty(time)){
+                query.setParameter("time",time);
+           }
+            if(!StringUtils.isEmpty(name)){
+                query.setParameter("name", "%"+name+"%");
+            }
+
+            query.setMaxResults(pageSize);
 
         });
-
-//        list.forEach(data->{
-//            Object[] objects = (Object[])data;
-//            Order order =(Order)objects[0];
-//            User user= objects[1]!=null?(User)objects[1]:null;
-//            AppTopConsumeModel appTopConsumeModel=new AppTopConsumeModel();
-//            appTopConsumeModel.setPictureUrl(user.getUserFace());
-//            appTopConsumeModel.setName();
-//
-//        });
-
         return list;
-
-//        return orderRepository.findAll(new Specification<Order>() {
-//            @Override
-//            public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                return null;
-//            }
-//        },new PageRequest(0,pageSize,new Sort(Sort.Direction.DESC,"time")));
-////        return orderRepository.findByMerchantAndPayStatusLessThanOrderByTimeDesc(merchant,payStatus,time,pageable);
     }
 
     @Override
