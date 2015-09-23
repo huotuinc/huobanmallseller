@@ -319,10 +319,10 @@ public class GoodsController implements GoodsSystem {
         if(lastDate!=null){
             date=new Date(lastDate);
         }else {
-            date=new Date();
+            date=null;
         }
 
-        List<Order> orderList = orderService.searchOrdersDetail(merchant.getId(), date, PAGE_SIZE, status, key).getContent();
+        List<Order> orderList = orderService.searchOrdersDetail(merchant.getId(), date, PAGE_SIZE, key).getContent();
         AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
         for (int i = 0; i < orderList.size(); i++) {
             AppSalesListModel appSalesListModel = new AppSalesListModel();

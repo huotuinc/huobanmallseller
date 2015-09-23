@@ -18,10 +18,9 @@ public interface OrderService {
      * @param merchantId     所属商家ID
      * @param time          最后一个显示的下单时间
      * @param pageSize      一次显示订单的数量
-     * @param orderStatus   订单的类型
      * @return              订单信息集合
      */
-    Page<Order> searchOrdersDetail(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
+    Page<Order> searchOrdersDetail(Integer merchantId,Date time,Integer pageSize,String keyword);
 
     /**
      * Create by shiliting on 2015/9/23

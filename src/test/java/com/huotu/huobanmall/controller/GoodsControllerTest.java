@@ -720,6 +720,7 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setTitle("slt"+i);
             order.setPayStatus(0);
             order.setPrice(100*i);
+            order.setMerchant(mockMerchant);
             order.setAmount(10);
             order.setId(UUID.randomUUID().toString());
             order=orderRepository.saveAndFlush(order);
