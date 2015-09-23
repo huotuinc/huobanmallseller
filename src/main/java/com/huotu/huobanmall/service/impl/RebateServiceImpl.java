@@ -1,7 +1,6 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Rebate;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.model.app.AppTopScoreModel;
 import com.huotu.huobanmall.repository.RebateRepository;
@@ -76,26 +75,7 @@ public class RebateServiceImpl implements RebateService {
             query.setMaxResults(pageSize);
         });
 
-//        list.forEach(data->{
-//            Object[] objects = (Object[])data;
-//            Order order =(Order)objects[0];
-//            User user= objects[1]!=null?(User)objects[1]:null;
-//            AppTopConsumeModel appTopConsumeModel=new AppTopConsumeModel();
-//            appTopConsumeModel.setPictureUrl(user.getUserFace());
-//            appTopConsumeModel.setName();
-//
-//        });
-
         return list;
-
-
-//        return rebateRepository.findAll(new Specification<Rebate>() {
-//            @Override
-//            public Predicate toPredicate(Root<Rebate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//                return null;
-//            }
-//        },new PageRequest(0,20));
-//        return rebateRepository.findByMerchantAndStatusLessThanOrderByTimeDesc(merchant, status, time, new PageRequest(0, 20));
     }
 
 

@@ -82,7 +82,7 @@ public class GoodsController implements GoodsSystem {
             appGoodListModel.setTitle(good.getTitle());
             appGoodListModel.setPictureUrl(good.getPictureUrl());
             appGoodListModel.setStock(good.getStock());
-            appGoodListModel.setPrice(good.getStock());
+            appGoodListModel.setPrice(good.getPrice());
             if (good.getCategory() == null) {
                 appGoodListModel.setCategory("未分类");
             } else {
@@ -284,7 +284,9 @@ public class GoodsController implements GoodsSystem {
 
     @Override
     @RequestMapping("/userScoreList")
-    public ApiResult userScoreList(Output<AppUserScoreModel[]> list, Integer lastId, String key) throws Exception {
+    public ApiResult userScoreList(Output<AppUserScoreModel[]> list,
+                                   @RequestParam(required=false)Integer lastId,
+                                   @RequestParam(required=false)String key) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
         List rebates = rebateService.searchUserScore(apm.getCurrentUser(),lastId,key,PAGE_SIZE);

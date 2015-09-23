@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -23,17 +22,8 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
 
     List<Order> findByMerchant(Merchant merchant);
-    List<Order> findByMerchantAndTimeGreaterThan(Merchant merchant,Date lastTime);
     Page<Order> findByMerchantAndPayStatusOrderByPriceDesc(Merchant merchant,Integer payStatus,Pageable pageable);
 
-    @Query(value = "select count(order) from Order order where order.time>=?1")
-    Integer countByWeekOrMonth(Date startDate);
-
-    //TODO 返利积分的规则有待确定
-    //TODO 显示前几条数据
-
-//    @Query(value = "select order.user.username,sum(order.score) from Order order where order.orderStatus<>1 group by order.user.username order by sum(order.score) desc")
-//    List<Object[]> countUserScore();
     @Query(value = "select o.userId,sum(o.price),count(o) from Order o where o.payStatus=1 and o.merchant=?1 group by o.userId order by sum(o.price) desc")
     Page<Object[]> countUserExpenditure(Merchant merchant,Pageable pageable);
 }

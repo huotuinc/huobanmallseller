@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -22,13 +21,10 @@ import java.util.List;
 @Repository
 public interface RebateRepository extends JpaRepository<Rebate, Integer>, JpaSpecificationExecutor<Rebate>,ClassicsRepository<Rebate> {
 
-//    @Query(value = "select r  from Rebate r where r.merchant=?1 and r.status=?2 and r.userId in(select u. from User u where )")
-//    Page<Rebate> searchRebateList(Merchant merchant,Integer status);
-
     @Query(value = "select r.userId,sum(r.score) from Rebate r where r.merchant.id=?1 and r.status=?2 group by r.userId order by sum(r.score) desc ")
     Page<Object[]> findTopScore(Integer merchantId,Integer status,Pageable pageable);
 
-    Page<Rebate> findByMerchantAndStatusLessThanOrderByTimeDesc(Merchant merchant, Integer status, Date time, Pageable pageable);
+//    Page<Rebate> findByMerchantAndStatusLessThanOrderByTimeDesc(Merchant merchant, Integer status, Date time, Pageable pageable);
     List<Rebate> findByMerchantAndOrder(Merchant merchant,Order order);
 
 

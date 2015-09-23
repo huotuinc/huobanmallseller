@@ -85,11 +85,11 @@ public class ReportController implements ReportSystem {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         //将Map结果分解成两个时间和数量的数组
         //计算今天各个时间段新增的订单数量
-        int n = 0;
+
         Map<Integer, Integer> map = countService.todayOrder(merchant);
         Integer[] hoursOrder = new Integer[map.size()];
         Integer[] orders = new Integer[map.size()];
-
+        int n = 0;
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             hoursOrder[n] = (entry.getKey());
             orders[n] = entry.getValue();
@@ -450,9 +450,7 @@ public class ReportController implements ReportSystem {
             Order order = orderList.get(i);
             appTopSalesModel.setOrderNo(order.getId());
             appTopSalesModel.setMoney(order.getPrice());
-//            appTopSalesModel.setTime(order.getTime());
             appTopSalesModel.setPictureUrl("");//todo 订单图片设置
-
 
             appTopSalesModels[i] = appTopSalesModel;
         }
@@ -477,7 +475,6 @@ public class ReportController implements ReportSystem {
             appTopConsumeModel.setPictureUrl(user.getUserFace());
             appTopConsumeModel.setName(userService.getViewUserName(user));
             appTopConsumeModel.setMoney((float) money);
-//            appTopConsumeModel.setMobile(user.getMobile());
             appTopConsumeModel.setAmount((int) amount);
             appTopConsumeModels[i] = appTopConsumeModel;
         }
