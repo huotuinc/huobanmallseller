@@ -108,13 +108,7 @@ public class Rebate {
         this.userId = userId;
     }
 
-    public Integer getScore() {
-        return score;
-    }
 
-    public void setScore(Integer score) {
-        this.score = score;
-    }
 
     public Integer getStatus() {
         return status;
@@ -162,5 +156,13 @@ public class Rebate {
 
     public void setGainer(Integer gainer) {
         this.gainer = gainer;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer scores) {
+        this.score = scores;
     }
 }

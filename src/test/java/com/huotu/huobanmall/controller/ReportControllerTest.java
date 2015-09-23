@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.luffy.test.matcher.NumberMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -517,7 +516,7 @@ public class ReportControllerTest extends SpringAppTest {
                 rebate.setGainer(1);
                 rebate.setMerchant(mockMerchant);
                 rebate.setScheduledTime(date);
-                rebate.setScore(random.nextInt());
+                rebate.setScore(random.nextInt(1000));
                 rebate.setStatus(1);
                 rebate.setUserId(user.getId());
                 rebateRepository.saveAndFlush(rebate);
@@ -537,8 +536,8 @@ public class ReportControllerTest extends SpringAppTest {
 
         Assert.assertEquals("总条数", 10, list.size());
         //判断对一个top
-        Assert.assertEquals("top one"
-                , listScore.stream().mapToLong(x -> x).summaryStatistics().getMax()
+        Assert.assertEquals("top one score"
+                , String.valueOf(listScore.stream().mapToLong(x -> x).summaryStatistics().getMax())
                 , JsonPath.read(list.get(0), "$.score").toString());
 
     }

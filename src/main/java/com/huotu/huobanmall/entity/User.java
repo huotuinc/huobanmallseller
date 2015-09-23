@@ -71,6 +71,7 @@ public class User {
      * 所属商家
      */
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "UB_CustomerID")
     private Merchant merchant;
 
     /**
