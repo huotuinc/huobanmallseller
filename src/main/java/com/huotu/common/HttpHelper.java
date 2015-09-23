@@ -18,6 +18,13 @@ import java.util.Map;
  * Created by Administrator on 2015/9/17.
  */
 public class HttpHelper {
+    /**
+     * http post请求
+     * @param url
+     * @param data
+     * @return
+     * @throws IOException
+     */
     public static String postRequest(String url,Map<String,String> data) throws IOException {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);

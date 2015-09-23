@@ -218,7 +218,7 @@ public class GoodsControllerTest extends SpringAppTest {
                 device.getApi("goodsList")
                         .param("lastProductId", "")
                         .build())
-                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(jsonPath("$.resultData.logisticsDetail").isArray())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andDo(print()).andReturn().getResponse().getContentAsString();
 
@@ -415,6 +415,7 @@ public class GoodsControllerTest extends SpringAppTest {
         mockMvc.perform(
                 device.getApi("logisticsDetail")
                         .param("orderNo", orderList.stream().findFirst().get().getId())
+//                        .param("orderNo","912971286892")
                         .build())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andExpect(jsonPath("$.resultData.data").exists())
@@ -425,6 +426,7 @@ public class GoodsControllerTest extends SpringAppTest {
 
 
     public void testOrderDetail() throws Exception {
+
 
     }
 
@@ -740,5 +742,17 @@ public class GoodsControllerTest extends SpringAppTest {
 
 
 
+    }
+
+    @Test
+    public void testLogisticsDetail() throws Exception {
+
+        //订单物流
+        mockMvc.perform(
+                device.getApi("logisticsDetail")
+//                        .param("orderNo", orderList.stream().findFirst().get().getId())
+                        .param("orderNo","912971286892")
+                        .build())
+                .andDo(print());
     }
 }

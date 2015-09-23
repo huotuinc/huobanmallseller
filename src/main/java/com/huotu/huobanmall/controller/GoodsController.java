@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -216,14 +215,8 @@ public class GoodsController implements GoodsSystem {
     @Override
     @RequestMapping("/logisticsDetail")
     public ApiResult logisticsDetail(Output<AppLogisticsDetailModel> data, String orderNo) throws Exception {
-        String appId = "73d29a4c9a6d389a0b7288ec27b4c4c4";
-        String encryption = "9389e8a5c32eefa3134340640fb4ceaa";
-        String sign = DigestUtils.md5DigestAsHex(("appid=" + appId + "&number=" + orderNo + encryption).getBytes());
-        String url = "http://express.51flashmall.com/express/logisty";
         //获取订单
         Order order = orderRepository.findOne(orderNo);
-        List<Delivery> deliveries = deliveryRepository.findByOrder(order);
-
         //获取该订单的顶单项
         List<OrderItems> orderItemses = orderItemsRepository.findByOrder(order);
         List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<AppOrderListProductModel>();
@@ -240,18 +233,25 @@ public class GoodsController implements GoodsSystem {
             appOrderListProductModels.add(appOrderListProductModel);
         }
 
+        List<Delivery> deliveries = deliveryRepository.findByOrder(order);
         Delivery delivery;
         if (deliveries.size() != 0) {
             delivery = deliveryRepository.findByOrder(order).get(0);
         } else {
             delivery = new Delivery();
         }
+        String appId = "73d29a4c9a6d389a0b7288ec27b4c4c4";
+        String encryption = "9389e8a5c32eefa3134340640fb4ceaa";
+        String sign = DigestUtils.md5DigestAsHex(("appid=" + appId + "&number=" + delivery.getNo() + encryption).getBytes());
+        String url = "http://express.51flashmall.com/express/logisty";
+
+
 
 
         AppLogisticsDetailModel appLogisticsDetailModel = new AppLogisticsDetailModel();
-        appLogisticsDetailModel.setSource(delivery.getDeliveryName() == null ? "无" : delivery.getDeliveryName());
-        appLogisticsDetailModel.setStatus(delivery.getStatus() == null ? "无" : delivery.getStatus());
-        appLogisticsDetailModel.setNo(delivery.getNo() == null ? "无" : delivery.getStatus());
+        appLogisticsDetailModel.setSource(StringUtils.isEmpty(delivery.getDeliveryName())? "暂无状态信息" : delivery.getDeliveryName());
+        appLogisticsDetailModel.setStatus(StringUtils.isEmpty(delivery.getStatus())? "暂无来源信息" : delivery.getStatus());
+        appLogisticsDetailModel.setNo(StringUtils.isEmpty(delivery.getNo())? "暂无编号信息" : delivery.getStatus());
 
         appLogisticsDetailModel.setList(appOrderListProductModels);
         appLogisticsDetailModel.setPictureURL("http://pic25.nipic.com/20121121/7020518_160535378000_2.jpg");//todo 到时候图片需要修改
@@ -261,21 +261,20 @@ public class GoodsController implements GoodsSystem {
             Map<String, String> map = new HashMap<String, String>();
             map.put("appid", appId);
             map.put("sign", sign);
+//            map.put("number",);
             map.put("number", delivery.getNo());
             //调用post方法获得物流信息字符串
-            String Data = null;
 
-            Data = HttpHelper.postRequest(url, map);
+            String   Data = HttpHelper.postRequest(url, map);
+
 
             AppLogisticsModel result = JSON.parseObject(Data, AppLogisticsModel.class);
             //获取物流信息集合
             appLogisticsDataModels = result.getData();
 
-        } catch (IOException e) {
-
+        } catch (Exception e) {
+            appLogisticsDetailModel.setTrack(null);
         }
-
-
         appLogisticsDetailModel.setTrack(appLogisticsDataModels);
 
         data.outputData(appLogisticsDetailModel);
