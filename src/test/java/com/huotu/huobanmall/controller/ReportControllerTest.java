@@ -544,6 +544,46 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Test
     public void testTopConsume() throws Exception {
+        //构建数据
+        List<Float> listScore = new ArrayList<>();
+        Random random = new Random();
+        for (int n = 0; n < 15; n++) {
+            List<Order> orderList = new ArrayList<>();
+            User user = generateUser(userRepository, mockMerchant);
+            Calendar calendar = Calendar.getInstance();
+            for (int i=0;i<5;i++) {
+                Order order = new Order();
+                order.setMerchant(mockMerchant);
+                order.setId(UUID.randomUUID().toString());
+                order.setTime(calendar.getTime());
+                order.setPayTime(calendar.getTime());
+                order.setUserId(user.getId());
+                order.setPrice(random.nextInt(1000));
+                order.setTitle("title");
+                order.setAmount(50);
+                order.setUserType(1);
+                order.setStatus(1);
+                order.setPayStatus(1);
+                order.setUserId(user.getId());
+                orderRepository.saveAndFlush(order);
+                orderList.add(order);
+            }
+            listScore.add(((Double) orderList.stream().mapToDouble(x -> x.getPrice()).summaryStatistics().getSum()).floatValue());
+        }
+
+        String result = mockMvc.perform(device.getApi("topConsume")
+                .build())
+                .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andReturn().getResponse().getContentAsString();
+
+        List<Object> list = JsonPath.read(result, "$.resultData.list");
+
+        Assert.assertEquals("总条数", 10, list.size());
+        //判断对一个top
+        Assert.assertEquals("top one score"
+                , String.valueOf(listScore.stream().mapToDouble(x -> x).summaryStatistics().getMax())
+                , JsonPath.read(list.get(0), "$.money").toString());
 
     }
 

@@ -520,101 +520,192 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testSalesList() throws Exception {
+        List<Order> orderList = new ArrayList<>();
+        Random random = new Random();
+        User user = generateUser(userRepository, mockMerchant);
+        for (int i = 0; i < 25; i++) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.SECOND, 2 * i);
+            Order order = new Order();
+            order.setMerchant(mockMerchant);
+            order.setId(UUID.randomUUID().toString());
+            order.setTime(calendar.getTime());
+            order.setPayTime(calendar.getTime());
+            order.setUserId(user.getId());
+            order.setPrice(random.nextInt(1000));
+            order.setTitle("title");
+            order.setAmount(50);
+            order.setUserType(1);
+            order.setStatus(1);
+            order.setPayStatus(1);
+            order.setUserId(user.getId());
+            orderRepository.saveAndFlush(order);
+            orderList.add(order);
+        }
+ 
 
+        String result = mockMvc.perform(device.getApi("salesList")
+                .param("lastDate", "")
+                .param("key", "").build())
+                .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andReturn().getResponse().getContentAsString();
+
+        List<Object> list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("第一条数据"
+                , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
+                , JsonPath.read(list.get(0), "$.time").toString());
+
+
+
+
+        //测试下一页
+        result = mockMvc.perform(
+                device.getApi("salesList")
+                        .param("lastDate", String.valueOf(orderList.get(orderList.size() - 10).getTime().getTime()))
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("返回条数", 10, list.size());
+        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.time").toString()
+                , String.valueOf(orderList.get(orderList.size() - 11).getTime().getTime()));
+
+
+        //搜索测试
+        String userName = UUID.randomUUID().toString();
+        user.setUsername(userName);
+        userRepository.save(user);
+
+        result = mockMvc.perform(
+                device.getApi("salesList")
+                        .param("lastDate", "")
+                        .param("key", userName)
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("第一条数据"
+                , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
+                , JsonPath.read(list.get(0), "$.time").toString());
+
+        //搜索无数据
+        result = mockMvc.perform(
+                device.getApi("salesList")
+                        .param("lastDate", "")
+                        .param("key", userName + "abcttt")
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 0, list.size());
     }
 
 
     @Test
-    @Rollback
     public void testUserConsumeList() throws Exception {
-        User[] users=new User[15];
-
-
-        for(int i=0;i<15;i++){
-            User user=new User();
-            user.setMerchant(mockMerchant);
-            user.setUsername("shiliting");
-            user.setRealName("史利挺"+i);
-            user.setMobile("18069770175"+i);
-            user.setWxNickName("si挺"+i);
-            user.setRegTime(new Date());
-            user.setType(0);
-            user.setPassword("123456");
-            users[i]=userRepository.saveAndFlush(user);
-        }
-
-
-
-        Category category=new Category();
-        category.setTitle("干果");
-        category.setParentId(2);
-        category.setSortId(4);
-        category=categoryRepository.saveAndFlush(category);
-
-
-        Goods goods=new Goods();
-        goods.setCategory(category);
-        goods.setPrice(50);
-        goods.setTitle("核桃");
-        goods.setOwner(mockMerchant);
-        goods.setStatus(1);
-        goods.setStock(-1);
-        goods.setPictureUrl("");
-        goods=goodsRepository.saveAndFlush(goods);
-
-        Order order=new Order();
-        order.setId(UUID.randomUUID().toString());
-        order.setMerchant(mockMerchant);
-        order.setStatus(0);
-        order.setPictureUrl("");
-        order.setUserType(0);
-        order.setPayStatus(1);
-        order.setTime(new Date());
-        order.setAmount(10);
-        order.setDeliverStatus(0);
-        order.setPayTime(new Date());
-        order.setPrice(100);
-        order.setReceiver("史利挺");
-        order.setUserId(users[0].getId());
-        order.setAmount(5);
-        order.setTitle("史利挺买了一些东西");
-        order=orderRepository.saveAndFlush(order);
-        long[] orderTime=new long[25];
-        for(int i=0;i<25;i++){
-            order=new Order();
-            order.setId(UUID.randomUUID().toString());
+        List<Order> orderList = new ArrayList<>();
+        Random random = new Random();
+        User user = generateUser(userRepository, mockMerchant);
+        for (int i = 0; i < 25; i++) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.SECOND, 2 * i);
+            Order order = new Order();
             order.setMerchant(mockMerchant);
-            order.setStatus(0);
-            order.setPictureUrl("");
-            order.setUserType(0);
+            order.setId(UUID.randomUUID().toString());
+            order.setTime(calendar.getTime());
+            order.setPayTime(calendar.getTime());
+            order.setUserId(user.getId());
+            order.setPrice(random.nextInt(1000));
+            order.setTitle("title");
+            order.setAmount(50);
+            order.setUserType(1);
+            order.setStatus(1);
             order.setPayStatus(1);
-            orderTime[i]=new Date().getTime();
-            order.setTime(new Date(orderTime[i]));
-            order.setAmount(10);
-            order.setDeliverStatus(0);
-            order.setPayTime(new Date());
-            order.setPrice(100);
-            order.setReceiver("史利挺"+i);
-            order.setUserId(users[i%15].getId());
-            order.setAmount(5);
-            order.setTitle("史利挺买了一些东西");
-            order=orderRepository.saveAndFlush(order);
+            order.setUserId(user.getId());
+            orderRepository.saveAndFlush(order);
+            orderList.add(order);
         }
 
+        Collections.sort(orderList, new Comparator<Order>() {
+            @Override
+            public int compare(Order o1, Order o2) {
+                return o1.getTime().compareTo(o2.getTime());
+            }
+        });
 
-        long time=new Date().getTime();
-        mockMvc.perform(
+
+        String result = mockMvc.perform(device.getApi("userConsumeList")
+                .param("lastDate", "")
+                .param("key", "").build())
+                .andDo(print())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andReturn().getResponse().getContentAsString();
+
+        List<Object> list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("第一条数据"
+                , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
+                , JsonPath.read(list.get(0), "$.time").toString());
+
+
+
+
+        //测试下一页
+        result = mockMvc.perform(
                 device.getApi("userConsumeList")
-                        .param("key","史")
-                        .param("lastDate",String.valueOf(orderTime[5]))
+                        .param("lastDate", String.valueOf(orderList.get(orderList.size() - 10).getTime().getTime()))
                         .build())
-                .andDo(print());
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("返回条数", 10, list.size());
+        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.time").toString()
+                , String.valueOf(orderList.get(orderList.size() - 11).getTime().getTime()));
 
 
-        mockMvc.perform(
-                device.getApi("topConsume")
+        //搜索测试
+        String userName = UUID.randomUUID().toString();
+        user.setUsername(userName);
+        userRepository.save(user);
+
+        result = mockMvc.perform(
+                device.getApi("userConsumeList")
+                        .param("lastDate", "")
+                        .param("key", userName)
                         .build())
-                .andDo(print());
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("第一条数据"
+                , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
+                , JsonPath.read(list.get(0), "$.time").toString());
+
+        //搜索无数据
+        result = mockMvc.perform(
+                device.getApi("userConsumeList")
+                        .param("lastDate", "")
+                        .param("key", userName + "abcttt")
+                        .build())
+                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("条数", 0, list.size());
 
     }
 }

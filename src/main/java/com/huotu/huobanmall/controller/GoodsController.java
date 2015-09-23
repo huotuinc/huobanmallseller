@@ -351,7 +351,14 @@ public class GoodsController implements GoodsSystem {
     @Override
     public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        Date date = new Date(lastDate);
+
+        Date date;
+        if(lastDate!=null){
+            date=new Date(lastDate);
+        }else {
+            date=new Date();
+        }
+
         List<Order> orderList = orderService.searchOrders(merchant.getId(), date, PAGE_SIZE, 1, key).getContent();
         AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
         for (int i = 0; i < orderList.size(); i++) {

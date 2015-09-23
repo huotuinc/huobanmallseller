@@ -463,7 +463,7 @@ public class ReportController implements ReportSystem {
     @RequestMapping("/topConsume")
     public ApiResult topConsume(Output<AppTopConsumeModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Object[]> toplist = orderService.searchTopExpenditure(merchant, new PageRequest(0, TOP_PAGE + 10)).getContent();
+        List<Object[]> toplist = orderService.searchTopExpenditure(merchant, new PageRequest(0, TOP_PAGE)).getContent();
         AppTopConsumeModel[] appTopConsumeModels = new AppTopConsumeModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             AppTopConsumeModel appTopConsumeModel = new AppTopConsumeModel();
