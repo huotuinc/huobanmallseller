@@ -115,7 +115,7 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key,Integer status) throws Exception;
+    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key) throws Exception;
 
 
     /**

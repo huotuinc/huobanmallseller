@@ -714,19 +714,29 @@ public class GoodsControllerTest extends SpringAppTest {
         user.setMerchant(mockMerchant);
         user.setUsername("123456");
         user=userRepository.saveAndFlush(user);
+        String[] ids=new String[25];
+        Date[] times=new Date[25];
         Order order;
         for(int i=0;i<25;i++){
             order=new Order();
             order.setTitle("slt"+i);
             order.setPayStatus(0);
             order.setPrice(100*i);
+            order.setMerchant(mockMerchant);
+            times[i]=new Date();
+            order.setTime(times[i]);
             order.setAmount(10);
-            order.setId(UUID.randomUUID().toString());
+            ids[i]="shiliting"+i;
+            order.setId(ids[i]);
             order=orderRepository.saveAndFlush(order);
         }
+        Long longTime=times[4].getTime();
         mockMvc.perform(
                 device.getApi("salesList")
+                        .param("key", "shiliting")
+                        .param("lastDate", String.valueOf(longTime))
                         .build());
+
 
 
 
