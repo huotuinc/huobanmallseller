@@ -17,8 +17,6 @@ public class AppTopSalesModel {
      */
     private Float money;
 
-
-
     /**
      * 订单图片
      */

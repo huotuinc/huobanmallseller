@@ -40,7 +40,45 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Page<Order> searchOrders(Integer merchantId, Date time, Integer pageSize, Integer orderStatus, String keyword) {//todo 检索规则需要修改，状态有多个
+    public Page<Order> searchOrdersDetail(Integer merchantId, Date time, Integer pageSize, Integer orderStatus, String keyword) {//todo 检索规则需要修改，状态有多个
+        return orderRepository.findAll(new Specification<Order>() {
+            @Override
+            public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                switch (orderStatus) {
+                    case 1:
+                        return cb.and(
+                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
+                                cb.equal(root.get("payStatus").as(Integer.class), 0),
+                                cb.lessThan(root.get("time").as(Date.class), time),
+                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
+                        );
+                    case 2:
+                        return cb.and(
+                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
+                                cb.equal(root.get("payStatus").as(Integer.class), 1),
+                                cb.lessThan(root.get("time").as(Date.class), time),
+                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
+                        );
+                    case 3:
+                        return cb.and(
+                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
+                                cb.equal(root.get("status").as(Integer.class), 1),
+                                cb.lessThan(root.get("time").as(Date.class), time),
+                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
+                        );
+                    default:
+                        return cb.and(
+                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
+                                cb.lessThan(root.get("time").as(Date.class), time),
+                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
+                        );
+                }
+            }
+        }, new PageRequest(0, pageSize, new Sort(Sort.Direction.DESC, "time")));
+    }
+
+    @Override
+    public Page<Order> searchOrders(Integer merchantId, Date time, Integer pageSize, Integer orderStatus, String keyword) {
         return orderRepository.findAll(new Specification<Order>() {
             @Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

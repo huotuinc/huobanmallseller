@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -706,6 +705,30 @@ public class GoodsControllerTest extends SpringAppTest {
 
         list = JsonPath.read(result, "$.resultData.list");
         Assert.assertEquals("条数", 0, list.size());
+
+    }
+
+    @Test
+    public void testOrderList1() throws Exception {
+        User user=new User();
+        user.setMerchant(mockMerchant);
+        user.setUsername("123456");
+        user=userRepository.saveAndFlush(user);
+        Order order;
+        for(int i=0;i<25;i++){
+            order=new Order();
+            order.setTitle("slt"+i);
+            order.setPayStatus(0);
+            order.setPrice(100*i);
+            order.setAmount(10);
+            order.setId(UUID.randomUUID().toString());
+            order=orderRepository.saveAndFlush(order);
+        }
+        mockMvc.perform(
+                device.getApi("salesList")
+                        .build());
+
+
 
     }
 }

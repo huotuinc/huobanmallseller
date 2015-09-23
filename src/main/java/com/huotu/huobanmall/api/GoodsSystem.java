@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
-
 /**
  * 商品系统
  */
@@ -112,11 +110,12 @@ public interface GoodsSystem {
      * @param list     返回销售明细列表
      * @param lastDate 上一个订单的下单时间
      * @param key      搜索关键字
+     * @param status    订单状态 0 全部 1待付款 2待收货 3已完成
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key) throws Exception;
+    ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key,Integer status) throws Exception;
 
 
     /**

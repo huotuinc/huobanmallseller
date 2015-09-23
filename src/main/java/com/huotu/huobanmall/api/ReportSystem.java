@@ -175,7 +175,7 @@ public interface ReportSystem {
 
 
     /**
-     * 返利积分统计
+     * 返利积分统计(前10条)
      * @param list
      * @return
      * @throws Exception
@@ -184,7 +184,7 @@ public interface ReportSystem {
     ApiResult topScore(Output<AppTopScoreModel[]>list) throws Exception;
 
     /**
-     * 销售统计，最高消费额订单
+     * 销售统计，最高消费额订单(前10条)
      * @param list      返回数条最高销售订单
      * @return
      * @throws Exception
@@ -194,7 +194,7 @@ public interface ReportSystem {
 
 
     /**
-     * 用户消费统计
+     * 用户消费统计(前10条)
      *
      *
      * @param list

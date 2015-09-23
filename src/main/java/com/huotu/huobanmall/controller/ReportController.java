@@ -6,7 +6,10 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.entity.*;
+import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.entity.Order;
+import com.huotu.huobanmall.entity.Product;
+import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.ProductRepository;
@@ -18,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.*;
 

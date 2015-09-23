@@ -66,46 +66,6 @@ public class GoodsController implements GoodsSystem {
     RebateService rebateService;
 
 
-//    @Override
-//    @RequestMapping("/index")
-//    public ApiResult otherInfo(Output<AppOtherInfoModel> index) throws Exception {
-//        //获取当前商家信息
-//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-//        Calendar date = Calendar.getInstance();
-//        date.setTime(new Date());
-//        date.set(Calendar.HOUR_OF_DAY, 0);
-//        date.set(Calendar.SECOND,0);
-//        date.set(Calendar.MINUTE,0);
-//        //今天
-//        Date today=date.getTime();
-//        date.set(Calendar.DATE,-5);
-//        //近七日
-//        Date sevenDays=date.getTime();
-//        AppOtherInfoModel appOtherInfoModel=new AppOtherInfoModel();
-//        //商品数量
-//        appOtherInfoModel.setGoodsAmount(productService.countByMerchant(merchant));
-//        //分销商数量
-//        appOtherInfoModel.setDiscributorAmount(userService.countUserNumber(merchant,1));
-//        //会员数量
-//        appOtherInfoModel.setMemberAmount(userService.countUserNumber(merchant,0));
-//        //近七日订单量
-//        appOtherInfoModel.setSevenBillAmount(orderService.countOrderQuantity(merchant,sevenDays));
-//        //今日订单数
-//        appOtherInfoModel.setTodayBillAmount(orderService.countOrderQuantity(merchant,today));
-//        //今日新增会员数
-//        appOtherInfoModel.setTodayNewUserAmount(userService.countUserNumber(merchant,0,today));
-//        //今日销售总额
-//        appOtherInfoModel.setTodaySalesAmount(orderService.countSale(merchant,today));
-//        //总销售额
-//        appOtherInfoModel.setTotalSalesAmount(orderService.countSale(merchant));
-//        //今日新增分销商数量
-//        appOtherInfoModel.setTodayDiscributorAmount(userService.countUserNumber(merchant,1,today));
-//        //近七日销售额
-//        appOtherInfoModel.setSevenSalesAmount(orderService.countSale(merchant,sevenDays));
-//        index.outputData(appOtherInfoModel);
-//        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
-//    }
-
     @Override
     @RequestMapping("/goodsList")
     public ApiResult goodsList(Output<AppGoodListModel[]> list,
@@ -349,7 +309,10 @@ public class GoodsController implements GoodsSystem {
 
     @RequestMapping("/salesList")
     @Override
-    public ApiResult salesList(Output<AppSalesListModel[]> list, @RequestParam(required = false) Long lastDate, String key) throws Exception {
+    public ApiResult salesList(Output<AppSalesListModel[]> list,
+                               @RequestParam(required = false) Long lastDate,
+                               @RequestParam(required = false) String key,
+                               Integer status) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
 
         Date date;
@@ -359,7 +322,7 @@ public class GoodsController implements GoodsSystem {
             date=new Date();
         }
 
-        List<Order> orderList = orderService.searchOrders(merchant.getId(), date, PAGE_SIZE, 1, key).getContent();
+        List<Order> orderList = orderService.searchOrdersDetail(merchant.getId(), date, PAGE_SIZE, status, key).getContent();
         AppSalesListModel[] appSalesListModels = new AppSalesListModel[orderList.size()];
         for (int i = 0; i < orderList.size(); i++) {
             AppSalesListModel appSalesListModel = new AppSalesListModel();

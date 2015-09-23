@@ -134,19 +134,19 @@ public class OrderServiceImplTest extends WebTestBase {
         Page<Order> pages=orderService.searchOrders(merchantNew.getId(),new Date(),6,0,"");
         Assert.assertEquals("测试查询出来的的订单总数量是否正确",daifukuan+daishouhuo+wancheng,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的数量是否正确", 6, pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),new Date(),5,0,"");
+        pages=orderService.searchOrders(merchantNew.getId(), new Date(), 5, 0, "");
         Assert.assertEquals("测试查询出来的的订单总数量是否正确",daifukuan+daishouhuo+wancheng,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的数量是否正确", 5, pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),new Date(),5,1,"");
+        pages=orderService.searchOrders(merchantNew.getId(), new Date(), 5, 1, "");
         Assert.assertEquals("测试查询出来的的待付款的订单总数量是否正确",daifukuan,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的代付款数量是否正确", daifukuan > 5 ? 5 : daifukuan, pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),new Date(),5,1,"");
+        pages=orderService.searchOrders(merchantNew.getId(), new Date(), 5, 1, "");
         Assert.assertEquals("测试查询出来的待付款的订单总数量是否正确",daifukuan,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的代付款数量是否正确", daifukuan > 5 ? 5 : daifukuan, pages.getNumberOfElements());
         pages=orderService.searchOrders(merchantNew.getId(),new Date(),4,2,"");
         Assert.assertEquals("测试查询出来的待收货的订单总数量是否正确",daishouhuo,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的待收货数量是否正确",daishouhuo>4?4:daishouhuo,pages.getNumberOfElements());
-        pages=orderService.searchOrders(merchantNew.getId(),new Date(),3,3,"");
+        pages=orderService.searchOrders(merchantNew.getId(), new Date(), 3,3,"");
         Assert.assertEquals("测试查询出来的完成的订单总数量是否正确",wancheng,pages.getTotalElements());
         Assert.assertEquals("测试查询出来的当前页的完成的数量是否正确",wancheng>3?3:wancheng,pages.getNumberOfElements());
 
