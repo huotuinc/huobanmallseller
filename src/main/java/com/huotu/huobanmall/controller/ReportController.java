@@ -441,7 +441,7 @@ public class ReportController implements ReportSystem {
     @RequestMapping("/topSales")
     public ApiResult topSales(Output<AppTopSalesModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Order> orderList = orderService.searchTopOrder(merchant, 1, new PageRequest(0, 20)).getContent();
+        List<Order> orderList = orderService.searchTopOrder(merchant, 1, new PageRequest(0, 10)).getContent();
         AppTopSalesModel[] appTopSalesModels = new AppTopSalesModel[orderList.size()];
         for (int i = 0; i < orderList.size(); i++) {
             AppTopSalesModel appTopSalesModel = new AppTopSalesModel();
@@ -450,7 +450,7 @@ public class ReportController implements ReportSystem {
             appTopSalesModel.setMoney(order.getPrice());
 //            appTopSalesModel.setTime(order.getTime());
             appTopSalesModel.setPictureUrl("");//todo 订单图片设置
-            appTopSalesModel.setTime(order.getTime());
+
 
             appTopSalesModels[i] = appTopSalesModel;
         }

@@ -24,10 +24,7 @@ public class AppTopSalesModel {
      */
     private String pictureUrl;
 
-    /**
-     * 生成时间
-     */
-    private Date time;
+
 
 
     public String getOrderNo() {
@@ -54,11 +51,4 @@ public class AppTopSalesModel {
         this.pictureUrl = pictureUrl;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 }
