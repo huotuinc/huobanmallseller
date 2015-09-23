@@ -10,6 +10,7 @@ import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.repository.ShopRepository;
+import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private MallApiService mallApiService;
 
     public String createToken() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -218,10 +222,8 @@ public class MerchantServiceImpl implements MerchantService {
             case 2:
 
                 byte[] bytes = StringHelper.toByteArray(profileData);
-                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-
-                //保存图片 todo 保存图片并获取地址
-                String logo = "";
+//                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+                String logo = mallApiService.upladPic(merchant.getId(), bytes, 1);
                 shop.setLogo(logo);
                 shopRepository.saveAndFlush(shop);
                 break;
