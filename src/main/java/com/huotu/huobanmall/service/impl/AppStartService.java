@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by lgh on 2015/9/6.
@@ -27,7 +28,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
 
     @Autowired
-    private GoodsRepository productRepository;
+    private GoodsRepository goodsRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -62,6 +63,26 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private CountTodaySalesRepository countTodaySalesRepository;
 
+    @Autowired
+    private RebateRepository rebateRepository;
+
+    @Autowired
+    private SellLogRepository sellLogRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
+    @Autowired
+    private DeliveryRepository deliveryRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ConfigAppVersionRepository configAppVersionRepository;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -77,7 +98,18 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 generateData("htxx", "18368893861", "htxx");
                 generateData("htxx2", "18368893862", "htxx2");
             }
+
+            if (configAppVersionRepository.count() == 0) {
+                ConfigAppVersion configAppVersion = new ConfigAppVersion();
+                configAppVersion.setBigError(false);
+                configAppVersion.setSourceFileUrl("http://");//todo app地址
+                configAppVersion.setVersionNo("1.0.0");
+                configAppVersion.setUpdateTime(new Date());
+                configAppVersionRepository.save(configAppVersion);
+            }
         }
+
+
     }
 
 
@@ -127,34 +159,42 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         user.setType(0);
         user = userRepository.save(user);
 
-        Goods product = new Goods();
-        product.setTitle("商品1");
-        product.setOwner(merchant);
-        product.setPictureUrl("");
-        product.setPrice(100);
-        product.setStatus(1);
-        product.setStock(1000);
-        productRepository.save(product);
+        Category category = new Category();
+        category.setSortId(1);
+        category.setTitle("衣服");
+        categoryRepository.save(category);
+
+        Goods goods = new Goods();
+        goods.setTitle("商品1");
+        goods.setOwner(merchant);
+        goods.setPictureUrl("");
+        goods.setPrice(100);
+        goods.setStatus(1);
+        goods.setStock(1000);
+        goods.setCategory(category);
+        goodsRepository.save(goods);
 
         for (int i = 0; i < 29; i++) {
-            product = new Goods();
-            product.setTitle("商品" + i + "(上架)");
-            product.setOwner(merchant);
-            product.setPictureUrl("");
-            product.setPrice(i * 10);
-            product.setStatus(1);
-            product.setStock(i * 100);
-            productRepository.save(product);
+            goods = new Goods();
+            goods.setTitle("商品" + i + "(上架)");
+            goods.setOwner(merchant);
+            goods.setPictureUrl("");
+            goods.setPrice(i * 10);
+            goods.setStatus(1);
+            goods.setStock(i * 100);
+            goods.setCategory(category);
+            goodsRepository.save(goods);
         }
 
-        product = new Goods();
-        product.setTitle("商品(下架)");
-        product.setOwner(merchant);
-        product.setPictureUrl("");
-        product.setPrice(100);
-        product.setStatus(2);
-        product.setStock(1000);
-        product = productRepository.save(product);
+        goods = new Goods();
+        goods.setTitle("商品(下架)");
+        goods.setOwner(merchant);
+        goods.setPictureUrl("");
+        goods.setPrice(100);
+        goods.setStatus(2);
+        goods.setStock(1000);
+        goods.setCategory(category);
+        goods = goodsRepository.save(goods);
 
         Order order = new Order();
         order.setId("201505061223033843");
@@ -162,7 +202,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setUserId(user.getId());
         order.setUserType(0);
         order.setTitle("购买abcd1");
-        order.setPrice(product.getPrice());
+        order.setPrice(goods.getPrice());
         order.setAmount(1);
         order.setStatus(1);
         order.setPayStatus(1);
@@ -171,14 +211,14 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         orderRepository.save(order);
 
 
-        product = new Goods();
-        product.setTitle("商品(库存量无限制)");
-        product.setOwner(merchant);
-        product.setPictureUrl("");
-        product.setPrice(100);
-        product.setStatus(1);
-        product.setStock(-1);
-        product = productRepository.save(product);
+        goods = new Goods();
+        goods.setTitle("商品(库存量无限制)");
+        goods.setOwner(merchant);
+        goods.setPictureUrl("");
+        goods.setPrice(100);
+        goods.setStatus(1);
+        goods.setStock(-1);
+        goods = goodsRepository.save(goods);
 
 
         order = new Order();
@@ -187,7 +227,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setUserId(user.getId());
         order.setUserType(1);
         order.setTitle("购买abcd2");
-        order.setPrice(product.getPrice());
+        order.setPrice(goods.getPrice());
         order.setAmount(1);
         order.setStatus(1);
         order.setPayStatus(1);
@@ -195,6 +235,50 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setTime(new Date());
         orderRepository.save(order);
 
+
+        for (int i = 0; i < 2; i++) {
+            Product product = new Product();
+            product.setMerchant(merchant);
+            product.setGoods(goods);
+            product.setName("abc" + i);
+            product.setPrice(100F);
+            product.setSpec("");
+            product = productRepository.saveAndFlush(product);
+
+            OrderItems orderItems = new OrderItems();
+            orderItems.setGoodsId(goods.getId());
+            orderItems.setProductId(product.getId());
+            orderItems.setAmount(10);
+            orderItems.setMerchant(merchant);
+            orderItems.setOrder(order);
+            orderItemsRepository.save(orderItems);
+
+            SellLog sellLog = new SellLog();
+            sellLog.setGoodsId(goods.getId());
+            sellLog.setTime(new Date());
+            sellLog.setUserId(user.getId());
+            sellLog.setAmount(10);
+            sellLog.setDesc("desc");
+            sellLog.setMerchantId(merchant.getId());
+            sellLog.setName("aaa");
+            sellLog.setPrice(10F);
+            sellLog.setProductId(product.getId());
+            sellLog.setProductName(product.getName());
+            sellLogRepository.save(sellLog);
+        }
+
+
+        Delivery delivery = new Delivery();
+        delivery.setOrder(order);
+        delivery.setNo(UUID.randomUUID().toString());
+        delivery.setStatus("succ");
+        delivery.setUser(user);
+        delivery.setAddress("address");
+        delivery.setDeliveryName("zhangsan");
+        delivery.setMoney(100F);
+        delivery.setMobile("1384655544444");
+        delivery.setReciever("ABC");
+        deliveryRepository.save(delivery);
 
 
         for (int i = 1; i <= 24; i++) {
@@ -232,7 +316,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         }
 
         Date date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i < 12; i++) {
             CountDayMember countDayMember = new CountDayMember();
             countDayMember.setMerchantId(merchant.getId());
             countDayMember.setAmount(100 + i * 11);
@@ -244,7 +328,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
 
         date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i < 12; i++) {
             CountDayOrder countDayOrder = new CountDayOrder();
             countDayOrder.setMerchantId(merchant.getId());
             countDayOrder.setAmount(100 + i * 22);
@@ -255,7 +339,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         }
 
         date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i < 12; i++) {
             CountDayPartner countDayPartner = new CountDayPartner();
             countDayPartner.setMerchantId(merchant.getId());
             countDayPartner.setAmount(100 + i * 33);
@@ -266,7 +350,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         }
 
         date = new Date(DateHelper.getThisDayBegin().getTime() - 1000 * 60 * 60 * 24 * 12);
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i < 12; i++) {
             CountDaySales countDaySales = new CountDaySales();
             countDaySales.setMerchantId(merchant.getId());
             countDaySales.setMoney(100 + i * 44);
@@ -275,6 +359,20 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
             date = new Date(date.getTime() + 1000 * 60 * 60 * 24);
         }
+
+        Rebate rebate = new Rebate();
+        rebate.setOrder(order);
+        rebate.setTime(date);
+        rebate.setActualTime(date);
+        rebate.setGainer(1);
+        rebate.setMerchant(merchant);
+        rebate.setScheduledTime(date);
+        rebate.setScore(100);
+        rebate.setStatus(1);
+        rebate.setUserId(user.getId());
+        rebateRepository.save(rebate);
+
+
     }
 
 }

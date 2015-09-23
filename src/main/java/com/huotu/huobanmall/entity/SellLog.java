@@ -40,7 +40,7 @@ public class SellLog {
      * 价格
      */
     @Column(name = "Price")
-    private String price;
+    private Float price;
 
 
     /**
@@ -113,13 +113,7 @@ public class SellLog {
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
-    }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
 
     public Integer getProductId() {
         return productId;
@@ -167,5 +161,13 @@ public class SellLog {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }
