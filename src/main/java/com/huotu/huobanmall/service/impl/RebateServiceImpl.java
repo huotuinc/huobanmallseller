@@ -4,6 +4,7 @@ import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.User;
 import com.huotu.huobanmall.model.app.AppTopScoreModel;
 import com.huotu.huobanmall.repository.RebateRepository;
+import com.huotu.huobanmall.service.CommonConfigService;
 import com.huotu.huobanmall.service.RebateService;
 import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class RebateServiceImpl implements RebateService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    CommonConfigService commonConfigService;
+
     @Override
     public List<AppTopScoreModel> topScore(Merchant merchant, Integer status) {
         StringBuilder hql = new StringBuilder();
@@ -46,7 +50,7 @@ public class RebateServiceImpl implements RebateService {
             AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
             appTopScoreModel.setName(userService.getViewUserName(user));
             appTopScoreModel.setScore(Integer.parseInt(objects[1].toString()));
-            appTopScoreModel.setPictureUrl(user.getUserFace());  //todo 图片路径需要修改
+            appTopScoreModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());  //todo 图片路径需要修改
             result.add(appTopScoreModel);
         });
         return result;
