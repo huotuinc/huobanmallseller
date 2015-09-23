@@ -35,6 +35,11 @@ public class AppConsumeListModel {
      */
     private  Date time;
 
+    /**
+     * 数量
+     */
+    private Integer amount;
+
     public String getPictureUrl() {
         return pictureUrl;
     }
@@ -65,5 +70,13 @@ public class AppConsumeListModel {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 }
