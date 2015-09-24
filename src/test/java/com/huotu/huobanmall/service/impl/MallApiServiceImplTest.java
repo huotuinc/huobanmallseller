@@ -47,12 +47,8 @@ public class MallApiServiceImplTest extends TestCase {
     public void testUpladPic() throws Exception {
         File file = new File("d:\\1.jpg");
         byte[] bytes = FileHelper.getBytes(file);
-
-        byte[] result = org.apache.commons.codec.binary.Base64.encodeBase64(bytes);
-
-//       Base64.getMimeDecoder(bytes.toString());
-
-        String text = mallApiService.upladPic(5, result.toString(), 1);
+        String result = Base64.getMimeEncoder().encodeToString(bytes);
+        String text = mallApiService.upladPic(5, result, 1);
         log.info(text);
     }
 }

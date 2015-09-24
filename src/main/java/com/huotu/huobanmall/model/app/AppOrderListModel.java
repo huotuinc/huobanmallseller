@@ -48,6 +48,11 @@ public class AppOrderListModel {
      */
     private Date time;
 
+    /**
+     * 主订单号
+     */
+    private String mainOrderNo;
+
     public String getOrderNo() {
         return orderNo;
     }
@@ -94,5 +99,13 @@ public class AppOrderListModel {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getMainOrderNo() {
+        return mainOrderNo;
+    }
+
+    public void setMainOrderNo(String mainOrderNo) {
+        this.mainOrderNo = mainOrderNo;
     }
 }

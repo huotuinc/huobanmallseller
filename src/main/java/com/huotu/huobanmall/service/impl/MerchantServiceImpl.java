@@ -13,6 +13,7 @@ import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -63,7 +64,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
-                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl()+shop.getLogo());
+                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
@@ -89,7 +90,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
-                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl()+shop.getLogo());
+                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
                 appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
@@ -122,7 +123,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
-                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl()+shop.getLogo());
+                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
@@ -144,7 +145,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
-                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl()+shop.getLogo());
+                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
                 appMerchantModel.setNickName(operator.getMerchant().getNickName());
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
@@ -172,7 +173,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
-                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl()+shop.getLogo());
+                appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
@@ -192,7 +193,7 @@ public class MerchantServiceImpl implements MerchantService {
             appMerchantModel.setEnableBillNotice(operator.isEnableBillNotice() ? 1 : 0);
             appMerchantModel.setEnablePartnerNotice(operator.isEnablePartnerNotice() ? 1 : 0);
             appMerchantModel.setOperatored(false);
-            appMerchantModel.setLogo(commonConfigService.getResoureServerUrl()+shop.getLogo());
+            appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
             appMerchantModel.setNickName(merchant.getNickName());
             appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
             appMerchantModel.setMobile(operator.getName());
@@ -241,8 +242,9 @@ public class MerchantServiceImpl implements MerchantService {
 //                byte[] bytes = StringHelper.toByteArray(profileData);
 //                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
                 String logo = mallApiService.upladPic(merchant.getId(), profileData.toString(), 1);
-                shop.setLogo(logo);
-                shopRepository.saveAndFlush(shop);
+                if (StringUtils.isEmpty(logo)) {
+
+                }
                 break;
             case 3:
                 merchant.setNickName(profileData.toString());
