@@ -64,6 +64,11 @@ public class AppMerchantModel {
     private String authority;
 
 
+    /**
+     * 首页地址
+     */
+    private String indexUrl;
+
 
     /**
      * 0 商家 1 操作员
@@ -177,5 +182,11 @@ public class AppMerchantModel {
     }
 
 
+    public String getIndexUrl() {
+        return indexUrl;
+    }
 
+    public void setIndexUrl(String indexUrl) {
+        this.indexUrl = indexUrl;
+    }
 }

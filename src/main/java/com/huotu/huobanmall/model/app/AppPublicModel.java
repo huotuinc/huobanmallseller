@@ -31,7 +31,7 @@ public class AppPublicModel {
 
 //    private Device currentDevice;
     /**
-     * 平台1、FM2015AD   （android）    2、FM2015AP   （ios)
+     * 平台1、HB2015AD   （android）    2、HB2015AP   （ios)
      */
     private String operation;
     /**

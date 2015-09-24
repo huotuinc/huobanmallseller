@@ -10,6 +10,7 @@ import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.repository.ShopRepository;
+import com.huotu.huobanmall.service.CommonConfigService;
 import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
                 appMerchantModel.setTitle(shop.getTitle());
+                appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
                 return appMerchantModel;
             }
         } else {
@@ -146,6 +148,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
                 appMerchantModel.setTitle(shop.getTitle());
+                appMerchantModel.setIndexUrl(getIndexUrl(operator.getMerchant().getId()));
                 return appMerchantModel;
             }
         }
@@ -173,6 +176,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
                 appMerchantModel.setTitle(shop.getTitle());
+                appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
                 return appMerchantModel;
             }
         } else {
@@ -192,9 +196,21 @@ public class MerchantServiceImpl implements MerchantService {
             appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
             appMerchantModel.setMobile(operator.getName());
             appMerchantModel.setTitle(shop.getTitle());
+            appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
             return appMerchantModel;
         }
         return null;
+    }
+
+
+    private String getIndexUrl(Integer merchantId) {
+
+        try {
+            return mallApiService.getMsiteUrl(merchantId);
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 
     /**

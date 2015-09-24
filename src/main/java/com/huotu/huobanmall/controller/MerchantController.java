@@ -70,7 +70,7 @@ public class MerchantController implements MerchantSystem {
     private AppUpdateModel versionChecking(String opertion, String version, String imei) {
         AppUpdateModel result = new AppUpdateModel();
 
-        if (opertion.equals("HuoTu2013AD")) {
+        if (opertion.equals("HB2015AD")) {
 
             ConfigAppVersion newestVersionModel = configAppVersionRepository.findTopByOrderByIdDesc();
 
