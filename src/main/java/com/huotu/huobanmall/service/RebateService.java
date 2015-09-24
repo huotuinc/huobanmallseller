@@ -43,6 +43,17 @@ public interface RebateService {
      */
     String getScoreStatus(Integer status);
 
+    /**
+     * 获取返利积分人员
+     *  购买商品获得 = 1,
+     *  下线购买商品提成 = 2,
+     *  下下线购买商品提成 = 201,
+     *  下下下线购买商品提成 = 202,
+     * @param gainer
+     * @return
+     */
+    String getScoreUserName(Integer gainer);
+
 
 
 

@@ -31,6 +31,11 @@ public class AppUserRebateModel {
      */
     private Integer score;
 
+    /**
+     * 获得积分用户的类型
+     */
+    private String userType;
+
 
     public String getUserName() {
         return userName;
@@ -70,5 +75,13 @@ public class AppUserRebateModel {
 
     public void setScore(Integer score) {
         this.score = score;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

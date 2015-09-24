@@ -50,7 +50,7 @@ public class RebateServiceImpl implements RebateService {
             AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
             appTopScoreModel.setName(userService.getViewUserName(user));
             appTopScoreModel.setScore(Integer.parseInt(objects[1].toString()));
-            appTopScoreModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());  //todo 图片路径需要修改
+            appTopScoreModel.setPictureUrl(commonConfigService.getWebUrl()+user.getUserFace());  //todo 图片路径需要修改
             result.add(appTopScoreModel);
         });
         return result;
@@ -94,6 +94,22 @@ public class RebateServiceImpl implements RebateService {
                 return "待转正状态下被作废";
             case -2:
                 return "已转正状态下被作废";
+            default:
+                return "无";
+        }
+    }
+
+    @Override
+    public String getScoreUserName(Integer gainer) {
+        switch (gainer){
+            case 1:
+                return "购买人返利积分";
+            case 2:
+                return "上线返利积分";
+            case 201:
+                return "上上线返利积分";
+            case 202:
+                return "上上上线返利积分";
             default:
                 return "无";
         }

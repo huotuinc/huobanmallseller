@@ -193,6 +193,7 @@ public class GoodsController implements GoodsSystem {
             appUserRebateModel.setUserName(userService.getViewUserName(rebateUser));
             appUserRebateModel.setScore(rebate.getScore());
             appUserRebateModel.setGetTime(rebate.getTime());
+            appUserRebateModel.setUserType(rebateService.getScoreUserName(rebate.getGainer()));
             appUserRebateModel.setRegularization(rebate.getActualTime());
             appUserRebateModel.setPresent(rebateService.getScoreStatus(rebate.getStatus()));
             appUserRebateModels.add(appUserRebateModel);
@@ -254,7 +255,7 @@ public class GoodsController implements GoodsSystem {
         appLogisticsDetailModel.setNo(StringUtils.isEmpty(delivery.getNo())? "暂无编号信息" : delivery.getStatus());
 
         appLogisticsDetailModel.setList(appOrderListProductModels);
-        appLogisticsDetailModel.setPictureURL(commonConfigService.getResoureServerUrl()+"resources/images/logistics.jpg");//todo 到时候图片需要修改
+        appLogisticsDetailModel.setPictureURL(commonConfigService.getWebUrl()+"resources/images/logistics.jpg");//todo 到时候图片需要修改
 
         List<AppLogisticsDataModel> appLogisticsDataModels = new ArrayList<>();
         try {
@@ -297,7 +298,7 @@ public class GoodsController implements GoodsSystem {
             User user=objects[1]==null?null:(User)objects[1];
             appUserScoreModel.setName(userService.getViewUserName(user));
             appUserScoreModel.setScore(rebate.getScore());
-            appUserScoreModel.setPictureUrl(user==null?"":commonConfigService.getResoureServerUrl()+user.getUserFace());  //todo 图片路径需要修改
+            appUserScoreModel.setPictureUrl(user==null?"":commonConfigService.getWebUrl()+user.getUserFace());  //todo 图片路径需要修改
             appUserScoreModel.setTime(rebate.getTime());
             appUserScoreModel.setPid(rebate.getId());
             appUserScoreModels[i]=appUserScoreModel;
@@ -331,7 +332,7 @@ public class GoodsController implements GoodsSystem {
             appSalesListModel.setOrderNo(order.getId());
             appSalesListModel.setMoney(order.getPrice());
             appSalesListModel.setTime(order.getTime());
-            appSalesListModel.setPictureUrl(commonConfigService.getResoureServerUrl()+"resources/images/ddtb.png");//todo 订单图片设置
+            appSalesListModel.setPictureUrl(commonConfigService.getWebUrl()+"resources/images/ddtb.png");//todo 订单图片设置
             appSalesListModels[i] = appSalesListModel;
         }
         list.outputData(appSalesListModels);

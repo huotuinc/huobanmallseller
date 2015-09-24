@@ -18,4 +18,10 @@ public interface CommonConfigService {
      */
     String getMallApiServerUrl();
 
+    /**
+     * 获取当前网站的地址
+     * @return
+     */
+    String getWebUrl();
+
 }
