@@ -49,8 +49,15 @@ public class HttpHelper {
                         .build()
         );
         HttpResponse resultData = httpClient.execute(post);
-        InputStream is = resultData.getEntity().getContent();
-        return new BufferedReader(new InputStreamReader(is, "UTF-8")).readLine();
+        InputStream inputStream = resultData.getEntity().getContent();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+
+        StringBuffer stringBuffer = new StringBuffer();
+        int line;
+        while ((line = reader.read()) > 0) {
+            stringBuffer.append(reader.readLine());
+        }
+        return stringBuffer.toString();
 
     }
 
@@ -59,7 +66,7 @@ public class HttpHelper {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = httpClient.execute(httpGet);
         InputStream inputStream = response.getEntity().getContent();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
 
         StringBuffer stringBuffer = new StringBuffer();
         int line;
