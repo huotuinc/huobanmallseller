@@ -25,18 +25,19 @@ import java.util.Map;
 public class HttpHelper {
     /**
      * http post请求
+     *
      * @param url
      * @param data
      * @return
      * @throws IOException
      */
-    public static String postRequest(String url,Map<String,String> data) throws IOException {
+    public static String postRequest(String url, Map<String, String> data) throws IOException {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
-        BasicNameValuePair[] basicNameValuePairs=new BasicNameValuePair[data.size()];
-        int i=0;
+        BasicNameValuePair[] basicNameValuePairs = new BasicNameValuePair[data.size()];
+        int i = 0;
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            basicNameValuePairs[i]=new BasicNameValuePair(entry.getKey(),entry.getValue());
+            basicNameValuePairs[i] = new BasicNameValuePair(entry.getKey(), entry.getValue());
             i++;
         }
         post.setEntity(
@@ -47,9 +48,9 @@ public class HttpHelper {
                         )
                         .build()
         );
-        HttpResponse resultData=httpClient.execute(post);
+        HttpResponse resultData = httpClient.execute(post);
         InputStream is = resultData.getEntity().getContent();
-        return new BufferedReader(new InputStreamReader(is,"UTF-8")).readLine();
+        return new BufferedReader(new InputStreamReader(is, "UTF-8")).readLine();
 
     }
 
@@ -58,9 +59,15 @@ public class HttpHelper {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = httpClient.execute(httpGet);
         InputStream inputStream = response.getEntity().getContent();
-        return new BufferedReader(new InputStreamReader(inputStream)).readLine();
-    }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
+        StringBuffer stringBuffer = new StringBuffer();
+        int line;
+        while ((line = reader.read()) > 0) {
+            stringBuffer.append(reader.readLine());
+        }
+        return stringBuffer.toString();
+    }
 
 
 }
