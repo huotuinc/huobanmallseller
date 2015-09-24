@@ -15,7 +15,7 @@ public class AppOrderListModel {
     private String orderNo;
 
     /**
-     * 订单状态
+     * 订单状态 (0活动 -1死单 1已完成)
      */
     private Integer status;
 
