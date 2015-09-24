@@ -101,4 +101,5 @@ public class AppLogisticsDataModel {
     public void setCode(String code) {
         this.code = code;
     }
+
 }

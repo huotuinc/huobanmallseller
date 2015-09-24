@@ -116,11 +116,9 @@ public class GoodsController implements GoodsSystem {
                                @RequestParam(required = false) String keyword) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
 
-        Date time = new Date();
-        if (lastDate == null) {
-            Calendar date = Calendar.getInstance();
-            date.add(Calendar.DATE, 1);
-            time = date.getTime();
+        Date time;
+        if (StringUtils.isEmpty(lastDate)) {
+            time=null;
         } else {
             time = new Date(lastDate);
         }
@@ -263,7 +261,6 @@ public class GoodsController implements GoodsSystem {
             Map<String, String> map = new HashMap<String, String>();
             map.put("appid", appId);
             map.put("sign", sign);
-//            map.put("number",);
             map.put("number", delivery.getNo());
             //调用post方法获得物流信息字符串
 

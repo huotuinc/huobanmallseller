@@ -16,7 +16,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
         }
         hql.append(" order by order.time desc");
 
-        List list = orderRepository.queryHql(hql.toString(), query -> {
+        List<Order> list = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId",merchantId);
             if (!StringUtils.isEmpty(time)) {
                 query.setParameter("time", time);
@@ -106,13 +105,13 @@ public class OrderServiceImpl implements OrderService {
 
         });
 
-        List<Order> list1 = new ArrayList<>();
-        list.forEach(data->{
-            Object[] objects=(Object[])data;
-            list1.add((Order)objects[0]);
-        });
+//        List<Order> list1 = new ArrayList<>();
+//        list.forEach(data->{
+//            Object[] objects=(Object[])data;
+//            list1.add((Order)objects[0]);
+//        });
 
-        return list1;
+        return list;
 
     }
 

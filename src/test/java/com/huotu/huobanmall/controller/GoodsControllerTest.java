@@ -751,7 +751,7 @@ public class GoodsControllerTest extends SpringAppTest {
         mockMvc.perform(
                 device.getApi("logisticsDetail")
 //                        .param("orderNo", orderList.stream().findFirst().get().getId())
-                        .param("orderNo","912971286892")
+                        .param("orderNo","665d1d4e-4f49-4586-acae-e7a49618af17")
                         .build())
                 .andDo(print());
     }
