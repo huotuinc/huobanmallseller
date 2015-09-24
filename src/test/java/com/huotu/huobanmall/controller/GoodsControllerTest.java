@@ -755,4 +755,14 @@ public class GoodsControllerTest extends SpringAppTest {
                         .build())
                 .andDo(print());
     }
+
+    @Test
+    public void testOrderList2() throws Exception {
+        mockMvc.perform(
+                device.getApi("orderList")
+                        .param("status", "0")
+                        .build())
+                .andDo(print());
+
+    }
 }

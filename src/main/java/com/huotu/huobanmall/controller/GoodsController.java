@@ -124,7 +124,7 @@ public class GoodsController implements GoodsSystem {
         } else {
             time = new Date(lastDate);
         }
-        List<Order> orderList = orderService.searchOrders(merchant.getId(), time, PAGE_SIZE, status, keyword).getContent();
+        List<Order> orderList = orderService.searchOrders(merchant.getId(), time, PAGE_SIZE, status, keyword);
         AppOrderListModel[] appOrderListModels = new AppOrderListModel[orderList.size()];
         int i = 0;
         for (Order o : orderList) {

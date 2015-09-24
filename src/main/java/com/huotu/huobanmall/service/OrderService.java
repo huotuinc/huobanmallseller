@@ -31,7 +31,7 @@ public interface OrderService {
      * @param orderStatus   订单的类型
      * @return              订单信息集合
      */
-    Page<Order> searchOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
+    List<Order> searchOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
 
     /**
      * Create by shiliting on 2015/9/1

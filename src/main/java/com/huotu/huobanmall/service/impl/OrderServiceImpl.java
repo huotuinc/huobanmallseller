@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,41 +70,50 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> searchOrders(Integer merchantId, Date time, Integer pageSize, Integer orderStatus, String keyword) {
-        return orderRepository.findAll(new Specification<Order>() {
-            @Override
-            public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                switch (orderStatus) {
-                    case 1:
-                        return cb.and(
-                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
-                                cb.equal(root.get("payStatus").as(Integer.class), 0),
-                                cb.lessThan(root.get("time").as(Date.class), time),
-                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
-                        );
-                    case 2:
-                        return cb.and(
-                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
-                                cb.equal(root.get("payStatus").as(Integer.class), 1),
-                                cb.lessThan(root.get("time").as(Date.class), time),
-                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
-                        );
-                    case 3:
-                        return cb.and(
-                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
-                                cb.equal(root.get("status").as(Integer.class), 1),
-                                cb.lessThan(root.get("time").as(Date.class), time),
-                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
-                        );
-                    default:
-                        return cb.and(
-                                cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
-                                cb.lessThan(root.get("time").as(Date.class), time),
-                                cb.like(root.get("id").as(String.class), "%" + keyword + "%")
-                        );
-                }
+    public List<Order> searchOrders(Integer merchantId, Date time, Integer pageSize, Integer orderStatus, String keyword) {
+        StringBuffer hql = new StringBuffer();
+        hql.append("select order from Order order where order.merchant.id=:merchantId");
+        switch (orderStatus){
+            case 1:
+                hql.append(" and (order.payStatus=0 or order.payStatus=3)");
+                break;
+            case 2:
+                hql.append(" and (order.deliverStatus=0 or order.deliverStatus=1)");
+                break;
+            case 3:
+                hql.append(" and order.status=1");
+                break;
+            default:
+                break;
+        }
+        if (!StringUtils.isEmpty(keyword)) {
+            hql.append(" and order.id like :orderId");
+        }
+        if (!StringUtils.isEmpty(time)) {
+            hql.append(" and order.time<:time");
+        }
+        hql.append(" order by order.time desc");
+
+        List list = orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("merchantId",merchantId);
+            if (!StringUtils.isEmpty(time)) {
+                query.setParameter("time", time);
             }
-        }, new PageRequest(0, pageSize, new Sort(Sort.Direction.DESC, "time")));
+            if (!StringUtils.isEmpty(keyword)) {
+                query.setParameter("orderId", "%" + keyword + "%");
+            }
+            query.setMaxResults(pageSize);
+
+        });
+
+        List<Order> list1 = new ArrayList<>();
+        list.forEach(data->{
+            Object[] objects=(Object[])data;
+            list1.add((Order)objects[0]);
+        });
+
+        return list1;
+
     }
 
     @Override
@@ -147,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
     public List searchExpenditureList(Merchant merchant, String name, Date time, Integer pageSize) {
         StringBuffer hql = new StringBuffer();
         hql.append("select order,user from Order order left join User user on order.userId=user.id where order.merchant.id=:merchantId");
-        if (time != null) {
+        if (!StringUtils.isEmpty(time)) {
             hql.append(" and order.time<:time");
         }
         if (!StringUtils.isEmpty(name)) {
