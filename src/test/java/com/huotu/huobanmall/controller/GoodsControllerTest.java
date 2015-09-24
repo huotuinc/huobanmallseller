@@ -218,7 +218,7 @@ public class GoodsControllerTest extends SpringAppTest {
                 device.getApi("goodsList")
                         .param("lastProductId", "")
                         .build())
-                .andExpect(jsonPath("$.resultData.logisticsDetail").isArray())
+                .andExpect(jsonPath("$.resultData.list").isArray())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andDo(print()).andReturn().getResponse().getContentAsString();
 
@@ -467,7 +467,7 @@ public class GoodsControllerTest extends SpringAppTest {
         Assert.assertEquals("条数", 10, list.size());
         Assert.assertEquals("第一条数据"
                 , String.valueOf(rebateList.get(rebateList.size() - 1).getId().toString())
-                , JsonPath.read(list.get(0), "$.id").toString());
+                , JsonPath.read(list.get(0), "$.pid").toString());
 
 
         //测试下一页
@@ -480,7 +480,7 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andDo(print()).andReturn().getResponse().getContentAsString();
         list = JsonPath.read(result, "$.resultData.list");
         Assert.assertEquals("返回条数", list.size(), 10);
-        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.id").toString()
+        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.pid").toString()
                 , rebateList.get(rebateList.size() - 11).getId().toString());
 
 
@@ -502,7 +502,7 @@ public class GoodsControllerTest extends SpringAppTest {
         Assert.assertEquals("条数", 10, list.size());
         Assert.assertEquals("第一条数据"
                 , String.valueOf(rebateList.get(rebateList.size() - 1).getId().toString())
-                , JsonPath.read(list.get(0), "$.id").toString());
+                , JsonPath.read(list.get(0), "$.pid").toString());
 
         //搜索无数据
         result = mockMvc.perform(
@@ -584,23 +584,23 @@ public class GoodsControllerTest extends SpringAppTest {
         result = mockMvc.perform(
                 device.getApi("salesList")
                         .param("lastDate", "")
-                        .param("key", userName)
+                        .param("key",orderList.get(0).getId() )
                         .build())
                 .andExpect(jsonPath("$.resultData.list").isArray())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
                 .andDo(print()).andReturn().getResponse().getContentAsString();
 
         list = JsonPath.read(result, "$.resultData.list");
-        Assert.assertEquals("条数", 10, list.size());
+        Assert.assertEquals("条数", 1, list.size());
         Assert.assertEquals("第一条数据"
-                , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
+                , String.valueOf(orderList.get(0).getTime().getTime())
                 , JsonPath.read(list.get(0), "$.time").toString());
 
         //搜索无数据
         result = mockMvc.perform(
                 device.getApi("salesList")
                         .param("lastDate", "")
-                        .param("key", userName + "abcttt")
+                        .param("key", orderList.get(0).getId() + "abcttt")
                         .build())
                 .andExpect(jsonPath("$.resultData.list").isArray())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
