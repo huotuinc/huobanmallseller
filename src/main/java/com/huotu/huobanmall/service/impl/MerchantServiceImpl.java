@@ -238,9 +238,9 @@ public class MerchantServiceImpl implements MerchantService {
                 break;
             case 2:
 
-                byte[] bytes = StringHelper.toByteArray(profileData);
+//                byte[] bytes = StringHelper.toByteArray(profileData);
 //                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-                String logo = mallApiService.upladPic(merchant.getId(), bytes, 1);
+                String logo = mallApiService.upladPic(merchant.getId(), profileData.toString(), 1);
                 shop.setLogo(logo);
                 shopRepository.saveAndFlush(shop);
                 break;

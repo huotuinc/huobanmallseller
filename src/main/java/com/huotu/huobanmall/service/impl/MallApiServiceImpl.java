@@ -5,19 +5,19 @@ import com.huotu.common.HttpHelper;
 import com.huotu.huobanmall.model.MallApiResultModel;
 import com.huotu.huobanmall.service.CommonConfigService;
 import com.huotu.huobanmall.service.MallApiService;
-import com.jayway.jsonpath.JsonPath;
 
+
+import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
-import javax.json.Json;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
-import java.util.SortedMap;
+
 import java.util.TreeMap;
 
 /**
@@ -37,11 +37,11 @@ public class MallApiServiceImpl implements MallApiService {
     public String getMsiteUrl(Integer customerId) throws IOException {
         String url = commonConfigService.getMallApiServerUrl() + "activity/getmsiteurl";
 
-        Map<String, Object> map = new TreeMap<>();
-        map.put("timestamp", new Date().getTime());//todo 格式
+        Map<String, String> map = new TreeMap<>();
+        map.put("timestamp", String.valueOf(new Date().getTime()));
         map.put("appid", appid);
-        map.put("customerid", customerId);
-        map.put("Sign", getSign(map));
+        map.put("customerid", String.valueOf(customerId));
+        map.put("sign", getSign(map));
 
         String strUrl = getSignUrl(map);
         String response = HttpHelper.getRequest(url + strUrl);
@@ -53,41 +53,41 @@ public class MallApiServiceImpl implements MallApiService {
     }
 
     @Override
-    public String upladPic(Integer customerId, byte[] images, Integer type) throws IOException {
+    public String upladPic(Integer customerId, String images, Integer type) throws IOException {
         String url = commonConfigService.getMallApiServerUrl() + "gallery/upladpic";
 
-        Map<String, Object> map = new TreeMap<>();
-        map.put("timestamp", new Date().getTime());//todo 格式
+        Map<String, String> map = new TreeMap<>();
+        map.put("timestamp", String.valueOf(new Date().getTime()));
         map.put("appid", appid);
-        map.put("storeId", customerId);
+        map.put("storeId", String.valueOf(customerId));
         map.put("image", images);
-        map.put("type", type);
-        map.put("Sign", getSign(map));
+        map.put("type", String.valueOf(type));
+        map.put("sign", getSign(map));
 
-        String strUrl = getSignUrl(map);
-        String response = HttpHelper.getRequest(url + strUrl);
+//        String strUrl = getSignUrl(map);
+        String response = HttpHelper.postRequest(url, map);
         MallApiResultModel resultModel = JSON.parseObject(response, MallApiResultModel.class);
         if (resultModel.getCode() == 200 && !StringUtils.isEmpty(resultModel.getData().toString())) {
-            return JsonPath.read(resultModel.getData().toString(), "$.pictureUrl").toString();
+            return JsonPath.read(resultModel.getData().toString(), "$.imgurl").toString();
         }
         return null;
     }
 
 
-    private String getSign(Map<String, Object> map) {
+    private String getSign(Map<String, String> map) {
         String result = "";
         for (String key : map.keySet()) {
             result += key + "=" + map.get(key).toString() + "&";
         }
-        return DigestUtils.md5DigestAsHex((result.substring(0, result.length()) + appsecret).getBytes());
+        return DigestUtils.md5DigestAsHex((result.substring(0, result.length() - 1) + appsecret).getBytes());
     }
 
-    private String getSignUrl(Map<String, Object> map) {
+    private String getSignUrl(Map<String, String> map) {
         String result = "";
         for (String key : map.keySet()) {
             result += key + "=" + map.get(key).toString() + "&";
         }
-        return "?" + result.substring(0, result.length());
+        return "?" + result.substring(0, result.length() - 1);
     }
 
 }

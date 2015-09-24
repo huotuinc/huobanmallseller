@@ -24,6 +24,6 @@ public interface MallApiService {
      * @param type       类型 1 logo
      * @return
      */
-    String upladPic(Integer customerId, byte[] images, Integer type) throws IOException;
+    String upladPic(Integer customerId, String images, Integer type) throws IOException;
 
 }
