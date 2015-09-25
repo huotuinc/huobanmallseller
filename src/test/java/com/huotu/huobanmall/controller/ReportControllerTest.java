@@ -8,6 +8,7 @@ import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.MerchantService;
+import com.huotu.huobanmall.service.ProductService;
 import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
@@ -99,6 +100,12 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Autowired
     private RebateRepository rebateRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductService productService;
 
     @Before
     public void prepareDevice() {
@@ -633,6 +640,69 @@ public class ReportControllerTest extends SpringAppTest {
     }
 
     public void testTopGoods() throws Exception {
+        //准备测试环境
+        //添加商品分类
+        Category category=new Category();
+        category.setTitle("测试分类");
+        category.setSortId(1);
+        category.setParentId(2);
+        category=categoryRepository.saveAndFlush(category);
+        //添加商品(已经上架的)
+        Goods goods;
+        Goods[] goodlist=new Goods[5];
+        for(int i=0;i<5;i++){
+            goods=new Goods();
+            goods.setCategory(category);
+            goods.setTitle("测试商品"+i);
+            goods.setStock(-1);
+            goods.setOwner(mockMerchant);
+            goods.setPrice(100);
+            goods.setPictureUrl("");
+            goods.setStatus(1);
+            goodlist[i]=goodsRepository.saveAndFlush(goods);
+        }
+        //添加下架商品
+        goods=new Goods();
+        goods.setCategory(category);
+        goods.setTitle("测试商品(下架)");
+        goods.setStock(-1);
+        goods.setOwner(mockMerchant);
+        goods.setPrice(100);
+        goods.setPictureUrl("");
+        goods.setStatus(2);
+        goodsRepository.saveAndFlush(goods);
+        //添加删除商品
+        goods=new Goods();
+        goods.setCategory(category);
+        goods.setTitle("测试商品(删除)");
+        goods.setStock(-1);
+        goods.setOwner(mockMerchant);
+        goods.setPrice(100);
+        goods.setPictureUrl("");
+        goods.setStatus(2);
+        goodsRepository.saveAndFlush(goods);
+
+
+        Product product;
+        Random random=new Random();
+        Product[] products=new Product[15];
+        for(int i=0;i<15;i++){
+            product=new Product();
+            product.setGoods(goodlist[random.nextInt(6)]);
+            product.setMerchant(mockMerchant);
+            product.setName("测试货品"+i);
+            product.setPrice((float)1);
+            product.setSpec("规格测试");
+            products[i]=productRepository.saveAndFlush(product);
+
+
+        }
+
+
+
+        //准备测试环境END
+
+
 
     }
 

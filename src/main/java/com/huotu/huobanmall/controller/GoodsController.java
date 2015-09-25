@@ -149,7 +149,18 @@ public class GoodsController implements GoodsSystem {
             appOrderListModel.setOrderNo(o.getId());
             appOrderListModel.setPaid(o.getPrice());
             appOrderListModel.setAmount(o.getAmount());
-            appOrderListModel.setStatus(o.getStatus());
+            switch (status){
+                case 0:
+                    appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus())+" "+orderService.getDeliverStatus(o.getDeliverStatus()));
+                case 1:
+                    appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus()));
+                case 2:
+                    appOrderListModel.setStatus(orderService.getDeliverStatus(o.getDeliverStatus()));
+                case 3:
+                    appOrderListModel.setStatus(orderService.getOrderStatus(o.getStatus()));
+                default:
+                        appOrderListModel.setStatus("已关闭");
+            }
             appOrderListModel.setTime(o.getTime());
             appOrderListModels[i] = appOrderListModel;
             i++;

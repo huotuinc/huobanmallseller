@@ -182,4 +182,73 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> searchTopOrder(Merchant merchant, Integer payStatus, Pageable pageable) {
         return orderRepository.findByMerchantAndPayStatusOrderByPriceDesc(merchant, payStatus, pageable);
     }
+
+//    @Override
+//    public String getFinalOrderStatus(Order order,Integer status) {//0 全部 1待付款 2待收货 3已完成
+//        String finalStatus="";
+//        switch (status){
+//            case 0:
+//
+//            case 1:
+//                return null;
+//            case 2:
+//                return null;
+//            case 3:
+//                return null;
+//            default:
+//                return "无";
+//        }
+//    }
+
+    @Override
+    public String getPayStatus(Integer status) {
+        switch (status){
+            case 0:
+                return "未支付";
+            case 1:
+                return "已支付";
+            case 2:
+                return "已支付至担保方";
+            case 3:
+                return "部分付款";
+            case 4:
+                return "部分退款";
+            case 5:
+                return "全额退款";
+            default:
+                return "无";
+        }
+    }
+
+    @Override
+    public String getDeliverStatus(Integer status) {
+        switch (status){
+            case 0:
+                return "未发货";
+            case 1:
+                return "已发货";
+            case 2:
+                return "部分发货";
+            case 3:
+                return "部分退货";
+            case 4:
+                return "已退货";
+            default:
+                return "无";
+        }
+    }
+
+    @Override
+    public String getOrderStatus(Integer status) {
+        switch (status){
+            case 0:
+                return "活动";
+            case -1:
+                return "死单";
+            case 2:
+                return "已完成";
+            default:
+                return "无";
+        }
+    }
 }

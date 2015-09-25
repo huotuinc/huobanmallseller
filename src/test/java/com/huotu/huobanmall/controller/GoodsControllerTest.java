@@ -438,8 +438,13 @@ public class GoodsControllerTest extends SpringAppTest {
     }
 
 
+    @Test
     public void testOrderDetail() throws Exception {
-
+        mockMvc.perform(
+                device.getApi("orderDetail")
+                        .param("orderNo", "354ed0b0-1ea3-423b-9c96-7a3e3373d2ca")
+                        .build())
+                .andDo(print());
 
     }
 
@@ -778,4 +783,5 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andDo(print());
 
     }
+
 }
