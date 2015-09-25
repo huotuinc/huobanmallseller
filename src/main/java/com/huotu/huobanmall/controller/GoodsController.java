@@ -169,6 +169,96 @@ public class GoodsController implements GoodsSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
+    @RequestMapping("/mainOrderList")
+    @Override
+    public ApiResult mainOrderList(Output<AppMainOrderListModel[]> list, Integer status,
+                                   @RequestParam(required = false) Long lastDate,
+                                   @RequestParam(required = false) String keyword) throws Exception {
+        Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
+
+        Date time;
+        if (StringUtils.isEmpty(lastDate)) {
+            time=null;
+        } else {
+            time = new Date(lastDate);
+        }
+        //主订单
+        List<MainOrder> mainOrderlist=orderService.searchMainOrders(merchant.getId(),time,PAGE_SIZE,status,keyword);
+        //主订单ID
+        List<String> mainOrderNo=new ArrayList<>();
+        mainOrderlist.forEach(data->{
+            mainOrderNo.add(data.getId());
+        });
+
+        //子订单
+        List<Order> orders=orderRepository.findByMainOrderNo(mainOrderNo);
+
+
+        AppMainOrderListModel[] appMainOrderListModels=new AppMainOrderListModel[mainOrderlist.size()];
+        int i=0;
+        for(MainOrder mainOrder:mainOrderlist){
+            AppMainOrderListModel appMainOrderListModel=new AppMainOrderListModel();
+            //设置主订单号
+            appMainOrderListModel.setMainOrderNo(mainOrder.getId());
+
+
+            //存放子订单model
+            List<AppOrderListModel> listModelList = new ArrayList<>();
+            orders.stream().filter(x->x.getMainOrderNo()==mainOrder.getId()).forEach(y->{//y是订单实体
+                AppOrderListModel appOrderListModel = new AppOrderListModel();
+                appOrderListModel.setTime(y.getTime());
+                appOrderListModel.setMainOrderNo(y.getMainOrderNo());
+                appOrderListModel.setAmount(y.getAmount());
+                appOrderListModel.setPaid(y.getPrice());
+
+                //规格
+                List<OrderItems> orderItemses = orderItemsRepository.findByOrder(y);
+                List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<>();
+                for (int k = 0; k < orderItemses.size(); k++) {
+                    AppOrderListProductModel appOrderListProductModel = new AppOrderListProductModel();
+
+                    OrderItems orderItems = orderItemses.get(k);
+                    Product product = productRepository.findOne(orderItems.getProductId());
+                    Goods goods = goodsRepository.findOne(orderItems.getGoodsId());
+
+                    appOrderListProductModel.setAmount(orderItems.getAmount());
+                    appOrderListProductModel.setSpec(product.getSpec());
+                    appOrderListProductModel.setTitle(product.getName());
+                    appOrderListProductModel.setMoney(product.getPrice());
+                    appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+
+                    appOrderListProductModels.add(appOrderListProductModel);
+                }
+
+
+                appOrderListModel.setList(appOrderListProductModels);
+                appOrderListModel.setOrderNo(y.getId());
+                switch (status){
+                    case 0:
+                        appOrderListModel.setStatus(orderService.getPayStatus(y.getPayStatus())+" "+orderService.getDeliverStatus(y.getDeliverStatus()));
+                    case 1:
+                        appOrderListModel.setStatus(orderService.getPayStatus(y.getPayStatus()));
+                    case 2:
+                        appOrderListModel.setStatus(orderService.getDeliverStatus(y.getDeliverStatus()));
+                    case 3:
+                        appOrderListModel.setStatus(orderService.getOrderStatus(y.getStatus()));
+                    default:
+                        appOrderListModel.setStatus("已关闭");
+                }
+
+                listModelList.add(appOrderListModel);
+
+
+            });
+            //设置子订单信息
+            appMainOrderListModel.setList(listModelList);
+            appMainOrderListModels[i]=appMainOrderListModel;
+            i++;
+        }
+        list.outputData(appMainOrderListModels);
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
     @Override
     @RequestMapping("/orderDetail")
     public ApiResult orderDetail(Output<AppOrderDetailModel> data, String orderNo) throws Exception {

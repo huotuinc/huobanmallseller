@@ -37,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
     CountDayOrderRepository countDayOrderRepository;
     @Autowired
     CountTodayOrderRepository countTodayOrderRepository;
+    @Autowired
+    MainOrderRepository mainOrderRepository;
 
 
     @Override
@@ -105,14 +107,45 @@ public class OrderServiceImpl implements OrderService {
 
         });
 
-//        List<Order> list1 = new ArrayList<>();
-//        list.forEach(data->{
-//            Object[] objects=(Object[])data;
-//            list1.add((Order)objects[0]);
-//        });
-
         return list;
 
+    }
+
+    @Override
+    public List<MainOrder> searchMainOrders(Integer merchantId, Date time, Integer pageSize, Integer orderStatus, String keyword) {
+        StringBuffer hql = new StringBuffer();
+        hql.append("select o from MainOrder o where o.merchant.id=:merchantId");
+        switch (orderStatus){
+            case 1:
+                hql.append(" and (o.payStatus=0 or o.payStatus=3)");
+                break;
+            case 2:
+                hql.append(" and (o.deliverStatus=0 or o.deliverStatus=1)");
+                break;
+            case 3:
+                hql.append(" and o.status=1");
+                break;
+            default:
+                break;
+        }
+        if (!StringUtils.isEmpty(keyword)) {
+            hql.append(" and o.id like :mainOrderId");
+        }
+        if (!StringUtils.isEmpty(time)) {
+            hql.append(" and o.time<:time");
+        }
+        hql.append(" order by o.time desc");
+        List<MainOrder> list =(List<MainOrder>)mainOrderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("merchantId",merchantId);
+            if (!StringUtils.isEmpty(time)) {
+                query.setParameter("time", time);
+            }
+            if (!StringUtils.isEmpty(keyword)) {
+                query.setParameter("mainOrderId", "%" + keyword + "%");
+            }
+            query.setMaxResults(pageSize);
+        });
+        return list;
     }
 
     @Override
@@ -183,25 +216,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByMerchantAndPayStatusOrderByPriceDesc(merchant, payStatus, pageable);
     }
 
-//    @Override
-//    public String getFinalOrderStatus(Order order,Integer status) {//0 全部 1待付款 2待收货 3已完成
-//        String finalStatus="";
-//        switch (status){
-//            case 0:
-//
-//            case 1:
-//                return null;
-//            case 2:
-//                return null;
-//            case 3:
-//                return null;
-//            default:
-//                return "无";
-//        }
-//    }
 
     @Override
     public String getPayStatus(Integer status) {
+        status=StringUtils.isEmpty(status)? -1:status;
         switch (status){
             case 0:
                 return "未支付";
@@ -222,6 +240,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String getDeliverStatus(Integer status) {
+        status=StringUtils.isEmpty(status)? -1:status;
         switch (status){
             case 0:
                 return "未发货";
@@ -240,6 +259,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String getOrderStatus(Integer status) {
+        status=StringUtils.isEmpty(status)? -1:status;
         switch (status){
             case 0:
                 return "活动";

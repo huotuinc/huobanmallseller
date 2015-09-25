@@ -10,7 +10,6 @@ import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
 import com.jayway.jsonpath.JsonPath;
-import com.sun.jndi.toolkit.url.Uri;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -24,7 +23,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
-import java.net.URI;
 import java.util.*;
 
 import static com.huotu.huobanmall.test.base.Device.huobanmallStatus;
@@ -83,6 +81,9 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Autowired
     private RebateRepository rebateRepository;
+
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
 
     @Before
     public void prepareDevice() {
@@ -784,4 +785,74 @@ public class GoodsControllerTest extends SpringAppTest {
 
     }
 
+    @Test
+    public void testMainOrderList() throws Exception {
+        MainOrder mainOrder=new MainOrder();
+        mainOrder.setMerchant(mockMerchant);
+        mainOrder.setStatus(0);
+        mainOrder.setDeliverStatus(0);
+        mainOrder.setTime(new Date());
+        mainOrder.setPayStatus(0);
+        mainOrder.setUserId(123);
+        mainOrder.setId(UUID.randomUUID().toString());
+        mainOrder=mainOrderRepository.saveAndFlush(mainOrder);
+        Order order=new Order();
+        order.setMerchant(mockMerchant);
+        order.setMainOrderNo(mainOrder.getId());
+        order.setId("11");
+        order.setIsProtect(0);
+        order.setIsTax(0);
+        order.setTime(new Date());
+        orderRepository.saveAndFlush(order);
+
+        order=new Order();
+        order.setMerchant(mockMerchant);
+        order.setMainOrderNo(mainOrder.getId());
+        order.setId("121");
+        order.setIsProtect(0);
+        order.setIsTax(0);
+        order.setTime(new Date());
+        orderRepository.saveAndFlush(order);
+
+
+
+
+        MainOrder mainOrder1=new MainOrder();
+        mainOrder1.setMerchant(mockMerchant);
+        mainOrder1.setStatus(0);
+        mainOrder1.setDeliverStatus(0);
+        mainOrder1.setTime(new Date());
+        mainOrder1.setPayStatus(0);
+        mainOrder1.setUserId(123);
+        mainOrder1.setId(UUID.randomUUID().toString());
+        mainOrder1=mainOrderRepository.saveAndFlush(mainOrder1);
+
+
+        order=new Order();
+        order.setMerchant(mockMerchant);
+        order.setMainOrderNo(mainOrder1.getId());
+        order.setId("1111");
+        order.setIsProtect(0);
+        order.setIsTax(0);
+        order.setTime(new Date());
+        orderRepository.saveAndFlush(order);
+
+        order=new Order();
+        order.setMerchant(mockMerchant);
+        order.setMainOrderNo(mainOrder1.getId());
+        order.setId("14421");
+        order.setIsProtect(0);
+        order.setIsTax(0);
+        order.setTime(new Date());
+        orderRepository.saveAndFlush(order);
+
+
+        mockMvc.perform(
+                device.getApi("mainOrderList")
+                        .param("status", "0")
+                        .build())
+                .andDo(print());
+
+
+    }
 }

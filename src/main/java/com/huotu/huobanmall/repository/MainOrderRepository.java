@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface MainRepository extends JpaRepository<MainOrder, String>, JpaSpecificationExecutor<MainOrder>,ClassicsRepository<MainOrder> {
+public interface MainOrderRepository extends JpaRepository<MainOrder, String>, JpaSpecificationExecutor<MainOrder>,ClassicsRepository<MainOrder> {
 }

@@ -34,6 +34,16 @@ public interface OrderService {
      */
     List<Order> searchOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
 
+    /**
+     * Create by shiliting on2015/9/25
+     * 按照主订单查找订单信息
+     * @param merchantId    所属商家ID
+     * @param time          最后一条显示主订单的时间
+     * @param pageSize      每页几条主订单
+     * @param orderStatus   订单分类
+     * @param keyword       主订单关键字
+     * @return
+     */
     List<MainOrder> searchMainOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
 
     /**
@@ -132,6 +142,7 @@ public interface OrderService {
      * @return
      */
     String getOrderStatus(Integer status);
+
 
 
 

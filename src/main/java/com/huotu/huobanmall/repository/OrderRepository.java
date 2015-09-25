@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -22,6 +23,8 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
 
     List<Order> findByMerchant(Merchant merchant);
+    @Query("select o from Order o where o.id in ?1")
+    List<Order> findByMainOrderNo(Collection<String> mainOrderNo);
     Page<Order> findByMerchantAndPayStatusOrderByPriceDesc(Merchant merchant,Integer payStatus,Pageable pageable);
 
     @Query(value = "select o.userId,sum(o.price),count(o) from Order o where o.payStatus=1 and o.merchant=?1 group by o.userId order by sum(o.price) desc")
