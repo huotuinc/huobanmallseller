@@ -15,6 +15,40 @@ public class MainOrder {
     @Column(name = "Union_Order_Id")
     private  String id;
 
+
+    /**
+     * 商家
+     */
+    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
+    @JoinColumn(name = "Customer_Id")
+    private  Merchant merchant;
+
+    /**
+     * 用户
+     */
+    @Column(name ="Member_Id" )
+    private Integer userId;
+
+    /**
+     * 订单状态 0活动 -1死单 1已完成
+     */
+    @Column(name = "Order_Status")
+    private Integer status;
+
+    /**
+     * 付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
+     */
+    @Column(name = "Pay_Status")
+    private Integer payStatus;
+
+
+    /**
+     * 发货状态
+     * 0：未发货|1：已发货|2：部分发货|3：部分退货|4：已退货
+     */
+    @Column(name = "Ship_Status")
+    private Integer deliverStatus;
+
     /**
      *时间
      */
@@ -36,5 +70,45 @@ public class MainOrder {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(Integer payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    public Integer getDeliverStatus() {
+        return deliverStatus;
+    }
+
+    public void setDeliverStatus(Integer deliverStatus) {
+        this.deliverStatus = deliverStatus;
     }
 }
