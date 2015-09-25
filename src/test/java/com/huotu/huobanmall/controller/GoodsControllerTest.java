@@ -10,6 +10,7 @@ import com.huotu.huobanmall.test.base.Device;
 import com.huotu.huobanmall.test.base.DeviceType;
 import com.huotu.huobanmall.test.base.SpringAppTest;
 import com.jayway.jsonpath.JsonPath;
+import com.sun.jndi.toolkit.url.Uri;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
+import java.net.URI;
 import java.util.*;
 
 import static com.huotu.huobanmall.test.base.Device.huobanmallStatus;
@@ -175,6 +177,8 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setPrice(25);
             order.setAmount(10);
             order.setReceiver("史利挺");
+            order.setIsTax(1);
+            order.setIsProtect(1);
             orderRepository.save(order);
         }
         //准备测试环境END
@@ -274,8 +278,9 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andDo(print())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS));
 
+
         Assert.assertEquals("下架的商品", 5
-                , goodsRepository.findAll().stream().filter(x -> x.getOwner().equals(mockMerchant)).filter(x -> x.getStatus() == 2).mapToInt(x -> x.getId()).summaryStatistics().getCount());
+                , goodsRepository.findByOwner(mockMerchant).stream().filter(x -> x.getStatus() == 2).mapToInt(x -> x.getId()).summaryStatistics().getCount());
 
 
     }
@@ -303,6 +308,8 @@ public class GoodsControllerTest extends SpringAppTest {
         product.setName("abc");
         product.setPrice(100F);
         product.setSpec("");
+        product.setMarketStatus(1);
+        product.setIsLocalStock(1);
         productRepository.saveAndFlush(product);
 
         User user = new User();
@@ -313,13 +320,13 @@ public class GoodsControllerTest extends SpringAppTest {
         user.setType(0);
         userRepository.saveAndFlush(user);
 
-
+        Random random = new Random();
         List<Order> orderList = new ArrayList<>();
         for (int i = 0; i < 35; i++) {
             calendar = Calendar.getInstance();
             calendar.set(Calendar.MINUTE, i * 5);
             Order order = new Order();
-            order.setId(UUID.randomUUID().toString());
+            order.setId(createOrderNo(random));
             order.setMerchant(mockMerchant);
             order.setPayStatus(1);//付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
             if (i == 0) order.setPayStatus(0);
@@ -331,6 +338,8 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setTitle("title");
             order.setAmount(50);
             order.setUserType(1);
+            order.setIsTax(1);
+            order.setIsProtect(1);
             order = orderRepository.save(order);
             orderList.add(order);
 
@@ -340,16 +349,20 @@ public class GoodsControllerTest extends SpringAppTest {
             orderItems.setAmount(10);
             orderItems.setMerchant(mockMerchant);
             orderItems.setOrder(order);
+            orderItems.setPrice(100F);
             orderItemsRepository.save(orderItems);
 
             Delivery delivery = new Delivery();
+            delivery.setId(createDeliveryNo(random));
             delivery.setOrder(order);
             delivery.setAddress("address");
             delivery.setStatus("");
             delivery.setUser(user);
             delivery.setNo("111212112122121");
-            deliveryRepository.save(delivery);
+            delivery.setMoney(10F);
+            deliveryRepository.saveAndFlush(delivery);
         }
+
 
         //测试第一页
         String result = mockMvc.perform(
@@ -529,7 +542,7 @@ public class GoodsControllerTest extends SpringAppTest {
             calendar.set(Calendar.SECOND, 2 * i);
             Order order = new Order();
             order.setMerchant(mockMerchant);
-            order.setId(UUID.randomUUID().toString());
+            order.setId(createOrderNo(random));
             order.setTime(calendar.getTime());
             order.setPayTime(calendar.getTime());
             order.setUserId(user.getId());
@@ -540,10 +553,12 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setStatus(1);
             order.setPayStatus(1);
             order.setUserId(user.getId());
+            order.setIsTax(1);
+            order.setIsProtect(1);
             orderRepository.saveAndFlush(order);
             orderList.add(order);
         }
- 
+
 
         String result = mockMvc.perform(device.getApi("salesList")
                 .param("lastDate", "")
@@ -558,8 +573,6 @@ public class GoodsControllerTest extends SpringAppTest {
         Assert.assertEquals("第一条数据"
                 , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
                 , JsonPath.read(list.get(0), "$.time").toString());
-
-
 
 
         //测试下一页
@@ -584,7 +597,7 @@ public class GoodsControllerTest extends SpringAppTest {
         result = mockMvc.perform(
                 device.getApi("salesList")
                         .param("lastDate", "")
-                        .param("key",orderList.get(0).getId() )
+                        .param("key", orderList.get(0).getId())
                         .build())
                 .andExpect(jsonPath("$.resultData.list").isArray())
                 .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
@@ -621,7 +634,7 @@ public class GoodsControllerTest extends SpringAppTest {
             calendar.set(Calendar.SECOND, 2 * i);
             Order order = new Order();
             order.setMerchant(mockMerchant);
-            order.setId(UUID.randomUUID().toString());
+            order.setId(createOrderNo(random));
             order.setTime(calendar.getTime());
             order.setPayTime(calendar.getTime());
             order.setUserId(user.getId());
@@ -632,6 +645,8 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setStatus(1);
             order.setPayStatus(1);
             order.setUserId(user.getId());
+            order.setIsTax(1);
+            order.setIsProtect(1);
             orderRepository.saveAndFlush(order);
             orderList.add(order);
         }
@@ -657,8 +672,6 @@ public class GoodsControllerTest extends SpringAppTest {
         Assert.assertEquals("第一条数据"
                 , String.valueOf(orderList.get(orderList.size() - 1).getTime().getTime())
                 , JsonPath.read(list.get(0), "$.time").toString());
-
-
 
 
         //测试下一页
@@ -712,34 +725,34 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testOrderList1() throws Exception {
-        User user=new User();
+        User user = new User();
         user.setMerchant(mockMerchant);
         user.setUsername("123456");
-        user=userRepository.saveAndFlush(user);
-        String[] ids=new String[25];
-        Date[] times=new Date[25];
+        user = userRepository.saveAndFlush(user);
+        String[] ids = new String[25];
+        Date[] times = new Date[25];
         Order order;
-        for(int i=0;i<25;i++){
-            order=new Order();
-            order.setTitle("slt"+i);
+        for (int i = 0; i < 25; i++) {
+            order = new Order();
+            order.setTitle("slt" + i);
             order.setPayStatus(0);
-            order.setPrice(100*i);
+            order.setPrice(100 * i);
             order.setMerchant(mockMerchant);
-            times[i]=new Date();
+            times[i] = new Date();
             order.setTime(times[i]);
             order.setAmount(10);
-            ids[i]="shiliting"+i;
+            ids[i] = "shiliting" + i;
             order.setId(ids[i]);
-            order=orderRepository.saveAndFlush(order);
+            order.setIsTax(1);
+            order.setIsProtect(1);
+            order = orderRepository.saveAndFlush(order);
         }
-        Long longTime=times[4].getTime();
+        Long longTime = times[4].getTime();
         mockMvc.perform(
                 device.getApi("salesList")
                         .param("key", "shiliting")
                         .param("lastDate", String.valueOf(longTime))
                         .build());
-
-
 
 
     }
@@ -751,7 +764,7 @@ public class GoodsControllerTest extends SpringAppTest {
         mockMvc.perform(
                 device.getApi("logisticsDetail")
 //                        .param("orderNo", orderList.stream().findFirst().get().getId())
-                        .param("orderNo","665d1d4e-4f49-4586-acae-e7a49618af17")
+                        .param("orderNo", "665d1d4e-4f49-4586-acae-e7a49618af17")
                         .build())
                 .andDo(print());
     }

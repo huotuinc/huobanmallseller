@@ -23,8 +23,16 @@ public class VerificationCode {
     @Column(name = "SSV_Phone")
     private String mobile;
 
+    /**
+     * todo new
+     */
+    @Column(name = "Type")
     private VerificationType type;
 
+    /**
+     * todo new
+     */
+    @Column(name = "CodeType")
     private CodeType codeType;
 
     @Column(name = "SSV_Verification")

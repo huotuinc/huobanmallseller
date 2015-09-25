@@ -9,7 +9,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -88,15 +92,16 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
             if (merchantRepository.count() == 0) {
-                generateData("lgh", "18368893860", "lgh");
-                generateData("lc", "13675847670", "lc");
-                generateData("wlf", "18767152078", "wlf");
-                generateData("wl", "15088718256", "wl");
-                generateData("jxd", "13757193476", "jxd");
-                generateData("jc", "18606509616", "jc");
-                generateData("lhb", "13857560740", "lhb");
-                generateData("htxx", "18368893861", "htxx");
-                generateData("htxx2", "18368893862", "htxx2");
+                Random random = new Random();
+                generateData("lgh", "18368893860", "lgh",random);
+                generateData("lc", "13675847670", "lc",random);
+                generateData("wlf", "18767152078", "wlf",random);
+                generateData("wl", "15088718256", "wl",random);
+                generateData("jxd", "13757193476", "jxd",random);
+                generateData("jc", "18606509616", "jc",random);
+                generateData("lhb", "13857560740", "lhb",random);
+                generateData("htxx", "18368893861", "htxx",random);
+                generateData("htxx2", "18368893862", "htxx2",random);
             }
 
             if (configAppVersionRepository.count() == 0) {
@@ -113,14 +118,14 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     }
 
 
-    private void generateData(String merchantName, String operatorName, String userName) {
+    private void generateData(String merchantName, String operatorName, String userName,Random random) {
         Merchant merchant = new Merchant();
         merchant.setName(merchantName);
         merchant.setPassword("e10adc3949ba59abbe56e057f20f883e");
         merchant.setEnableBillNotice(true);
         merchant.setToken("");
         merchant.setMobile("18368893860");
-        merchant.setEnabled(true);
+//        merchant.setEnabled(true);
         merchant.setEnablePartnerNotice(true);
 
         merchant.setNickName("伙伴商城abc");
@@ -141,7 +146,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         operator.setAuthority("11,22,33");
         operator.setEnableBillNotice(true);
         operator.setEnablePartnerNotice(true);
-        operator.setIsEnabled(true);
+//        operator.setIsEnabled(true);
         operator.setNoDisturbed(true);
         operatorRepository.save(operator);
 
@@ -187,7 +192,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         goods = goodsRepository.save(goods);
 
         Order order = new Order();
-        order.setId(UUID.randomUUID().toString());
+        order.setId(createOrderNo(random));
         order.setMerchant(merchant);
         order.setUserId(user.getId());
         order.setUserType(0);
@@ -198,6 +203,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setPayStatus(1);
         order.setReceiver("zhangsan");
         order.setTime(new Date());
+        order.setIsTax(1);
         orderRepository.save(order);
 
 
@@ -233,6 +239,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             product.setName("abc" + i);
             product.setPrice(100F);
             product.setSpec("");
+            product.setMarketStatus(1);
+            product.setIsLocalStock(1);
             product = productRepository.saveAndFlush(product);
 
             OrderItems orderItems = new OrderItems();
@@ -241,6 +249,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
             orderItems.setAmount(10);
             orderItems.setMerchant(merchant);
             orderItems.setOrder(order);
+            orderItems.setPrice(100F);
             orderItemsRepository.save(orderItems);
 
             SellLog sellLog = new SellLog();
@@ -259,6 +268,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
 
         Delivery delivery = new Delivery();
+        delivery.setId(createDeliveryNo(random));
         delivery.setOrder(order);
         delivery.setNo(UUID.randomUUID().toString());
         delivery.setStatus("succ");
@@ -363,6 +373,18 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         rebateRepository.save(rebate);
 
 
+    }
+
+    private String createOrderNo(Random random) {
+        Calendar calendar = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(calendar.getTime()) + random.nextInt(1000000);
+    }
+
+    private String createDeliveryNo(Random random) {
+        Calendar calendar = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(calendar.getTime()) + random.nextInt(1000000);
     }
 
 }

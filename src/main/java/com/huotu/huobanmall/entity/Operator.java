@@ -69,7 +69,7 @@ public class Operator {
      * 是否可用
      * todo new
      */
-    private boolean isEnabled;
+//    private boolean isEnabled;
 
     /**
      * 身份验证 服务端负责生成 负责验证；app端只需要保存 传递
@@ -144,13 +144,13 @@ public class Operator {
         this.noDisturbed = noDisturbed;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public void setIsEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
-    }
+//    public boolean isEnabled() {
+//        return isEnabled;
+//    }
+//
+//    public void setIsEnabled(boolean isEnabled) {
+//        this.isEnabled = isEnabled;
+//    }
 
     public String getToken() {
         return token;

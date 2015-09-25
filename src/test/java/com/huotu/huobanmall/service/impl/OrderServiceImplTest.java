@@ -78,7 +78,7 @@ public class OrderServiceImplTest extends WebTestBase {
         Merchant merchant=new Merchant();
         merchant.setId(random.nextInt(200));
         merchant.setName("wy");
-        merchant.setEnabled(true);
+//        merchant.setEnabled(true);
         merchant.setPassword("654321");
         merchant.setNickName("nicheng");
         Merchant merchantNew=merchantRepository.save(merchant);     //新建一个商家

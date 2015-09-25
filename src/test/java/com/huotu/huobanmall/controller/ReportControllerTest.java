@@ -554,7 +554,7 @@ public class ReportControllerTest extends SpringAppTest {
             for (int i = 0; i < 5; i++) {
                 Order order = new Order();
                 order.setMerchant(mockMerchant);
-                order.setId(UUID.randomUUID().toString());
+                order.setId(createOrderNo(random));
                 order.setTime(calendar.getTime());
                 order.setPayTime(calendar.getTime());
                 order.setUserId(user.getId());
@@ -565,6 +565,8 @@ public class ReportControllerTest extends SpringAppTest {
                 order.setStatus(1);
                 order.setPayStatus(1);
                 order.setUserId(user.getId());
+                order.setIsTax(1);
+                order.setIsProtect(1);
                 orderRepository.saveAndFlush(order);
                 orderList.add(order);
             }
@@ -598,7 +600,7 @@ public class ReportControllerTest extends SpringAppTest {
         for (int i = 0; i < 25; i++) {
             Order order = new Order();
             order.setMerchant(mockMerchant);
-            order.setId(UUID.randomUUID().toString());
+            order.setId(createOrderNo(random));
             order.setTime(calendar.getTime());
             order.setPayTime(calendar.getTime());
             order.setUserId(user.getId());
@@ -609,6 +611,8 @@ public class ReportControllerTest extends SpringAppTest {
             order.setStatus(1);
             order.setPayStatus(1);
             order.setUserId(user.getId());
+            order.setIsTax(1);
+            order.setIsProtect(1);
             orderRepository.saveAndFlush(order);
             orderList.add(order);
         }

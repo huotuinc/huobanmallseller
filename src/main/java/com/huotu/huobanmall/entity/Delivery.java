@@ -13,9 +13,8 @@ import javax.persistence.*;
 public class Delivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Delivery_Id")
-    private Integer id;
+    @Column(name = "Delivery_Id", length = 20)
+    private String id;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "Order_Id")
@@ -113,11 +112,11 @@ public class Delivery {
     @Column(name = "Status")
     private String status;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

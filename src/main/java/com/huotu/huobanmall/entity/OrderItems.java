@@ -44,6 +44,12 @@ public class OrderItems {
     private Integer amount;
 
     /**
+     * 价格
+     */
+    @Column(name = "Price")
+    private Float price;
+
+    /**
      * 所属商户
      */
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
@@ -96,5 +102,13 @@ public class OrderItems {
 
     public void setGoodsId(Integer goodsId) {
         this.goodsId = goodsId;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }

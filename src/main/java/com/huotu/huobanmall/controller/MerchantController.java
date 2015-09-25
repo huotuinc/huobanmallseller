@@ -250,10 +250,10 @@ public class MerchantController implements MerchantSystem {
             if (operator == null) {
                 return ApiResult.resultWith(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME);
             }
-
-            if (!operator.isEnabled()) {
-                return ApiResult.resultWith(CommonEnum.AppCode.SYSTEM_BAD_ACCOUNT);
-            }
+//
+//            if (!operator.isEnabled()) {
+//                return ApiResult.resultWith(CommonEnum.AppCode.SYSTEM_BAD_ACCOUNT);
+//            }
 
         }
 

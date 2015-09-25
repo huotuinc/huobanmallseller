@@ -113,12 +113,13 @@ public class SystemCountingImplTest extends SpringAppTest {
         Date curHour = DateHelper.getThisHourBegin();
         curHour.setHours(curHour.getHours() - 1);
 
+        Random random = new Random();
         int orderCount = 10;
         for (int i = 0; i < orderCount; i++) {
             Date date = new Date(curHour.getTime() + 1000 * 60 * 10 * i);
 
             Order order = new Order();
-            order.setId(UUID.randomUUID().toString());
+            order.setId(createOrderNo(random));
             order.setMerchant(mockMerchant);
             order.setTitle("");
             order.setPrice(100);
@@ -128,6 +129,8 @@ public class SystemCountingImplTest extends SpringAppTest {
             order.setReceiver("");
             order.setTime(date);
             order.setPayTime(date);
+            order.setIsTax(1);
+            order.setIsProtect(1);
             orders.add(order);
             orderRepository.saveAndFlush(order);
         }
@@ -222,32 +225,5 @@ public class SystemCountingImplTest extends SpringAppTest {
     @Test
     public void testInitHistoryDayAndToday() throws Exception {
         systemCounting.InitHistoryDayAndToday();
-    }
-
-
-
-    @Test
-    public void test1() {
-
-        //构建订单数据
-
-//        Order order = new Order();
-//        order.setId("201505061723033841");
-//        order.setMerchant(mockMerchant);
-//        order.setTitle("购买abcd2");
-//        order.setPrice(100);
-//        order.setAmount(1);
-//        order.setStatus(1);
-//        order.setPayStatus(1);
-//        order.setReceiver("zhangsan");
-//        order.setTime(new Date());
-//        orderRepository.save(order);
-
-//        log.info(DateHelper.getThisDayBegin(2015, 8, 31));
-//        log.info(new Date(2015, 8, 31));
-
-        Date date = new Date(1442419200000L);
-        log.info(date);
-
     }
 }

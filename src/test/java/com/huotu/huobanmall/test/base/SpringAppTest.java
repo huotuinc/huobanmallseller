@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -52,7 +54,7 @@ public class SpringAppTest {
         merchant.setEnableBillNotice(true);
         merchant.setToken(token);
         merchant.setMobile("");
-        merchant.setEnabled(true);
+//        merchant.setEnabled(true);
         merchant.setEnablePartnerNotice(true);
         merchant.setName(mockMerchantName);
         merchant.setNickName("伙伴商城abc");
@@ -69,7 +71,7 @@ public class SpringAppTest {
     }
 
     protected User generateUser(UserRepository userRepository, Merchant merchant) {
-        return  generateUser(userRepository, merchant, UUID.randomUUID().toString());
+        return generateUser(userRepository, merchant, UUID.randomUUID().toString());
     }
 
     protected User generateUser(UserRepository userRepository, Merchant merchant, String userName) {
@@ -83,9 +85,10 @@ public class SpringAppTest {
     }
 
     protected Order generateOrder(OrderRepository orderRepository, Merchant merchant, User user) {
+        Random random = new Random();
         Calendar calendar = Calendar.getInstance();
         Order order = new Order();
-        order.setId(UUID.randomUUID().toString());
+        order.setId(createOrderNo(random));
         order.setTime(calendar.getTime());
         order.setPayTime(calendar.getTime());
         order.setUserId(user.getId());
@@ -93,10 +96,24 @@ public class SpringAppTest {
         order.setTitle("title");
         order.setAmount(50);
         order.setUserType(1);
+        order.setIsTax(1);
+        order.setIsProtect(1);
         return orderRepository.saveAndFlush(order);
     }
 
     protected String createToken() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    protected String createOrderNo(Random random) {
+        Calendar calendar = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(calendar.getTime()) + random.nextInt(1000000);
+    }
+
+    protected String createDeliveryNo(Random random) {
+        Calendar calendar = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(calendar.getTime()) + random.nextInt(1000000);
     }
 }

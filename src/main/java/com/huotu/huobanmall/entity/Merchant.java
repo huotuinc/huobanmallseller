@@ -30,11 +30,7 @@ public class Merchant {
      */
     @Column(name = "SC_UserLoginPassword")
     private String password;
-    /**
-     * 所属商户
-     */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    private Merchant merchant;
+
 
     /**
      * 昵称
@@ -75,10 +71,7 @@ public class Merchant {
     private String token;
 
 
-    /**
-     * 可用
-     */
-    private boolean enabled;
+
 
 
     public Integer getId() {
@@ -105,13 +98,7 @@ public class Merchant {
         this.password = password;
     }
 
-    public Merchant getMerchant() {
-        return merchant;
-    }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
-    }
 
     public String getNickName() {
         return nickName;
@@ -161,11 +148,5 @@ public class Merchant {
         this.token = token;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }

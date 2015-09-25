@@ -16,7 +16,7 @@ public class Order {
      * 订单号(yyyyMMdd+8位随机数)  todo 订单号格式
      */
     @Id
-    @Column(name = "Order_Id")
+    @Column(name = "Order_Id",length = 20)
     private String id;
 
     /**
@@ -54,7 +54,7 @@ public class Order {
     /**
      * 图片 需要从商品表获取
      */
-    @Column
+    @Column(name = "Thumbnail_Pic")
     private String pictureUrl;
 
     /**
@@ -115,6 +115,18 @@ public class Order {
     @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "Paytime")
     private Date payTime;
+
+    /**
+     * 是否开发票
+     */
+    @Column(nullable = false,name = "Is_Tax")
+    private Integer isTax;
+
+    /**
+     * 是否保价
+     */
+    @Column(nullable = false,name = "Is_Protect")
+    private  Integer isProtect;
 
     public String getId() {
         return id;
@@ -226,5 +238,21 @@ public class Order {
 
     public void setDeliverStatus(Integer deliverStatus) {
         this.deliverStatus = deliverStatus;
+    }
+
+    public Integer getIsTax() {
+        return isTax;
+    }
+
+    public void setIsTax(Integer isTax) {
+        this.isTax = isTax;
+    }
+
+    public Integer getIsProtect() {
+        return isProtect;
+    }
+
+    public void setIsProtect(Integer isProtect) {
+        this.isProtect = isProtect;
     }
 }

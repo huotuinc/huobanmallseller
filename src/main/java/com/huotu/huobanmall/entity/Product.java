@@ -46,6 +46,15 @@ public class Product {
     @Column(name = "Price")
     private Float price;
 
+    /**
+     * 上架状态
+     */
+    @Column(name = "Marketable")
+    private Integer marketStatus;
+
+    @Column(name = "Is_Local_Stock")
+    private Integer isLocalStock;
+
     public Integer getId() {
         return id;
     }
@@ -94,4 +103,19 @@ public class Product {
         this.price = price;
     }
 
+    public Integer getMarketStatus() {
+        return marketStatus;
+    }
+
+    public void setMarketStatus(Integer marketStatus) {
+        this.marketStatus = marketStatus;
+    }
+
+    public Integer getIsLocalStock() {
+        return isLocalStock;
+    }
+
+    public void setIsLocalStock(Integer isLocalStock) {
+        this.isLocalStock = isLocalStock;
+    }
 }
