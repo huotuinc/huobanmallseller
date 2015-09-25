@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.service;
 
+import com.huotu.huobanmall.entity.MainOrder;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Order;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,8 @@ public interface OrderService {
      * @return              订单信息集合
      */
     List<Order> searchOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
+
+    List<MainOrder> searchMainOrders(Integer merchantId,Date time,Integer pageSize,Integer orderStatus,String keyword);
 
     /**
      * Create by shiliting on 2015/9/1
@@ -99,6 +102,36 @@ public interface OrderService {
      * @return
      */
     Page<Order>searchTopOrder(Merchant merchant,Integer payStatus,Pageable pageable);
+
+
+//    /**
+//     * 返回最终订单状态信息
+//     * @param order
+//     * @param status        订单所属分类
+//     * @return
+//     */
+//    String getFinalOrderStatus(Order order,Integer status);
+
+    /**
+     * 获取支付状态码对应的状态信息
+     * @param status
+     * @return
+     */
+    String getPayStatus(Integer status);
+
+    /**
+     * 获取物流状态码对应的物流信息
+     * @param status
+     * @return
+     */
+    String getDeliverStatus(Integer status);
+
+    /**
+     * 获取订单码对应的订单信息
+     * @param status
+     * @return
+     */
+    String getOrderStatus(Integer status);
 
 
 

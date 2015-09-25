@@ -15,9 +15,9 @@ public class AppOrderListModel {
     private String orderNo;
 
     /**
-     * 订单状态 (0活动 -1死单 1已完成)
+     * 订单状态
      */
-    private Integer status;
+    private String status;
 
 
     /**
@@ -61,11 +61,11 @@ public class AppOrderListModel {
         this.orderNo = orderNo;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
