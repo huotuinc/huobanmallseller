@@ -122,6 +122,12 @@ public class Order {
     @Column(nullable = false,name = "Is_Tax")
     private Integer isTax;
 
+
+    /**
+     * 主订单
+     */
+    @Column(name = "Union_Order_Id")
+    private  String mainOrderNo;
     /**
      * 是否保价
      */
@@ -254,5 +260,13 @@ public class Order {
 
     public void setIsProtect(Integer isProtect) {
         this.isProtect = isProtect;
+    }
+
+    public String getMainOrderNo() {
+        return mainOrderNo;
+    }
+
+    public void setMainOrderNo(String mainOrderNo) {
+        this.mainOrderNo = mainOrderNo;
     }
 }
