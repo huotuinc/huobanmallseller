@@ -52,6 +52,7 @@ public class Product {
     @Column(name = "Marketable")
     private Integer marketStatus;
 
+
     @Column(name = "Is_Local_Stock")
     private Integer isLocalStock;
 

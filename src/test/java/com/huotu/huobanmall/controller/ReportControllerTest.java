@@ -107,6 +107,9 @@ public class ReportControllerTest extends SpringAppTest {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private SellLogRepository sellLogRepository;
+
     @Before
     public void prepareDevice() {
         device = Device.newDevice(DeviceType.Android);
@@ -639,6 +642,7 @@ public class ReportControllerTest extends SpringAppTest {
                 , JsonPath.read(list.get(0), "$.money").toString());
     }
 
+    @Test
     public void testTopGoods() throws Exception {
         //准备测试环境
         //添加商品分类
@@ -647,6 +651,11 @@ public class ReportControllerTest extends SpringAppTest {
         category.setSortId(1);
         category.setParentId(2);
         category=categoryRepository.saveAndFlush(category);
+        User user=new User();
+        user.setUsername("shiliting");
+        user.setMerchant(mockMerchant);
+        user.setPassword("123456");
+        user=userRepository.saveAndFlush(user);
         //添加商品(已经上架的)
         Goods goods;
         Goods[] goodlist=new Goods[5];
@@ -688,7 +697,7 @@ public class ReportControllerTest extends SpringAppTest {
         Product[] products=new Product[15];
         for(int i=0;i<15;i++){
             product=new Product();
-            product.setGoods(goodlist[random.nextInt(6)]);
+            product.setGoods(goodlist[random.nextInt(5)]);
             product.setMerchant(mockMerchant);
             product.setName("测试货品"+i);
             product.setPrice((float)1);
@@ -698,9 +707,27 @@ public class ReportControllerTest extends SpringAppTest {
 
         }
 
+        SellLog sellLog;
+        SellLog[] sellLogs=new SellLog[10];
+        for(int i=0;i<10;i++){
+            sellLog=new SellLog();
+            sellLog.setMerchantId(mockMerchant.getId());
+            sellLog.setAmount(10);
+            sellLog.setDesc("测试selllog"+i);
+            sellLog.setGoodsId(goodlist[random.nextInt(5)].getId());
+            sellLog.setName("title"+i);
+            sellLog.setPrice((float)10);
+            sellLog.setProductId(products[i].getId());
+            sellLog.setProductName("测试货品标题"+i);
+            sellLog.setTime(new Date());
+            sellLog.setUserId(user.getId());
+            sellLogs[i]=sellLogRepository.saveAndFlush(sellLog);
 
 
+        }
         //准备测试环境END
+
+        mockMvc.perform(device.getApi("topGoods").build()).andDo(print());
 
 
 
