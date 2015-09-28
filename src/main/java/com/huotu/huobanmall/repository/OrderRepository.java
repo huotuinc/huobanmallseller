@@ -23,7 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
 
     List<Order> findByMerchant(Merchant merchant);
-    @Query("select o from Order o where o.id in ?1")
+    @Query("select o from Order o where o.mainOrderNo in ?1")
     List<Order> findByMainOrderNo(Collection<String> mainOrderNo);
     Page<Order> findByMerchantAndPayStatusOrderByPriceDesc(Merchant merchant,Integer payStatus,Pageable pageable);
 

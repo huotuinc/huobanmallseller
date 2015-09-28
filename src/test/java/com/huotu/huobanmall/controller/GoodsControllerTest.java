@@ -846,6 +846,9 @@ public class GoodsControllerTest extends SpringAppTest {
         order.setTime(new Date());
         orderRepository.saveAndFlush(order);
 
+       MainOrder id1= mainOrderRepository.findOne(mainOrder.getId());
+        MainOrder id2= mainOrderRepository.findOne(mainOrder1.getId());
+
 
         mockMvc.perform(
                 device.getApi("mainOrderList")
