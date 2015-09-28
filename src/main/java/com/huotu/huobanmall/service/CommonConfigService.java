@@ -24,4 +24,10 @@ public interface CommonConfigService {
      */
     String getWebUrl();
 
+    /**
+     * 客服电话
+     * @return
+     */
+    String getWebCustomerServicePhone();
+
 }

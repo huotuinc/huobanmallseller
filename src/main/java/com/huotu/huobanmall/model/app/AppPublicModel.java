@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.model.app;
 
+import com.huotu.huobanmall.entity.Device;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.entity.Shop;
@@ -24,12 +25,12 @@ public class AppPublicModel {
      * 当前店铺
      */
     private Shop currentShop;
-//    /**
-//     * 服务端参数
-//     * <p>当前用户设备，必然非空</p>
-//     */
+    /**
+     * 服务端参数
+     * <p>当前用户设备，必然非空</p>
+     */
 
-//    private Device currentDevice;
+    private Device currentDevice;
     /**
      * 平台1、HB2015AD   （android）    2、HB2015AP   （ios)
      */
@@ -175,12 +176,12 @@ public class AppPublicModel {
     public void setCurrentShop(Shop currentShop) {
         this.currentShop = currentShop;
     }
-//
-//    public Device getCurrentDevice() {
-//        return currentDevice;
-//    }
-//
-//    public void setCurrentDevice(Device currentDevice) {
-//        this.currentDevice = currentDevice;
-//    }
+
+    public Device getCurrentDevice() {
+        return currentDevice;
+    }
+
+    public void setCurrentDevice(Device currentDevice) {
+        this.currentDevice = currentDevice;
+    }
 }

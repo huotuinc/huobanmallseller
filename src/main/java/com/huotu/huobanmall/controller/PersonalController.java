@@ -3,11 +3,15 @@ package com.huotu.huobanmall.controller;
 import com.huotu.huobanmall.api.PersonalSystem;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
+import com.huotu.huobanmall.api.common.Paging;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
+import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
+import com.huotu.huobanmall.model.app.AppMessageModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.service.MerchantService;
+import com.huotu.huobanmall.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PersonalController implements PersonalSystem {
     @Autowired
     private MerchantService merchantService;
+
+    @Autowired
+    private MessageService messageService;
 
     /**
      * 更新商家信息
@@ -43,7 +50,7 @@ public class PersonalController implements PersonalSystem {
             throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
-        merchantService.updateMerchantProfile(apm.getCurrentUser(), apm.getCurrentOprator(),apm.getCurrentShop(), profileType, profileData);
+        merchantService.updateMerchantProfile(apm.getCurrentUser(), apm.getCurrentOprator(), apm.getCurrentShop(), profileType, profileData);
 
         if (apm.getCurrentOprator() == null) {
             user.outputData(merchantService.getAppMerchantModel(false, apm.getCurrentUser().getId()));
@@ -66,10 +73,23 @@ public class PersonalController implements PersonalSystem {
 //        else
 //            user.outputData(merchantService.getAppMerchantModel(true, apm.getCurrentOprator().getId()));
 
-        user.outputData(merchantService.getAppMerchantModel(apm.getCurrentOprator(),apm.getCurrentUser()));
+        user.outputData(merchantService.getAppMerchantModel(apm.getCurrentOprator(), apm.getCurrentUser()));
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
+
+    @Override
+    @RequestMapping("/messages")
+    public ApiResult messages(Output<AppMessageModel[]> messages, Paging paging) throws Exception {
+        AppPublicModel apm = PublicParameterHolder.getParameters();
+
+        if (apm.getCurrentOprator() == null) {
+            messages.outputData(messageService.getMessages(apm.getCurrentUser(), null, paging));
+        } else {
+            messages.outputData(messageService.getMessages(null, apm.getCurrentOprator(), paging));
+        }
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
 
 }

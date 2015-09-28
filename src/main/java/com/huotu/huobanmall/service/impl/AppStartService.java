@@ -1,6 +1,7 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.common.DateHelper;
+import com.huotu.common.model.AppOS;
 import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by lgh on 2015/9/6.
@@ -87,6 +85,9 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private ConfigAppVersionRepository configAppVersionRepository;
 
+    @Autowired
+    private CPARepository cPARepository;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -111,6 +112,14 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
                 configAppVersion.setVersionNo("1.0.0");
                 configAppVersion.setUpdateTime(new Date());
                 configAppVersionRepository.save(configAppVersion);
+            }
+
+
+            if (cPARepository.count() == 0) {
+                cPARepository.save(Arrays.asList(
+                        new CPA("huotu", "火图安卓", "HB2015AD", AppOS.Android),
+                        new CPA("huotu", "火图iphone", "HB2015AP", AppOS.iOS)
+                ));
             }
         }
 
@@ -143,7 +152,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         operator.setPassword("e10adc3949ba59abbe56e057f20f883e");
         operator.setName(operatorName);
         operator.setMerchant(merchant);
-        operator.setAuthority("11,22,33");
+        operator.setAuthority("1,2,3");
         operator.setEnableBillNotice(true);
         operator.setEnablePartnerNotice(true);
 //        operator.setIsEnabled(true);
@@ -204,6 +213,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setReceiver("zhangsan");
         order.setTime(new Date());
         order.setIsTax(1);
+        order.setIsProtect(1);
         orderRepository.save(order);
 
 
@@ -218,7 +228,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
 
 
         order = new Order();
-        order.setId(UUID.randomUUID().toString());
+        order.setId(createOrderNo(random));
         order.setMerchant(merchant);
         order.setUserId(user.getId());
         order.setUserType(1);
@@ -229,6 +239,8 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setPayStatus(1);
         order.setReceiver("zhangsan");
         order.setTime(new Date());
+        order.setIsTax(1);
+        order.setIsProtect(1);
         orderRepository.save(order);
 
 

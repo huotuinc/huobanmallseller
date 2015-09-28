@@ -19,9 +19,7 @@ import com.huotu.huobanmall.model.app.AppGlobalModel;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.model.app.AppUpdateModel;
-import com.huotu.huobanmall.repository.ConfigAppVersionRepository;
-import com.huotu.huobanmall.repository.MerchantRepository;
-import com.huotu.huobanmall.repository.OperatorRepository;
+import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.MerchantService;
 
 import org.apache.commons.logging.Log;
@@ -66,6 +64,9 @@ public class MerchantController implements MerchantSystem {
 
     @Autowired
     private OperatorRepository operatorRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     private AppUpdateModel versionChecking(String opertion, String version, String imei) {
         AppUpdateModel result = new AppUpdateModel();
@@ -186,7 +187,9 @@ public class MerchantController implements MerchantSystem {
     @Transactional
     public ApiResult login(Output<AppMerchantModel> user, String username, String password) throws Exception {
 
-        AppMerchantModel appMerchantModel = merchantService.login(username, password);
+        AppPublicModel appPublicModel = PublicParameterHolder.getParameters();
+
+        AppMerchantModel appMerchantModel = merchantService.login(username, password, appPublicModel);
         if (appMerchantModel == null) {
             return ApiResult.resultWith(CommonEnum.AppCode.ERROR_WRONG_USERNAME_PASSWORD);
         }
@@ -310,5 +313,14 @@ public class MerchantController implements MerchantSystem {
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
-
+    @RequestMapping("/updateDeviceToken")
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public ApiResult updateDeviceToken(String deviceToken) throws Exception {
+        AppPublicModel pms = PublicParameterHolder.getParameters();
+        log.debug(pms.getImei() + " updateDeviceToken to " + deviceToken);
+        pms.getCurrentDevice().setPushingToken(deviceToken);
+        deviceRepository.save(pms.getCurrentDevice());
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
 }

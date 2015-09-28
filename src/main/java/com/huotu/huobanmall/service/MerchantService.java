@@ -4,6 +4,7 @@ import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
+import com.huotu.huobanmall.model.app.AppPublicModel;
 
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ import java.io.IOException;
  * Created by lgh on 2015/8/26.
  */
 public interface MerchantService {
-    AppMerchantModel login(String username, String password) throws Exception;
+    AppMerchantModel login(String username, String password,AppPublicModel appPublicModel) throws Exception;
 
     /**
      * 返回app商家信息

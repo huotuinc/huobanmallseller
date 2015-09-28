@@ -2,7 +2,9 @@ package com.huotu.huobanmall.api;
 
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
+import com.huotu.huobanmall.api.common.Paging;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
+import com.huotu.huobanmall.model.app.AppMessageModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,4 +43,19 @@ public interface PersonalSystem {
      */
     @RequestMapping(method = RequestMethod.GET)
     ApiResult getMerchantProfile(Output<AppMerchantModel> user) throws Exception;
+
+
+    /**
+     * 消息列表-可分组查询
+     * <p>分组依据-messageOrder</p>
+     * <p>
+     * <b>负责人：刘渠成</b>
+     *
+     * @param messages
+     * @param paging
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult messages(Output<AppMessageModel[]> messages, Paging paging) throws Exception;
 }

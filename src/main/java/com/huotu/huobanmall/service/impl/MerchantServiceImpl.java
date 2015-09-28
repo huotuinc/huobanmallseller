@@ -4,10 +4,12 @@ import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
+import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.repository.ShopRepository;
 import com.huotu.huobanmall.service.CommonConfigService;
+import com.huotu.huobanmall.service.DeviceService;
 import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +42,15 @@ public class MerchantServiceImpl implements MerchantService {
     @Autowired
     private MallApiService mallApiService;
 
+    @Autowired
+    private DeviceService deviceService;
+
     public String createToken() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
     @Override
-    public AppMerchantModel login(String username, String password) throws Exception {
+    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws Exception {
 
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
@@ -69,6 +74,10 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setMobile(merchant.getMobile());
                 appMerchantModel.setTitle(shop.getTitle());
 
+                //设备变更
+                if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
+                    deviceService.userChanged(appPublicModel.getCurrentDevice(), merchant,null, appPublicModel.getVersion(), appPublicModel.getIp());
+                }
 
                 merchant.setToken(token);
                 merchantRepository.save(merchant);
@@ -94,6 +103,11 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
                 appMerchantModel.setTitle(shop.getTitle());
+
+                //设备变更
+                if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
+                    deviceService.userChanged(appPublicModel.getCurrentDevice(), null,operator, appPublicModel.getVersion(), appPublicModel.getIp());
+                }
 
                 operator.setToken(token);
                 operatorRepository.save(operator);

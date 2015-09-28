@@ -70,7 +70,13 @@ public class Merchant {
     @Column(length = 32,name = "AppToken")
     private String token;
 
-
+    /**
+     * 当前所用设备
+     * todo new
+     */
+    @ManyToOne
+    @JoinColumn(name = "Device")
+    private Device device;
 
 
 
@@ -149,4 +155,11 @@ public class Merchant {
     }
 
 
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
 }

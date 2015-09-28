@@ -80,6 +80,14 @@ public class Operator {
     private String token;
 
 
+    /**
+     * 当前所用设备
+     * todo new
+     */
+    @ManyToOne
+    @JoinColumn(name = "Device")
+    private Device device;
+
     public Integer getId() {
         return id;
     }
@@ -158,5 +166,13 @@ public class Operator {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
 }

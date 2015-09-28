@@ -1,6 +1,7 @@
 package com.huotu.huobanmall.model.app;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.huotu.huobanmall.service.CommonConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -78,12 +79,19 @@ public class AppGlobalModel {
         this.customerServicePhone = customerServicePhone;
     }
 
+
+    @Autowired
+    private CommonConfigService commonConfigService;
+
     @Autowired
     public void setEnv(Environment env) {
-        //todo 没有数据
-        serverUrl = env.getProperty("huobanmall.url", "http://test.huobanmall.com");
-        customerServicePhone = env.getProperty("huobanmall.customerServicePhone", "4001818357");
+        serverUrl = commonConfigService.getWebUrl();
+//        serverUrl = env.getProperty("huobanmall.url", "http://test.huobanmall.com");
+//        customerServicePhone = env.getProperty("huobanmall.customerServicePhone", "4001818357");
+
+        customerServicePhone = commonConfigService.getWebCustomerServicePhone();
     }
+
 
     @PostConstruct
     public void afterConstruct() {

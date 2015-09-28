@@ -11,6 +11,7 @@ import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.repository.ShopRepository;
+import com.huotu.huobanmall.service.DeviceService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -41,6 +42,9 @@ public class CommonInterceptor implements HandlerInterceptor {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private DeviceService deviceService;
 
 //    @Autowired
 //    private DeviceService deviceService;
@@ -122,7 +126,7 @@ public class CommonInterceptor implements HandlerInterceptor {
         long timestamp = StringUtils.isEmpty(request.getParameter("timestamp")) ? 0 : Long.parseLong(request.getParameter("timestamp"));
         String token = StringUtils.isEmpty(request.getParameter("token")) ? "" : request.getParameter("token");
 
-        if(!StringUtils.isEmpty(token)) {
+        if (!StringUtils.isEmpty(token)) {
             Merchant merchant = merchantRepository.findByToken(token);
             if (merchant != null) {
                 model.setCurrentUser(merchant);
@@ -163,28 +167,22 @@ public class CommonInterceptor implements HandlerInterceptor {
         model.setIp(ip);
 
         //设置当前用户设备
-//        model.setCurrentDevice(deviceService.fetchDevice(model.getImei(), model.getCpaCode(), model.getOperation()));
-//        //如果当前用户存在 并且设备不同于之前的设备那么发布设备变化事件
-//        if (model.getCurrentUser() != null && model.getCurrentDevice() != model.getCurrentUser().getDevice()) {
-//            deviceService.userChanged(model.getCurrentDevice(), model.getCurrentUser(), model.getVersion(), model.getIp());
-//            model.getCurrentUser().setDevice(model.getCurrentDevice());
-//        }
-//        //获取区域信息
-//        if (cityCode.length() == 0 && model.getCurrentUser() != null && model.getCurrentUser().isMobileBanded() && model.getCurrentUser().getMobile() != null && model.getCurrentUser().getMobile().length() > 10) {
-//            //根据其登录手机号码 后去citycode
-//            ConfigMobile mobile = configMobileRepository.findByNumber(model.getCurrentUser().getMobile().substring(0, 7));
-//            if (mobile != null) {
-//                cityCode = mobile.getAreaCode();
-//            }
-//        }
-//
-//        if (!StringUtils.isEmpty(cityCode) && !"0".equals(cityCode)) {
-//            ConfigArea area = configAreaRepository.findOne(Long.parseLong(cityCode));
-//            //区域是否变化？
-//            if (area != null && model.getCurrentDevice().getArea() != area) {
-//                deviceService.areaChanged(model.getCurrentDevice(), area, model.getVersion(), model.getIp());
-//            }
-//        }
+        model.setCurrentDevice(deviceService.fetchDevice(model.getImei(), model.getCpaCode(), model.getOperation()));
+        //如果当前用户存在 并且设备不同于之前的设备那么发布设备变化事件
+        if (model.getCurrentUser() != null) {
+            if (model.getCurrentOprator() != null) {
+                if (model.getCurrentDevice() != model.getCurrentOprator().getDevice()) {
+                    deviceService.userChanged(model.getCurrentDevice(), null, model.getCurrentOprator(), model.getVersion(), model.getIp());
+                    model.getCurrentOprator().setDevice(model.getCurrentDevice());
+                }
+            } else {
+                if (model.getCurrentDevice() != model.getCurrentUser().getDevice()) {
+                    deviceService.userChanged(model.getCurrentDevice(), model.getCurrentUser(), null, model.getVersion(), model.getIp());
+                    model.getCurrentUser().setDevice(model.getCurrentDevice());
+                }
+            }
+        }
+
         return model;
     }
 

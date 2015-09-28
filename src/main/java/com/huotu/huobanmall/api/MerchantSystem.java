@@ -4,6 +4,7 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.model.app.AppGlobalModel;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
+import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.model.app.AppUpdateModel;
 
 import org.springframework.stereotype.Controller;
@@ -43,9 +44,9 @@ public interface MerchantSystem {
      * <p> 先判断商家登录，登录失败，再判断操作员登录
      * <b>负责人：罗国华</b>
      *
-     * @param user     用户信息
-     * @param username 用户名(3-50)，商家用户或操作员
-     * @param password 一次MD5运算过的密码以16进制描述，英文小写
+     * @param user           用户信息
+     * @param username       用户名(3-50)，商家用户或操作员
+     * @param password       一次MD5运算过的密码以16进制描述，英文小写
      * @return
      * @throws Exception
      */
@@ -92,7 +93,7 @@ public interface MerchantSystem {
 
 
     /**
-     * @param user 返回用户数据
+     * @param user        返回用户数据
      * @param oldPassword 旧密码
      * @param newPassword 新密码
      * @return
@@ -100,4 +101,16 @@ public interface MerchantSystem {
      */
     @RequestMapping(method = RequestMethod.GET)
     ApiResult modifyPassword(Output<AppMerchantModel> user, String oldPassword, String newPassword) throws Exception;
+
+
+    /**
+     * <p>无需登录</p>
+     * app请求设置该设备(imei)的deviceToken
+     *
+     * @param deviceToken ios deviceToken的16位编码小写；android 极光推送的设备别名
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    ApiResult updateDeviceToken(String deviceToken) throws Exception;
 }
