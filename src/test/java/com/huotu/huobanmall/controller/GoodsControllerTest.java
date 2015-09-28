@@ -441,11 +441,11 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testOrderDetail() throws Exception {
-        mockMvc.perform(
-                device.getApi("orderDetail")
-                        .param("orderNo", "354ed0b0-1ea3-423b-9c96-7a3e3373d2ca")
-                        .build())
-                .andDo(print());
+//        mockMvc.perform(
+//                device.getApi("orderDetail")
+//                        .param("orderNo", "354ed0b0-1ea3-423b-9c96-7a3e3373d2ca")
+//                        .build())
+//                .andDo(print());
 
     }
 
@@ -793,6 +793,7 @@ public class GoodsControllerTest extends SpringAppTest {
         String[] strings=new String[15];
         Map<String,List<Order>>map=new TreeMap<>();
 
+        Random random = new Random();
         MainOrder mainOrder;
         Order order;
         for(int i=0;i<15;i++){
@@ -804,7 +805,7 @@ public class GoodsControllerTest extends SpringAppTest {
             mainOrder.setTime(dates[i]);
             mainOrder.setPayStatus(1);
             mainOrder.setUserId(123);
-            strings[i]=UUID.randomUUID().toString();
+            strings[i]=createOrderNo(random);
             mainOrder.setId(strings[i]);
             mainOrders[i]=mainOrderRepository.saveAndFlush(mainOrder);
 

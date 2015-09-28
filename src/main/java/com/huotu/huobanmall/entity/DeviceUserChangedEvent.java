@@ -1,5 +1,6 @@
 package com.huotu.huobanmall.entity;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -7,6 +8,7 @@ import javax.persistence.ManyToOne;
  * 设备user更变时，做出记录
  */
 @Entity
+@Cacheable(value = false)
 public class DeviceUserChangedEvent extends DeviceEvent {
 
     /**

@@ -14,6 +14,7 @@ import java.util.Set;
  * @author CJ
  */
 @Entity
+@Cacheable(value = false)
 public class PushingMessage implements Cloneable {
 
     @SuppressWarnings("CloneDoesntCallSuperClone")

@@ -411,7 +411,7 @@ public class GoodsController implements GoodsSystem {
             User user=objects[1]==null?null:(User)objects[1];
             appUserScoreModel.setName(userService.getViewUserName(user));
             appUserScoreModel.setScore(rebate.getScore());
-            appUserScoreModel.setPictureUrl(user==null?"":commonConfigService.getWebUrl()+user.getUserFace());  //todo 图片路径需要修改
+            appUserScoreModel.setPictureUrl(user==null?"":commonConfigService.getResoureServerUrl()+user.getUserFace());
             appUserScoreModel.setTime(rebate.getTime());
             appUserScoreModel.setPid(rebate.getId());
             appUserScoreModels[i]=appUserScoreModel;

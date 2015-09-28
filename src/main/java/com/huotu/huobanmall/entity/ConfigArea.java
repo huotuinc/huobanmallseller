@@ -5,42 +5,37 @@ import java.util.List;
 
 /**
  * 区域配置
- * todo 确认此表
  */
 @Entity
-@Table( indexes = {@Index(columnList = "code")})
+@Cacheable(value = false)
+@Table(name = "TS_ConfigArea", indexes = {@Index(columnList = "code")})
 public class ConfigArea {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    private Integer id;
 
-    @OneToMany(mappedBy = "superArea", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ConfigArea> subAreas;
     @ManyToOne
+    @JoinColumn(name = "ParentId")
     private ConfigArea superArea;
 
-    @Column(length = 20)
+    @Column(length = 20, name = "Name")
     private String name;
 
+    @Column(name = "Level")
     private Integer level;
-    @Column(length = 10)
+
+    @Column(length = 10, name = "AreaCode")
     private String code;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public List<ConfigArea> getSubAreas() {
-        return subAreas;
-    }
-
-    public void setSubAreas(List<ConfigArea> subAreas) {
-        this.subAreas = subAreas;
-    }
 
     public ConfigArea getSuperArea() {
         return superArea;

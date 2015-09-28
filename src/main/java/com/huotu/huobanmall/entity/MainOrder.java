@@ -9,6 +9,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "Mall_UnionOrder")
+@Cacheable(value = false)
 public class MainOrder {
 
     @Id
@@ -32,7 +33,7 @@ public class MainOrder {
     /**
      * 订单状态 0活动 -1死单 1已完成
      */
-    @Column(name = "Order_Status")
+    @Column(name = "Status")
     private Integer status;
 
     /**

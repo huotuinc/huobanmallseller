@@ -8,6 +8,7 @@ import javax.persistence.*;
  * 渠道
  */
 @Entity
+@Cacheable(value = false)
 public class CPA {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -7,6 +7,7 @@ import java.util.Date;
  * 站内消息
  */
 @Entity
+@Cacheable(value = false)
 @Table(indexes = {@Index(columnList = "sendTime"), @Index(columnList = "invalidTime"), @Index(columnList = "deleted")})
 public class Message {
     @Id

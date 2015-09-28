@@ -7,6 +7,7 @@ import java.util.Date;
  * 设备事件
  */
 @Entity
+@Cacheable(value = false)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class DeviceEvent {
     @Id

@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by Administrator on 2015/6/8.
  */
 @Entity
+@Cacheable(value = false)
 public class Feedback {
 
     @Id

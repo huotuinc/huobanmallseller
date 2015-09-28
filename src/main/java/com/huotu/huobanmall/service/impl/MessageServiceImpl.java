@@ -63,8 +63,9 @@ public class MessageServiceImpl implements MessageService, AutoCloseable {
 
     @PostConstruct
     public void init() {
-        String MASTERSECRET = "7a5a5698f4e5e32dfeac09ee";
-        String APPKEY = "a36e00d3397bf5e69049ed41";
+        //andriod配置
+        String MASTERSECRET = "85ed60eced5cfd1f64fe4203";
+        String APPKEY = "a237b5c86ab65f7fa6260bcf";
         client = new JPushClient(MASTERSECRET, APPKEY, env.acceptsProfiles("!test"), 24 * 60 * 60);
 
         InputStream input;

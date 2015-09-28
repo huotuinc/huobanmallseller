@@ -8,6 +8,7 @@ import java.util.Date;
  * @author CJ
  */
 @Entity
+@Cacheable(value = false)
 public class Device {
 
     /**

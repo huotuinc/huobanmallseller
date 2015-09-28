@@ -7,6 +7,7 @@ import java.util.Date;
  * 用户站内消息
  */
 @Entity
+@Cacheable(value = false)
 public class MessageToUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -50,7 +50,7 @@ public class RebateServiceImpl implements RebateService {
             AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
             appTopScoreModel.setName(userService.getViewUserName(user));
             appTopScoreModel.setScore(Integer.parseInt(objects[1].toString()));
-            appTopScoreModel.setPictureUrl(commonConfigService.getWebUrl()+user.getUserFace());  //todo 图片路径需要修改
+            appTopScoreModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());
             result.add(appTopScoreModel);
         });
         return result;
