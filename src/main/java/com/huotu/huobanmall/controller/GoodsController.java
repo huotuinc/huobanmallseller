@@ -191,7 +191,13 @@ public class GoodsController implements GoodsSystem {
         });
 
         //子订单
-        List<Order> orders=orderRepository.findByMainOrderNo(mainOrderNo);
+        List<Order> orders;
+        if(mainOrderNo.size()!=0){
+            orders=orderRepository.findByMainOrderNo(mainOrderNo);
+        }else {
+            orders=null;
+        }
+
 
 
         AppMainOrderListModel[] appMainOrderListModels=new AppMainOrderListModel[mainOrderlist.size()];
@@ -236,12 +242,16 @@ public class GoodsController implements GoodsSystem {
                 switch (status){
                     case 0:
                         appOrderListModel.setStatus(orderService.getPayStatus(y.getPayStatus())+" "+orderService.getDeliverStatus(y.getDeliverStatus()));
+                        break;
                     case 1:
                         appOrderListModel.setStatus(orderService.getPayStatus(y.getPayStatus()));
+                        break;
                     case 2:
                         appOrderListModel.setStatus(orderService.getDeliverStatus(y.getDeliverStatus()));
+                        break;
                     case 3:
                         appOrderListModel.setStatus(orderService.getOrderStatus(y.getStatus()));
+                        break;
                     default:
                         appOrderListModel.setStatus("已关闭");
                 }
@@ -256,6 +266,8 @@ public class GoodsController implements GoodsSystem {
             i++;
         }
         list.outputData(appMainOrderListModels);
+
+
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
@@ -321,7 +333,7 @@ public class GoodsController implements GoodsSystem {
         Order order = orderRepository.findOne(orderNo);
         //获取该订单的顶单项
         List<OrderItems> orderItemses = orderItemsRepository.findByOrder(order);
-        List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<AppOrderListProductModel>();
+        List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<>();
         for (int i = 0; i < orderItemses.size(); i++) {
             OrderItems orderItems = orderItemses.get(i);
             Product product = productRepository.findOne(orderItems.getProductId());

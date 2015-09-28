@@ -787,74 +787,69 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testMainOrderList() throws Exception {
-        MainOrder mainOrder=new MainOrder();
-        mainOrder.setMerchant(mockMerchant);
-        mainOrder.setStatus(0);
-        mainOrder.setDeliverStatus(0);
-        mainOrder.setTime(new Date());
-        mainOrder.setPayStatus(0);
-        mainOrder.setUserId(123);
-        mainOrder.setId(UUID.randomUUID().toString());
-        mainOrder=mainOrderRepository.saveAndFlush(mainOrder);
-        Order order=new Order();
-        order.setMerchant(mockMerchant);
-        order.setMainOrderNo(mainOrder.getId());
-        order.setId("11");
-        order.setIsProtect(0);
-        order.setIsTax(0);
-        order.setTime(new Date());
-        orderRepository.saveAndFlush(order);
+        Order[][] orders=new Order[10][2];
+        MainOrder[] mainOrders=new MainOrder[15];
+        Date[] dates=new Date[15];
+        String[] strings=new String[15];
+        Map<String,List<Order>>map=new TreeMap<>();
 
-        order=new Order();
-        order.setMerchant(mockMerchant);
-        order.setMainOrderNo(mainOrder.getId());
-        order.setId("121");
-        order.setIsProtect(0);
-        order.setIsTax(0);
-        order.setTime(new Date());
-        orderRepository.saveAndFlush(order);
+        MainOrder mainOrder;
+        Order order;
+        for(int i=0;i<15;i++){
+            mainOrder=new MainOrder();
+            mainOrder.setMerchant(mockMerchant);
+            mainOrder.setStatus(0);
+            mainOrder.setDeliverStatus(0);
+            dates[i]=new Date();
+            mainOrder.setTime(dates[i]);
+            mainOrder.setPayStatus(1);
+            mainOrder.setUserId(123);
+            strings[i]=UUID.randomUUID().toString();
+            mainOrder.setId(strings[i]);
+            mainOrders[i]=mainOrderRepository.saveAndFlush(mainOrder);
 
-
-
-
-        MainOrder mainOrder1=new MainOrder();
-        mainOrder1.setMerchant(mockMerchant);
-        mainOrder1.setStatus(0);
-        mainOrder1.setDeliverStatus(0);
-        mainOrder1.setTime(new Date());
-        mainOrder1.setPayStatus(0);
-        mainOrder1.setUserId(123);
-        mainOrder1.setId(UUID.randomUUID().toString());
-        mainOrder1=mainOrderRepository.saveAndFlush(mainOrder1);
-
-
-        order=new Order();
-        order.setMerchant(mockMerchant);
-        order.setMainOrderNo(mainOrder1.getId());
-        order.setId("1111");
-        order.setIsProtect(0);
-        order.setIsTax(0);
-        order.setTime(new Date());
-        orderRepository.saveAndFlush(order);
-
-        order=new Order();
-        order.setMerchant(mockMerchant);
-        order.setMainOrderNo(mainOrder1.getId());
-        order.setId("14421");
-        order.setIsProtect(0);
-        order.setIsTax(0);
-        order.setTime(new Date());
-        orderRepository.saveAndFlush(order);
-
-       MainOrder id1= mainOrderRepository.findOne(mainOrder.getId());
-        MainOrder id2= mainOrderRepository.findOne(mainOrder1.getId());
+            List<Order> orderList=new ArrayList<>();
+            for(int j=0;j<2;j++){
+                order=new Order();
+                order.setStatus(0);
+                order.setPayStatus(1);
+                order.setTitle("测试订单");
+                order.setTime(new Date());
+                order.setId("0000514");
+                order.setIsTax(0);
+                order.setAmount(4);
+                order.setPrice(100);
+                order.setUserId(123);
+                order.setDeliverStatus(0);
+                order.setIsProtect(1);
+                order.setMerchant(mockMerchant);
+                order.setPayTime(new Date());
+                order.setPictureUrl("");
+                order.setMainOrderNo(strings[i]);
+                order.setUserType(0);
+                order.setReceiver("史利挺");
+                orderRepository.saveAndFlush(order);
+                orderList.add(order);
+            }
+            map.put(strings[i],orderList);
+        }
 
 
+
+        Long time=dates[14].getTime();
         mockMvc.perform(
                 device.getApi("mainOrderList")
                         .param("status", "0")
+                        .param("lastDate",String.valueOf(time))
+                        .param("keyword", strings[2])
                         .build())
                 .andDo(print());
+//                .andReturn().getResponse().getContentAsString();
+
+//        List<Order> lists=JSON.parseObject(result, );
+
+
+
 
 
     }
