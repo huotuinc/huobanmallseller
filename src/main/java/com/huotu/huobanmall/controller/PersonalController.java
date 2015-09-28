@@ -7,15 +7,19 @@ import com.huotu.huobanmall.api.common.Paging;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.model.app.AppFeedbackModel;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppMessageModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
+import com.huotu.huobanmall.service.FeedbackService;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanmall.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * 个性化系统
@@ -88,6 +92,24 @@ public class PersonalController implements PersonalSystem {
             messages.outputData(messageService.getMessages(apm.getCurrentUser(), null, paging));
         } else {
             messages.outputData(messageService.getMessages(null, apm.getCurrentOprator(), paging));
+        }
+        return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
+    }
+
+    @Autowired
+    private FeedbackService feedbackService;
+
+
+    @Override
+    @RequestMapping("/feedback")
+    public ApiResult feedback(String name, String contact, String content) throws Exception {
+
+        AppPublicModel apm = PublicParameterHolder.getParameters();
+
+        if (apm.getCurrentOprator() == null) {
+            feedbackService.insert(name, contact, content, apm.getCurrentUser(), null);
+        } else {
+            feedbackService.insert(name, contact, content, null, apm.getCurrentOprator());
         }
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }

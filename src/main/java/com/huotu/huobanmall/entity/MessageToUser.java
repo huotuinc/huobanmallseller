@@ -12,7 +12,7 @@ public class MessageToUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Message message;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})

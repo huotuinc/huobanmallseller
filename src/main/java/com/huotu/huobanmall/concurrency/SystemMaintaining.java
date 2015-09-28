@@ -63,7 +63,7 @@ public class SystemMaintaining {
     public void work() {
         messageService.deleteExceeds();
 
-        if (env.acceptsProfiles("test")) {
+//        if (env.acceptsProfiles("test")) {
             log.info("周期性清理缓存");
             Cache cache = entityManagerFactory.getCache();
             if (cache != null && cache instanceof JpaCache) {
@@ -102,7 +102,7 @@ public class SystemMaintaining {
                 msg.setTitle("大丈夫当带三尺之剑，立不世之功！");
                 messageService.pushMessageToAllUser(msg);
             }
-        }
+//        }
     }
 
 }

@@ -152,7 +152,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         operator.setPassword("e10adc3949ba59abbe56e057f20f883e");
         operator.setName(operatorName);
         operator.setMerchant(merchant);
-        operator.setAuthority("1,2,3");
+        operator.setAuthority("1,2,3,100");
         operator.setEnableBillNotice(true);
         operator.setEnablePartnerNotice(true);
 //        operator.setIsEnabled(true);

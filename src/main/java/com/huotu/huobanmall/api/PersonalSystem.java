@@ -3,11 +3,14 @@ package com.huotu.huobanmall.api;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.Paging;
+import com.huotu.huobanmall.model.app.AppFeedbackModel;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppMessageModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * 个性化系统
@@ -58,4 +61,17 @@ public interface PersonalSystem {
      */
     @RequestMapping(method = RequestMethod.GET)
     ApiResult messages(Output<AppMessageModel[]> messages, Paging paging) throws Exception;
+
+
+    /**
+     * 提交审核
+     *
+     * @param name
+     * @param contact
+     * @param content
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    ApiResult feedback(String name, String contact, String content) throws Exception;
 }
