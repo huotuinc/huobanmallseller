@@ -19,6 +19,7 @@ import com.notnoop.apns.ApnsServiceBuilder;
 import com.notnoop.exceptions.NetworkIOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.persistence.annotations.TenantTableDiscriminator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
@@ -281,10 +282,23 @@ public class MessageServiceImpl implements MessageService, AutoCloseable {
     }
 
     @Override
+    @Transactional
     public void deleteExceeds() {
         Date date = new Date();
-        toUserRepository.deleteInBatch(toUserRepository.findByMessage_DeletedTrueOrMessage_InvalidTimeLessThan(date));
-        messageRepository.deleteInBatch(messageRepository.findByDeletedTrueOrInvalidTimeLessThan(date));
+//        toUserRepository.deleteInBatch(toUserRepository.findByMessage_DeletedTrueOrMessage_InvalidTimeLessThan(date));
+//        messageRepository.deleteInBatch(messageRepository.findByDeletedTrueOrInvalidTimeLessThan(date));
+
+//        toUserRepository.deleteByMessage_DeletedTrueOrMessage_InvalidTimeLessThan(date);
+//        messageRepository.deleteByDeletedTrueOrInvalidTimeLessThan(date);
+
+        toUserRepository.executeHql("delete from MessageToUser toUser where  toUser.message.deleted=true or toUser.message.invalidTime<:date", query -> {
+            query.setParameter("date", date);
+        });
+
+        messageRepository.executeHql("delete from Message  message where message.deleted=true or message.invalidTime<:date", query -> {
+            query.setParameter("date", date);
+        });
+
         log.debug("过期消息已删除");
     }
 
