@@ -702,6 +702,8 @@ public class ReportControllerTest extends SpringAppTest {
             product.setName("测试货品"+i);
             product.setPrice((float)1);
             product.setSpec("规格测试");
+            product.setIsLocalStock(1);
+            product.setMarketStatus(1);
             products[i]=productRepository.saveAndFlush(product);
 
 
