@@ -206,6 +206,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setUserId(user.getId());
         order.setUserType(0);
         order.setTitle("购买abcd1");
+        order.setIsProtect(1);
         order.setPrice(goods.getPrice());
         order.setAmount(1);
         order.setStatus(1);
@@ -232,6 +233,7 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
         order.setMerchant(merchant);
         order.setUserId(user.getId());
         order.setUserType(1);
+        order.setIsProtect(1);
         order.setTitle("购买abcd2");
         order.setPrice(goods.getPrice());
         order.setAmount(1);
