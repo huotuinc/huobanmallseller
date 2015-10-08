@@ -117,13 +117,13 @@ public class OrderServiceImpl implements OrderService {
         hql.append("select o from MainOrder o where o.merchant.id=:merchantId");
         switch (orderStatus){
             case 1:
-                hql.append(" and (o.payStatus=0 or o.payStatus=3)");
+                hql.append(" and o.payStatus=0");
                 break;
             case 2:
-                hql.append(" and (o.deliverStatus=0 or o.deliverStatus=1)");
+                hql.append(" and o.payStatus=1");
                 break;
             case 3:
-                hql.append(" and o.status=1");
+                hql.append(" and o.receivestatus=1");
                 break;
             default:
                 break;
@@ -264,7 +264,7 @@ public class OrderServiceImpl implements OrderService {
             case 0:
                 return "活动";
             case -1:
-                return "死单";
+                return "已关闭";
             case 2:
                 return "已完成";
             default:

@@ -83,12 +83,6 @@ public class Order {
     @Column(name = "Ship_Name")
     private String receiver;
 
-//    /**
-//     * 返利积分
-//     */
-//    private Integer score;
-
-
     /**
      * 商品数量
      */
@@ -133,6 +127,12 @@ public class Order {
      */
     @Column(nullable = false,name = "Is_Protect")
     private  Integer isProtect;
+
+    /**
+     * 接收状态
+     */
+    @Column(name = "Rel_receiveStatus")
+    private Integer receivestatus;
 
     public String getId() {
         return id;
@@ -268,5 +268,13 @@ public class Order {
 
     public void setMainOrderNo(String mainOrderNo) {
         this.mainOrderNo = mainOrderNo;
+    }
+
+    public Integer getReceivestatus() {
+        return receivestatus;
+    }
+
+    public void setReceivestatus(Integer receivestatus) {
+        this.receivestatus = receivestatus;
     }
 }

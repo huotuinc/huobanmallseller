@@ -368,7 +368,7 @@ public class GoodsController implements GoodsSystem {
         appLogisticsDetailModel.setNo(StringUtils.isEmpty(delivery.getNo())? "暂无编号信息" : delivery.getStatus());
 
         appLogisticsDetailModel.setList(appOrderListProductModels);
-        appLogisticsDetailModel.setPictureURL(commonConfigService.getWebUrl()+"resources/images/logistics.jpg");//todo 到时候图片需要修改
+        appLogisticsDetailModel.setPictureURL(null);//todo 到时候图片需要修改
 
         List<AppLogisticsDataModel> appLogisticsDataModels = new ArrayList<>();
         try {
@@ -445,7 +445,7 @@ public class GoodsController implements GoodsSystem {
             appSalesListModel.setOrderNo(order.getId());
             appSalesListModel.setMoney(order.getPrice());
             appSalesListModel.setTime(order.getTime());
-            appSalesListModel.setPictureUrl(commonConfigService.getWebUrl()+"resources/images/ddtb.png");//todo 订单图片设置
+            appSalesListModel.setPictureUrl(null);//todo 订单图片设置
             appSalesListModels[i] = appSalesListModel;
         }
         list.outputData(appSalesListModels);
