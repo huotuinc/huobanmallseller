@@ -63,7 +63,7 @@ public class SystemMaintaining {
     public void work() {
         messageService.deleteExceeds();
 
-        if (env.acceptsProfiles("test")) {
+        if (env.acceptsProfiles("aaatest")) {
             log.info("周期性清理缓存");
             Cache cache = entityManagerFactory.getCache();
             if (cache != null && cache instanceof JpaCache) {

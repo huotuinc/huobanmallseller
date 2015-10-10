@@ -299,8 +299,8 @@ public class SystemCountingImpl implements SystemCounting {
     private void deleteYesterdayHour() {
         countTodayMemberRepository.deleteAll();
         countTodayOrderRepository.deleteAll();
-        countDayPartnerRepository.deleteAll();
-        countDaySalesRepository.deleteAll();
+        countTodayPartnerRepository.deleteAll();
+        countTodaySalesRepository.deleteAll();
     }
 
 
@@ -402,7 +402,7 @@ public class SystemCountingImpl implements SystemCounting {
                 " ,count(log) as amount from UserChangeLog log " +
                 " where log.time<:startTime and log.changeType=:changeType " +
                 " group by log.merchant.id,year,month,day");
-        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+        List listQuery = userChangeLogRepository.queryHql(hql.toString(), query -> {
             query.setParameter("startTime", startTime);
             query.setParameter("changeType", 5);
         });
@@ -425,7 +425,7 @@ public class SystemCountingImpl implements SystemCounting {
                 " ,count(log) as amount from UserChangeLog log " +
                 " where log.time<:startTime and log.changeType in (2,6)" +
                 " group by log.merchant.id,year,month,day");
-        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+        List listQuery = userChangeLogRepository.queryHql(hql.toString(), query -> {
             query.setParameter("startTime", startTime);
         });
 
@@ -491,7 +491,7 @@ public class SystemCountingImpl implements SystemCounting {
         hql.append("select log.merchant.id,FUNC('dbo.hour',log.time) d,count(log) as amount from UserChangeLog log " +
                 " where log.time>=:beginTime and log.time<:endTime  and log.changeType=:changeType " +
                 " group by log.merchant.id,d");
-        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+        List listQuery = userChangeLogRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
             query.setParameter("changeType", 5);
@@ -514,7 +514,7 @@ public class SystemCountingImpl implements SystemCounting {
         hql.append("select log.merchant.id,FUNC('dbo.hour',log.time) d,count(log) as amount from UserChangeLog log " +
                 " where log.time>=:beginTime and log.time<:endTime   and log.changeType in (2,6) " +
                 " group by log.merchant.id,d");
-        List listQuery = orderRepository.queryHql(hql.toString(), query -> {
+        List listQuery = userChangeLogRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
             query.setParameter("endTime", endTime);
         });
