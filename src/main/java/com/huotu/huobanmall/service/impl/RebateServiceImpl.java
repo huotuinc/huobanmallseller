@@ -47,11 +47,13 @@ public class RebateServiceImpl implements RebateService {
         list.forEach(data -> {
             Object[] objects = (Object[]) data;
             User user = (User) objects[0];
-            AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
-            appTopScoreModel.setName(userService.getViewUserName(user));
-            appTopScoreModel.setScore(Integer.parseInt(objects[1].toString()));
-            appTopScoreModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());
-            result.add(appTopScoreModel);
+            if(!StringUtils.isEmpty(user)){
+                AppTopScoreModel appTopScoreModel = new AppTopScoreModel();
+                appTopScoreModel.setName(userService.getViewUserName(user));
+                appTopScoreModel.setScore(Integer.parseInt(objects[1].toString()));
+                appTopScoreModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());
+                result.add(appTopScoreModel);
+            }
         });
         return result;
     }

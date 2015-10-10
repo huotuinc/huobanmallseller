@@ -63,6 +63,12 @@ public class Goods {
     @Column(name = "Price")
     private float price;
 
+    /**
+     * 商品是否可用 0表示可用
+     */
+    @Column(name = "Disabled")
+    private Integer disabled;
+
 
     public Integer getId() {
         return id;
@@ -126,5 +132,13 @@ public class Goods {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Integer getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Integer disabled) {
+        this.disabled = disabled;
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 
 @Repository
 public interface GoodsRepository extends JpaRepository<Goods, Integer>, JpaSpecificationExecutor<Goods> {
-    //    List<Goods> countByOwnerAndStatus(Merchant merchant,Integer shilitingtatus);
-    Long countByOwnerAndStatus(Merchant merchant, Integer status);
+
+    Long countByOwnerAndDisabled(Merchant merchant, Integer status);
 
     List<Goods> findByOwner(Merchant owner);
 }

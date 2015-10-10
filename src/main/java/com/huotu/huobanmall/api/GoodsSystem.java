@@ -58,6 +58,7 @@ public interface GoodsSystem {
      * @param list     返回订单列表
      * @param status   订单状态 0 全部 1待付款 2待收货 3已完成
      * @param lastDate 上一个订单的下单时间
+     * @param keyword   搜索主订单的关键字
      * @return
      * @throws Exception
      */
@@ -77,7 +78,7 @@ public interface GoodsSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult mainOrderList(Output<AppMainOrderListModel[]>list,Integer status,
+    ApiResult mainOrderList(Output<AppMainOrderListModel[]>list,Output<AppOrderListModel[]> listz,Integer status,
                             @RequestParam(required = false) Long lastDate,
                             @RequestParam(required = false) String keyword) throws Exception;
 

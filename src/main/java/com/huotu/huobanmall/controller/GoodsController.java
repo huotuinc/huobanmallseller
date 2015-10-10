@@ -122,56 +122,76 @@ public class GoodsController implements GoodsSystem {
         } else {
             time = new Date(lastDate);
         }
-        List<Order> orderList = orderService.searchOrders(merchant.getId(), time, PAGE_SIZE, status, keyword);
-        AppOrderListModel[] appOrderListModels = new AppOrderListModel[orderList.size()];
-        int i = 0;
-        for (Order o : orderList) {
-            AppOrderListModel appOrderListModel = new AppOrderListModel();
-            //规格
-            List<OrderItems> orderItemses = orderItemsRepository.findByOrder(o);
-            List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<AppOrderListProductModel>();
-            for (int k = 0; k < orderItemses.size(); k++) {
-                AppOrderListProductModel appOrderListProductModel = new AppOrderListProductModel();
+//        List<Order> orderList = orderService.searchOrders(merchant.getId(), time, PAGE_SIZE, status, keyword);
 
-                OrderItems orderItems = orderItemses.get(k);
-                Product product = productRepository.findOne(orderItems.getProductId());
-                Goods goods = goodsRepository.findOne(orderItems.getGoodsId());
+        //主订单
+        List<MainOrder> mainOrderlist=orderService.searchMainOrders(merchant.getId(),time,PAGE_SIZE,status,keyword);
+        //主订单ID
+        List<String> mainOrderNo=new ArrayList<>();
+        mainOrderlist.forEach(data->{
+            mainOrderNo.add(data.getId());
+        });
 
-                appOrderListProductModel.setAmount(orderItems.getAmount());
-                appOrderListProductModel.setSpec(product.getSpec());
-                appOrderListProductModel.setTitle(product.getName());
-                appOrderListProductModel.setMoney(product.getPrice());
-                appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+        //子订单
+        List<Order> orderList;
+        if(mainOrderNo.size()!=0){
+            orderList=orderRepository.findByMainOrderNo(mainOrderNo);
+            AppOrderListModel[] appOrderListModels = new AppOrderListModel[orderList.size()];
+            int i = 0;
+            for (Order o : orderList) {
+                AppOrderListModel appOrderListModel = new AppOrderListModel();
+                //规格
+                List<OrderItems> orderItemses = orderItemsRepository.findByOrder(o);
+                List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<>();
+                for (int k = 0; k < orderItemses.size(); k++) {
+                    AppOrderListProductModel appOrderListProductModel = new AppOrderListProductModel();
 
-                appOrderListProductModels.add(appOrderListProductModel);
-            }
-            appOrderListModel.setList(appOrderListProductModels);
-            appOrderListModel.setOrderNo(o.getId());
-            appOrderListModel.setPaid(o.getPrice());
-            appOrderListModel.setAmount(o.getAmount());
-            switch (status){
-                case 0:
-                    appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus())+" "+orderService.getDeliverStatus(o.getDeliverStatus()));
-                case 1:
-                    appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus()));
-                case 2:
-                    appOrderListModel.setStatus(orderService.getDeliverStatus(o.getDeliverStatus()));
-                case 3:
-                    appOrderListModel.setStatus(orderService.getOrderStatus(o.getStatus()));
-                default:
+                    OrderItems orderItems = orderItemses.get(k);
+                    Product product = productRepository.findOne(orderItems.getProductId());
+                    Goods goods = goodsRepository.findOne(orderItems.getGoodsId());
+
+                    appOrderListProductModel.setAmount(orderItems.getAmount());
+                    appOrderListProductModel.setSpec(product.getSpec());
+                    appOrderListProductModel.setTitle(product.getName());
+                    appOrderListProductModel.setMoney(product.getPrice());
+                    appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+
+                    appOrderListProductModels.add(appOrderListProductModel);
+                }
+                appOrderListModel.setList(appOrderListProductModels);
+                appOrderListModel.setOrderNo(o.getId());
+                appOrderListModel.setPaid(o.getPrice());
+                appOrderListModel.setAmount(o.getAmount());
+                switch (status){
+                    case 0:
+                        appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus())+" "+orderService.getDeliverStatus(o.getDeliverStatus()));
+                        break;
+                    case 1:
+                        appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus()));
+                        break;
+                    case 2:
+                        appOrderListModel.setStatus(orderService.getDeliverStatus(o.getDeliverStatus()));
+                        break;
+                    case 3:
+                        appOrderListModel.setStatus(orderService.getOrderStatus(o.getStatus()));
+                        break;
+                    default:
                         appOrderListModel.setStatus("已关闭");
+                }
+                appOrderListModel.setTime(o.getTime());
+                appOrderListModels[i] = appOrderListModel;
+                i++;
             }
-            appOrderListModel.setTime(o.getTime());
-            appOrderListModels[i] = appOrderListModel;
-            i++;
+            list.outputData(appOrderListModels);
+        }else {
+            list.outputData(null);
         }
-        list.outputData(appOrderListModels);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
 
     @RequestMapping("/mainOrderList")
     @Override
-    public ApiResult mainOrderList(Output<AppMainOrderListModel[]> list, Integer status,
+    public ApiResult mainOrderList(Output<AppMainOrderListModel[]> list,Output<AppOrderListModel[]> listz, Integer status,
                                    @RequestParam(required = false) Long lastDate,
                                    @RequestParam(required = false) String keyword) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
@@ -197,6 +217,10 @@ public class GoodsController implements GoodsSystem {
         }else {
             orders=null;
         }
+
+
+
+
 
 
 
