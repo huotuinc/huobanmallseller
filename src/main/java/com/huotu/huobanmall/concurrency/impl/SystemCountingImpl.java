@@ -145,7 +145,7 @@ public class SystemCountingImpl implements SystemCounting {
         List<CountTodaySales> list = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
         hql.append("select order.merchant.id,sum(order.fi) as amount from Order order " +
-                " where order.payTime>=:beginTime and order.payTime<:endTime and order.payStatus=1 order.status<>-1 " +
+                " where order.payTime>=:beginTime and order.payTime<:endTime and order.payStatus=1 and order.status<>-1 " +
                 " group by order.merchant.id");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
