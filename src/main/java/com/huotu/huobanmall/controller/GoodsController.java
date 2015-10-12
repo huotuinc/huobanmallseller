@@ -82,7 +82,7 @@ public class GoodsController implements GoodsSystem {
             Goods good = lists.get(i);
             appGoodListModel.setGoodsId(good.getId());
             appGoodListModel.setTitle(good.getTitle());
-            appGoodListModel.setPictureUrl(good.getPictureUrl());
+            appGoodListModel.setPictureUrl(commonConfigService.getResoureServerUrl()+good.getSmallPic());
             appGoodListModel.setStock(good.getStock());
             appGoodListModel.setPrice(good.getPrice());
             if (good.getCategory() == null) {
@@ -136,12 +136,14 @@ public class GoodsController implements GoodsSystem {
         List<Order> orderList;
         if(mainOrderNo.size()!=0){
             orderList=orderRepository.findByMainOrderNo(mainOrderNo);
+            //子订单列表
             AppOrderListModel[] appOrderListModels = new AppOrderListModel[orderList.size()];
             int i = 0;
             for (Order o : orderList) {
                 AppOrderListModel appOrderListModel = new AppOrderListModel();
                 //规格
                 List<OrderItems> orderItemses = orderItemsRepository.findByOrder(o);
+                //每个子订单里的商品列表
                 List<AppOrderListProductModel> appOrderListProductModels = new ArrayList<>();
                 for (int k = 0; k < orderItemses.size(); k++) {
                     AppOrderListProductModel appOrderListProductModel = new AppOrderListProductModel();
@@ -498,6 +500,7 @@ public class GoodsController implements GoodsSystem {
             AppConsumeListModel appConsumeListModel = new AppConsumeListModel();
             appConsumeListModel.setPictureUrl(user == null ? "" : user.getUserFace());
             appConsumeListModel.setName(userService.getViewUserName(user));
+            appConsumeListModel.setAmount(1);
             appConsumeListModel.setMoney(order.getPrice());
             appConsumeListModel.setTime(order.getTime());
             appConsumeListModels[i] = appConsumeListModel;

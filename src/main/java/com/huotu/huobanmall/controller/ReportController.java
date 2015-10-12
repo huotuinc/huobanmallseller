@@ -6,10 +6,7 @@ import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
 import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
-import com.huotu.huobanmall.entity.Merchant;
-import com.huotu.huobanmall.entity.Order;
-import com.huotu.huobanmall.entity.Product;
-import com.huotu.huobanmall.entity.User;
+import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.GoodsRepository;
 import com.huotu.huobanmall.repository.ProductRepository;
@@ -65,6 +62,9 @@ public class ReportController implements ReportSystem {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    CommonConfigService commonConfigService;
 
     @Override
     @RequestMapping("/newToday")
@@ -493,18 +493,22 @@ public class ReportController implements ReportSystem {
     @RequestMapping("/topGoods")
     public ApiResult topGoods(Output<AppTopGoodsModel[]> list) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        List<Object[]> toplist = sellLogService.countTopGoodList(merchant, new PageRequest(0, TOP_PAGE)).getContent();
+        List<Object[]> toplist = sellLogService.countTopGoodList(merchant);
         AppTopGoodsModel[] appTopGoodsModels = new AppTopGoodsModel[toplist.size()];
         for (int i = 0; i < toplist.size(); i++) {
             AppTopGoodsModel appTopGoodsModel = new AppTopGoodsModel();
             Object[] objects = toplist.get(i);
-            Integer productId = (Integer) objects[0];
-            Product product = productRepository.findOne(productId);
+
+
+
+            String goodName = (String) objects[0];
+//            Product product = productRepository.findOne(productId);
             long amount = (Long) objects[1];
-            appTopGoodsModel.setTitle(product.getName());
+            Integer goodId=(Integer)objects[2];
+            appTopGoodsModel.setTitle(goodName);
             appTopGoodsModel.setAmount((int) amount);
-            appTopGoodsModel.setPrice(product.getPrice());
-            appTopGoodsModel.setPicture(product.getGoods().getPictureUrl());
+//            appTopGoodsModel.setPrice(product.getPrice());
+            appTopGoodsModel.setPicture(commonConfigService.getResoureServerUrl() + goodsRepository.findOne(goodId).getSmallPic());
             appTopGoodsModels[i] = appTopGoodsModel;
         }
         list.outputData(appTopGoodsModels);

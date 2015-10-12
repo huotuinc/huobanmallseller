@@ -52,7 +52,7 @@ public class Goods {
     private Integer stock;
 
     /**
-     * 商品状态 1 上架 2 下架 3 删除 todo 根据实际情况需要修改
+     * 商品状态 1 上架 0 下架  todo 根据实际情况需要修改
      */
     @Column(name = "Marketable")
     private Integer status;
@@ -68,6 +68,12 @@ public class Goods {
      */
     @Column(name = "Disabled")
     private Integer disabled;
+
+    /**
+     * 商品小图
+     */
+    @Column(name = "Small_Pic")
+    private String smallPic;
 
 
     public Integer getId() {
@@ -140,5 +146,13 @@ public class Goods {
 
     public void setDisabled(Integer disabled) {
         this.disabled = disabled;
+    }
+
+    public String getSmallPic() {
+        return smallPic;
+    }
+
+    public void setSmallPic(String smallPic) {
+        this.smallPic = smallPic;
     }
 }

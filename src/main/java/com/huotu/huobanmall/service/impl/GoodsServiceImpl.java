@@ -33,22 +33,30 @@ public class GoodsServiceImpl implements GoodsService {
             @Override
             public Predicate toPredicate(Root<Goods> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 if(status==null&&lastProductId==null){
-                    return cb.equal(root.get("owner").as(Merchant.class),merchant);
+                    return cb.and(
+                            cb.equal(root.get("disabled").as(Integer.class),0),
+                            cb.equal(root.get("owner").as(Merchant.class), merchant)
+                    );
+
                 }
                 else if(status==null){
                     return cb.and(
+                            cb.equal(root.get("disabled").as(Integer.class),0),
                             cb.equal(root.get("owner").as(Merchant.class),merchant),
                             cb.lessThan(root.get("id").as(Integer.class), lastProductId)
                     );
                 }else if(lastProductId==null){
                     return cb.and(
-                            cb.equal(root.get("owner").as(Merchant.class),merchant),
-                            cb.equal(root.get("status").as(Integer.class),status)
+                            cb.equal(root.get("disabled").as(Integer.class),0),
+                            cb.equal(root.get("status").as(Integer.class),status),
+                            cb.equal(root.get("owner").as(Merchant.class),merchant)
+
                     );
                 }else{
                     return cb.and(
-                            cb.equal(root.get("owner").as(Merchant.class),merchant),
+                            cb.equal(root.get("disabled").as(Integer.class),0),
                             cb.equal(root.get("status").as(Integer.class),status),
+                            cb.equal(root.get("owner").as(Merchant.class),merchant),
                             cb.lessThan(root.get("id").as(Integer.class),lastProductId)
                     );
                 }
