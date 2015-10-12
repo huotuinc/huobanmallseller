@@ -40,6 +40,12 @@ public class CountServiceImpl implements CountService {
     @Autowired
     private CountTodaySalesRepository countTodaySalesRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
 
     @Override
     public Map<Integer,Integer> todayOrder(Merchant merchant) {
@@ -157,11 +163,11 @@ public class CountServiceImpl implements CountService {
                 count = 0F;
             }
         }
-
-        Integer lastHour = list.get(list.size() - 1).getHour();
-        if (lastHour % 3 != 0)
-            result.put(lastHour - lastHour % 3 + 3, count);
-
+        if(list.size()>0){
+            Integer lastHour = list.get(list.size() - 1).getHour();
+            if (lastHour % 3 != 0)
+                result.put(lastHour - lastHour % 3 + 3, count);
+        }
         return result;
     }
 
@@ -192,26 +198,66 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Float getTotalSales(Merchant merchant) {
-        List<CountDaySales> countDaySales=countDaySalesRepository.findByMerchantId(merchant.getId());
-       return ((Number)  countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum()).floatValue();
+//        List<CountDaySales> countDaySales=countDaySalesRepository.findByMerchantId(merchant.getId());
+//       return ((Number)  countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum()).floatValue();
+
+        StringBuffer hql = new StringBuffer();
+        hql.append("SELECT SUM(o.price) FROM Order o where o.status<>-1 and o.payStatus=1 and o.merchant.id=:merchantId");
+        List sum =orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("merchantId",merchant.getId());
+        });
+        return ((Double)sum.get(0)).floatValue();
+//        double data=(Double)sum.get(0);
+//        return (float)data;
     }
 
     @Override
     public Long getTotalOrders(Merchant merchant) {
-        List<CountDayOrder> countDayOrders=countDayOrderRepository.findByMerchantId(merchant.getId());
-        return countDayOrders.stream().mapToLong((x) -> x.getAmount()).summaryStatistics().getSum();
+//        List<CountDayOrder> countDayOrders=countDayOrderRepository.findByMerchantId(merchant.getId());
+//        return countDayOrders.stream().mapToLong((x) -> x.getAmount()).summaryStatistics().getSum();
+//SELECT ISNULL(SUM(Final_Amount),0) AS TotalAmount,COUNT(1) AS OrderNum FROM Mall_Orders WHERE Status<>-1 AND Pay_Status=1 AND Customer_Id={0}
+
+
+
+        StringBuffer hql = new StringBuffer();
+        hql.append("select count(1) from Order o where o.status<>-1 and o.payStatus=1 and o.merchant.id=:merchantId");
+        List sum =orderRepository.queryHql(hql.toString(), query -> {
+            query.setParameter("merchantId",merchant.getId());
+        });
+
+
+//        return Long.parseLong(sum.get(0).toString());
+        return (long)sum.get(0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     @Override
     public Long getTotalMembers(Merchant merchant) {
-        List<CountDayMember> countDayMembers=countDayMemberRepository.findByMerchantId(merchant.getId());
-        return countDayMembers.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
+//        List<CountDayMember> countDayMembers=countDayMemberRepository.findByMerchantId(merchant.getId());
+//        return countDayMembers.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
+        return userRepository.countByMerchant(merchant);
     }
 
     @Override
-    public Long getTotalPartner(Merchant merchant) {
-        List<CountDayPartner> countDayPartners=countDayPartnerRepository.findByMerchantId(merchant.getId());
-        return countDayPartners.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
+    public Long getTotalMembersType(Merchant merchant,Integer status) {
+//        List<CountDayPartner> countDayPartners=countDayPartnerRepository.findByMerchantId(merchant.getId());
+//        return countDayPartners.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
+        return userRepository.countByMerchantAndType(merchant,status);
     }
 
     @Override

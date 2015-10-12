@@ -129,7 +129,7 @@ public class Order {
     private  Integer isProtect;
 
     /**
-     * 接收状态
+     * 接收状态    1为签收
      */
     @Column(name = "Rel_receiveStatus")
     private Integer receivestatus;

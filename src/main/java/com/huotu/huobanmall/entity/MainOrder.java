@@ -57,6 +57,12 @@ public class MainOrder {
     @Column(name = "Createtime")
     private Date  time;
 
+    /**
+     * 接收状态  1为签收
+     */
+    @Column(name = "Rel_receiveStatus")
+    private Integer receivestatus;
+
     public String getId() {
         return id;
     }
@@ -111,5 +117,13 @@ public class MainOrder {
 
     public void setDeliverStatus(Integer deliverStatus) {
         this.deliverStatus = deliverStatus;
+    }
+
+    public Integer getReceivestatus() {
+        return receivestatus;
+    }
+
+    public void setReceivestatus(Integer receivestatus) {
+        this.receivestatus = receivestatus;
     }
 }

@@ -145,7 +145,7 @@ public class SystemCountingImpl implements SystemCounting {
         List<CountTodaySales> list = new ArrayList<>();
         StringBuilder hql = new StringBuilder();
         hql.append("select order.merchant.id,sum(order.fi) as amount from Order order " +
-                " where order.payTime>=:beginTime and order.payTime<:endTime and order.payStatus=1 " +
+                " where order.payTime>=:beginTime and order.payTime<:endTime and order.payStatus=1 order.status<>-1 " +
                 " group by order.merchant.id");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);
@@ -377,7 +377,7 @@ public class SystemCountingImpl implements SystemCounting {
         StringBuilder hql = new StringBuilder();
         hql.append("select order.merchant.id,FUNC('year',order.time) as year,FUNC('month',order.time) as month,FUNC('day',order.time) as day" +
                 " ,sum(order.price) as amount from Order order " +
-                " where order.time<:startTime and order.payStatus=1 " +
+                " where order.time<:startTime and order.payStatus=1 and order.status<>-1 " +
                 " group by order.merchant.id,year,month,day");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("startTime", startTime);
@@ -467,7 +467,7 @@ public class SystemCountingImpl implements SystemCounting {
 
         StringBuilder hql = new StringBuilder();
         hql.append("select order.merchant.id,FUNC('dbo.hour',order.time) d,sum(order.price) as amount from Order order " +
-                " where order.time>=:beginTime and order.time<:endTime  and order.payStatus=1 " +
+                " where order.time>=:beginTime and order.time<:endTime  and order.payStatus=1 and order.status<>-1 " +
                 " group by order.merchant.id,d");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);

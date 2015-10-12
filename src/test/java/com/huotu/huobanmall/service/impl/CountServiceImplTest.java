@@ -1,6 +1,7 @@
 package com.huotu.huobanmall.service.impl;
 
 import com.huotu.huobanmall.entity.Merchant;
+import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.service.CountService;
 import com.huotu.huobanmall.test.TestWebConfig;
 import com.huotu.huobanmall.test.WebTestBase;
@@ -24,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CountServiceImplTest  extends WebTestBase {
     @Autowired
     CountService countService;
+    @Autowired
+    MerchantRepository merchantRepository;
 
     @Test
     public void testTodayOrder() throws Exception {
@@ -33,8 +36,17 @@ public class CountServiceImplTest  extends WebTestBase {
 
     @Test
     public void testGetTotalSales() throws Exception {
-        Float i=countService.getTotalSales(new Merchant());
+        Merchant merchant=merchantRepository.findOne(3447);
+        double sum=countService.getTotalSales(merchant);
+//        Assert.assertEquals(212506.01, sum);
 
+    }
+
+    @Test
+    public void testGetTotalOrders() throws Exception {
+        Merchant merchant=merchantRepository.findOne(3447);
+        long sum=countService.getTotalOrders(merchant);
+//        Assert.assertEquals(1511,sum);
 
     }
 }

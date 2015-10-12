@@ -19,6 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     List<User> findByMerchantAndType(Merchant merchant,Integer type);
     List<User> findByMerchantAndTypeAndRegTimeGreaterThan(Merchant merchant,Integer type,Date date);
     Long countByMerchant(Merchant merchant);
+    Long countByMerchantAndType(Merchant merchant,Integer status);
 
 
 

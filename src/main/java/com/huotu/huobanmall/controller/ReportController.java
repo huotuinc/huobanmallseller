@@ -133,7 +133,7 @@ public class ReportController implements ReportSystem {
         float countDodaySales = orderService.countSale(merchant);
         todaySales.outputData(countDodaySales);
         //返回总销售额
-        totalSales.outputData(countService.getTotalSales(merchant) + countDodaySales);
+        totalSales.outputData(countService.getTotalSales(merchant));
         //返回今日新增订单数
         todayOrderAmount.outputData(orderService.countOrderQuantity(merchant));
         //返回今日新增会员数
@@ -180,7 +180,7 @@ public class ReportController implements ReportSystem {
         monthAmount.outputData(mapMonth.values().stream().mapToInt((x) -> x).summaryStatistics().getSum());
 
 
-        totalAmount.outputData(countService.getTotalOrders(apm.getCurrentUser()) + todayCountAmount);
+        totalAmount.outputData(countService.getTotalOrders(apm.getCurrentUser()));
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -221,7 +221,7 @@ public class ReportController implements ReportSystem {
         monthAmounts.outputData(mapMonth.values().toArray(new Float[mapMonth.values().size()]));
         monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
 
-        totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser()) + todayCountSales);
+        totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser()));
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -361,9 +361,9 @@ public class ReportController implements ReportSystem {
         monthPartnerAmounts.outputData(listMonthPartnerAmounts.toArray(new Integer[listMonthPartnerAmounts.size()]));
 
         //统计注册会员总数
-        totalMember.outputData(countService.getTotalMembers(apm.getCurrentUser()) + todayCountMemberAmount);
+        totalMember.outputData(countService.getTotalMembers(apm.getCurrentUser()));
         //统计分销商的总数
-        totalPartner.outputData(countService.getTotalPartner(apm.getCurrentUser()) + todayCountPartnerAmount);
+        totalPartner.outputData(countService.getTotalMembersType(apm.getCurrentUser(),1));
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -416,13 +416,19 @@ public class ReportController implements ReportSystem {
     public ApiResult otherStatistics(Output<AppOtherInfoModel> otherInfoList) throws Exception {
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
         AppOtherInfoModel appOtherInfoModel = new AppOtherInfoModel();
-        appOtherInfoModel.setBillAmount(countService.getTotalOrders(merchant)
-                + countService.todayOrder(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+        appOtherInfoModel.setBillAmount(countService.getTotalOrders(merchant));
+//                + countService.todayOrder(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+
+
         appOtherInfoModel.setGoodsAmount(goodsService.countByMerchant(merchant));
-        appOtherInfoModel.setDiscributorAmount(countService.getTotalPartner(merchant)
-                + countService.todayPartner(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
-        appOtherInfoModel.setMemberAmount(countService.getTotalMembers(merchant)
-                + countService.todayMember(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+
+
+        appOtherInfoModel.setDiscributorAmount(countService.getTotalMembersType(merchant,1));
+//                + countService.todayPartner(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
+
+
+        appOtherInfoModel.setMemberAmount(countService.getTotalMembersType(merchant,0));
+//                + countService.todayMember(merchant).values().stream().mapToInt(x -> x).summaryStatistics().getSum());
         otherInfoList.outputData(appOtherInfoModel);
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
