@@ -254,7 +254,7 @@ public class CountServiceImpl implements CountService {
     public Long getTotalMembers(Merchant merchant) {
 //        List<CountDayMember> countDayMembers=countDayMemberRepository.findByMerchantId(merchant.getId());
 //        return countDayMembers.stream().mapToLong((x)->x.getAmount()).summaryStatistics().getSum();
-        return userRepository.countByMerchant(merchant);
+        return userRepository.countByMerchantAndTypeNot(merchant,-1);
     }
 
     @Override

@@ -47,6 +47,8 @@ public interface UserService {
     /**
      * Create by shiliting on 2015/9/19
      * 获取显示的用户名(按照优先级显示)
+     * 显示优先级：1.真实姓名，2.微信昵称，3.电话号码，4.用户名
+     * 如果User为空则显示""
      * @return
      */
     String getViewUserName(User user);

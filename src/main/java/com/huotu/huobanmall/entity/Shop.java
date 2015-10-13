@@ -33,7 +33,7 @@ public class Shop {
     /**
      * 店铺描述
      */
-    @Column(name = "SaleTag")
+    @Column(name = "MallIntro")
     private String discription;
 
     /**

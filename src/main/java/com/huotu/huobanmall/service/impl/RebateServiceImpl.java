@@ -34,7 +34,7 @@ public class RebateServiceImpl implements RebateService {
     @Override
     public List<AppTopScoreModel> topScore(Merchant merchant) {
         StringBuilder hql = new StringBuilder();
-        hql.append("select user,sum(r.score) amount from Rebate r left join User user on user.id=r.userId " +
+        hql.append("select user,sum(r.score) amount from User user left join Rebate r on user.id=r.userId " +
                 " where r.merchant.id=:merchantId and r.type<>4 " +
                 " group by user order by amount desc");
         List list = rebateRepository.queryHql(hql.toString(), query -> {

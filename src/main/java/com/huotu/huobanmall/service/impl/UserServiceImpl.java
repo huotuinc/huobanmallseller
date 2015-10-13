@@ -10,6 +10,7 @@ import com.huotu.huobanmall.repository.UserRepository;
 import com.huotu.huobanmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -69,9 +70,9 @@ public class UserServiceImpl implements UserService{
         String wxNickName=user.getWxNickName();
         String mobile=user.getMobile();
         String userName=user.getUsername();
-        if(realName==null||realName==""){
-            if(wxNickName==null||wxNickName==""){
-                if(mobile==null||mobile==""){
+        if(StringUtils.isEmpty(realName)){
+            if(StringUtils.isEmpty(wxNickName)){
+                if(StringUtils.isEmpty(mobile)){
                     return userName;
                 }else {
                     return mobile;
