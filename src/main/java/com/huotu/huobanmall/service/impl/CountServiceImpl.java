@@ -6,6 +6,7 @@ import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.CountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -206,6 +207,9 @@ public class CountServiceImpl implements CountService {
         List sum =orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("merchantId",merchant.getId());
         });
+        if(StringUtils.isEmpty(sum.get(0))){
+            return 0.0f;
+        }
         return ((Double)sum.get(0)).floatValue();
 //        double data=(Double)sum.get(0);
 //        return (float)data;

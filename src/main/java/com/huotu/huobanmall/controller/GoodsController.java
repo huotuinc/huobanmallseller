@@ -164,6 +164,7 @@ public class GoodsController implements GoodsSystem {
                 appOrderListModel.setOrderNo(o.getId());
                 appOrderListModel.setPaid(o.getPrice());
                 appOrderListModel.setAmount(o.getAmount());
+                appOrderListModel.setMainOrderNo(o.getMainOrderNo());
                 switch (status){
                     case 0:
                         appOrderListModel.setStatus(orderService.getPayStatus(o.getPayStatus())+" "+orderService.getDeliverStatus(o.getDeliverStatus()));

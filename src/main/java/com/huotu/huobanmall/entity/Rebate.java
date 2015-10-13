@@ -82,7 +82,8 @@ public class Rebate {
     @Column(name = "UTIH_NewType")
     private Integer gainer;
 
-
+    @Column(name = "UTIH_Type")
+    private Integer type;
 
     public Integer getId() {
         return id;
@@ -164,5 +165,13 @@ public class Rebate {
 
     public void setScore(Integer scores) {
         this.score = scores;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

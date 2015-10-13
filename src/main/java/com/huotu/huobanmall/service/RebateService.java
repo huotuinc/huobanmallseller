@@ -14,10 +14,9 @@ public interface RebateService {
     /**
      * 返利积分排行 10
      * @param merchant
-     * @param status
      * @return
      */
-    List<AppTopScoreModel> topScore(Merchant merchant,Integer status);
+    List<AppTopScoreModel> topScore(Merchant merchant);
 
     /**
      * 最高返利会员

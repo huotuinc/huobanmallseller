@@ -439,7 +439,7 @@ public class ReportController implements ReportSystem {
     public ApiResult topScore(Output<AppTopScoreModel[]> list) throws Exception {
 
         AppPublicModel apm = PublicParameterHolder.getParameters();
-        List<AppTopScoreModel> list1 =  rebateService.topScore(apm.getCurrentUser(), 1);
+        List<AppTopScoreModel> list1 =  rebateService.topScore(apm.getCurrentUser());
         list.outputData(list1.toArray(new AppTopScoreModel[list1.size()]));
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
