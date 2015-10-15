@@ -6,7 +6,6 @@ import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.CountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -50,16 +49,12 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Integer,Integer> todayOrder(Merchant merchant) {
-        Map<Integer,Integer> map=new TreeMap<Integer,Integer>();
+        Map<Integer,Integer> map=DateHelper.getTimeAbscissa(Integer.class);
         List<CountTodayOrder> listOrder=countTodayOrderRepository.findByMerchantId(merchant.getId());
+
         for(int i=1;i<=listOrder.size();i++){
             CountTodayOrder countTodayOrder=listOrder.get(i-1);
-            int p=(i+2)/3*3;
-            if(map.get(p)==null){
-                map.put(p,countTodayOrder.getAmount());
-            }else{
-                map.put(p,map.get(p)+countTodayOrder.getAmount());
-            }
+            map.put(countTodayOrder.getHour(),countTodayOrder.getAmount());
 
         }
         return map;
@@ -67,23 +62,24 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Integer, Integer> todayMember(Merchant merchant) {
-        Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
+        Map<Integer, Integer> map = DateHelper.getTimeAbscissa(Integer.class);
         List<CountTodayMember> listMember = countTodayMemberRepository.findByMerchantId(merchant.getId());
         for (int i = 1; i <=listMember.size(); i++) {
             CountTodayMember countTodayMember = listMember.get(i-1);
-            int p=(i+2)/3*3;
-            if (map.get(p) == null) {
-                map.put(p, countTodayMember.getAmount());
-            } else {
-                map.put(p, map.get(p) + countTodayMember.getAmount());
-            }
+            map.put(countTodayMember.getHour(),countTodayMember.getAmount());
+//            int p=(i+2)/3*3;
+//            if (map.get(p) == null) {
+//                map.put(p, countTodayMember.getAmount());
+//            } else {
+//                map.put(p, map.get(p) + countTodayMember.getAmount());
+//            }
         }
         return map;
 
     }
     @Override
     public Map<Date, Integer> getWeekOrder(Merchant merchant) {
-        Map<Date, Integer> result = new TreeMap<>();
+        Map<Date, Integer> result = DateHelper.getWeekAbscissa(Integer.class);
         Date date = DateHelper.getThisWeekBegin();
         List<CountDayOrder> list = countDayOrderRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayOrder countDayOrder : list) {
@@ -105,7 +101,7 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Date, Integer> getWeekMember(Merchant merchant) {
-        Map<Date, Integer> result = new TreeMap<>();
+        Map<Date, Integer> result =DateHelper.getWeekAbscissa(Integer.class);
         Date date = DateHelper.getThisWeekBegin();
         List<CountDayMember> list = countDayMemberRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayMember countDayMember : list) {
@@ -127,7 +123,7 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Date, Integer> getWeekPartner(Merchant merchant) {
-        Map<Date, Integer> result = new TreeMap<>();
+        Map<Date, Integer> result = DateHelper.getWeekAbscissa(Integer.class);
         Date date = DateHelper.getThisWeekBegin();
         List<CountDayPartner> list = countDayPartnerRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDayPartner countDayPartner : list) {
@@ -149,35 +145,33 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Map<Integer, Float> getDaySales(Merchant merchant) {
-        Map<Integer, Float> result = new TreeMap<>();
-        List<CountTodaySales> list = countTodaySalesRepository.findAllByMerchantIdOrderByHour(merchant.getId());
+        Map<Integer, Float> result = DateHelper.getTimeAbscissa(Float.class);
         Calendar calendar = Calendar.getInstance();
         Integer curHour = calendar.get(Calendar.HOUR_OF_DAY);
+        List<CountTodaySales> list = countTodaySalesRepository.findAllByMerchantIdOrderByHour(merchant.getId());
 
-        Float count = 0F;
         for (CountTodaySales countTodaySales : list) {
             Integer hour = countTodaySales.getHour();
             if (hour > curHour) break;
-            count += countTodaySales.getMoney();
-            if (hour % 3 == 0) {
-                result.put(hour, count);
-                count = 0F;
-            }
+            int realhour=(hour+2)/3*3;
+            result.put(realhour,result.get(realhour)+countTodaySales.getMoney());
+//            count += countTodaySales.getMoney();
+//            if (hour % 3 == 0) {
+//                result.put(hour, count);
+//                count = 0F;
+//            }
         }
-        if(list.size()>0){
-            Integer lastHour = list.get(list.size() - 1).getHour();
-            if (lastHour % 3 != 0)
-                result.put(lastHour - lastHour % 3 + 3, count);
-        }
+//        if(list.size()>0){
+//            Integer lastHour = list.get(list.size() - 1).getHour();
+//            if (lastHour % 3 != 0)
+//                result.put(lastHour - lastHour % 3 + 3, count);
+//        }
         return result;
     }
 
     @Override
     public Map<Date, Float> getWeekSales(Merchant merchant) {
-
-
-
-        Map<Date, Float> result = new TreeMap<>();
+        Map<Date, Float> result = DateHelper.getWeekAbscissa(Float.class);
         Date date = DateHelper.getThisWeekBegin();
         List<CountDaySales> list = countDaySalesRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDaySales countDaySales : list) {
@@ -199,20 +193,20 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Float getTotalSales(Merchant merchant) {
-//        List<CountDaySales> countDaySales=countDaySalesRepository.findByMerchantId(merchant.getId());
-//       return ((Number)  countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum()).floatValue();
+        List<CountDaySales> countDaySales=countDaySalesRepository.findByMerchantId(merchant.getId());
+       return ((Number)  countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum()).floatValue();
 
-        StringBuffer hql = new StringBuffer();
-        hql.append("SELECT SUM(o.price) FROM Order o where o.status<>-1 and o.payStatus=1 and o.merchant.id=:merchantId");
-        List sum =orderRepository.queryHql(hql.toString(), query -> {
-            query.setParameter("merchantId",merchant.getId());
-        });
-        if(StringUtils.isEmpty(sum.get(0))){
-            return 0.0f;
-        }
-        return ((Double)sum.get(0)).floatValue();
-//        double data=(Double)sum.get(0);
-//        return (float)data;
+//        StringBuffer hql = new StringBuffer();
+//        hql.append("SELECT SUM(o.price) FROM Order o where o.status<>-1 and o.payStatus=1 and o.merchant.id=:merchantId");
+//        List sum =orderRepository.queryHql(hql.toString(), query -> {
+//            query.setParameter("merchantId",merchant.getId());
+//        });
+//        if(StringUtils.isEmpty(sum.get(0))){
+//            return 0.0f;
+//        }
+//        return ((Double)sum.get(0)).floatValue();
+////        double data=(Double)sum.get(0);
+////        return (float)data;
     }
 
     @Override
@@ -232,22 +226,6 @@ public class CountServiceImpl implements CountService {
 
 //        return Long.parseLong(sum.get(0).toString());
         return (long)sum.get(0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -270,12 +248,13 @@ public class CountServiceImpl implements CountService {
         List<CountTodayPartner> listPartner=countTodayPartnerRepository.findByMerchantId(merchant.getId());
         for(int i=1;i<=listPartner.size();i++){
             CountTodayPartner countTodayPartner=listPartner.get(i-1);
-            int p=(i+2)/3*3;
-            if(map.get(p)==null){
-                map.put(p,countTodayPartner.getAmount());
-            }else{
-                map.put(p,map.get(p)+countTodayPartner.getAmount());
-            }
+            map.put(countTodayPartner.getHour(),countTodayPartner.getAmount());
+//            int p=(i+2)/3*3;
+//            if(map.get(p)==null){
+//                map.put(p,countTodayPartner.getAmount());
+//            }else{
+//                map.put(p,map.get(p)+countTodayPartner.getAmount());
+//            }
         }
         return map;
     }

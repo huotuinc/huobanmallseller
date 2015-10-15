@@ -47,19 +47,26 @@ public class OrderServiceImpl implements OrderService {
             @Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 if(StringUtils.isEmpty(keyword)&&StringUtils.isEmpty(time)){
-                    return cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId);
+                    return cb.and(
+                            cb.equal(root.get("payStatus").as(Integer.class),1),
+                            cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId)
+                    );
+
                 }else if(StringUtils.isEmpty(keyword)){
                     return cb.and(
+                            cb.equal(root.get("payStatus").as(Integer.class),1),
                             cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
                             cb.lessThan(root.get("time").as(Date.class), time)
                     );
                 }else if(StringUtils.isEmpty(time)){
                     return cb.and(
+                            cb.equal(root.get("payStatus").as(Integer.class),1),
                             cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
                             cb.like(root.get("id").as(String.class), "%" + keyword + "%")
                     );
                 }else {
                     return cb.and(
+                            cb.equal(root.get("payStatus").as(Integer.class),1),
                             cb.equal(root.get("merchant").get("id").as(Integer.class), merchantId),
                             cb.lessThan(root.get("time").as(Date.class), time),
                             cb.like(root.get("id").as(String.class), "%" + keyword + "%")

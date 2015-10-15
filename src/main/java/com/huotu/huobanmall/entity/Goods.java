@@ -75,6 +75,12 @@ public class Goods {
     @Column(name = "Small_Pic")
     private String smallPic;
 
+    /**
+     * 排序字段
+     */
+    @Column(name = "D_Order")
+    private Integer dOrder;
+
 
     public Integer getId() {
         return id;
@@ -154,5 +160,13 @@ public class Goods {
 
     public void setSmallPic(String smallPic) {
         this.smallPic = smallPic;
+    }
+
+    public Integer getdOrder() {
+        return dOrder;
+    }
+
+    public void setdOrder(Integer dOrder) {
+        this.dOrder = dOrder;
     }
 }

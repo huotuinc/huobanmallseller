@@ -507,46 +507,50 @@ public class ReportControllerTest extends SpringAppTest {
 
     @Test
     public void testTopScore() throws Exception {
-
-        List<Long> listScore = new ArrayList<>();
-        for (int n = 0; n < 15; n++) {
-            List<Rebate> rebateList = new ArrayList<>();
-            User user = generateUser(userRepository, mockMerchant);
-            Order order = generateOrder(orderRepository, mockMerchant, user);
-
-            Date date = new Date();
-            Random random = new Random();
-            for (int i = 0; i < 5; i++) {
-                Rebate rebate = new Rebate();
-                rebate.setOrder(order);
-                rebate.setTime(date);
-                rebate.setActualTime(date);
-                rebate.setGainer(1);
-                rebate.setMerchant(mockMerchant);
-                rebate.setScheduledTime(date);
-                rebate.setScore(random.nextInt(1000));
-                rebate.setStatus(1);
-                rebate.setUserId(user.getId());
-                rebateRepository.saveAndFlush(rebate);
-                rebateList.add(rebate);
-            }
-
-            listScore.add(rebateList.stream().mapToInt(x -> x.getScore()).summaryStatistics().getSum());
-        }
-
-        String result = mockMvc.perform(device.getApi("topScore")
-                .build())
-                .andDo(print())
-                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
-                .andReturn().getResponse().getContentAsString();
-
-        List<Object> list = JsonPath.read(result, "$.resultData.list");
-
-        Assert.assertEquals("总条数", 10, list.size());
-        //判断对一个top
-        Assert.assertEquals("top one score"
-                , String.valueOf(listScore.stream().mapToLong(x -> x).summaryStatistics().getMax())
-                , JsonPath.read(list.get(0), "$.score").toString());
+        Calendar c=Calendar.getInstance();
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        c.add(Calendar.DAY_OF_YEAR,1);
+        System.out.print("时间："+c.getTime());
+//
+//        List<Long> listScore = new ArrayList<>();
+//        for (int n = 0; n < 15; n++) {
+//            List<Rebate> rebateList = new ArrayList<>();
+//            User user = generateUser(userRepository, mockMerchant);
+//            Order order = generateOrder(orderRepository, mockMerchant, user);
+//
+//            Date date = new Date();
+//            Random random = new Random();
+//            for (int i = 0; i < 5; i++) {
+//                Rebate rebate = new Rebate();
+//                rebate.setOrder(order);
+//                rebate.setTime(date);
+//                rebate.setActualTime(date);
+//                rebate.setGainer(1);
+//                rebate.setMerchant(mockMerchant);
+//                rebate.setScheduledTime(date);
+//                rebate.setScore(random.nextInt(1000));
+//                rebate.setStatus(1);
+//                rebate.setUserId(user.getId());
+//                rebateRepository.saveAndFlush(rebate);
+//                rebateList.add(rebate);
+//            }
+//
+//            listScore.add(rebateList.stream().mapToInt(x -> x.getScore()).summaryStatistics().getSum());
+//        }
+//
+//        String result = mockMvc.perform(device.getApi("topScore")
+//                .build())
+//                .andDo(print())
+//                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+//                .andReturn().getResponse().getContentAsString();
+//
+//        List<Object> list = JsonPath.read(result, "$.resultData.list");
+//
+//        Assert.assertEquals("总条数", 10, list.size());
+//        //判断对一个top
+//        Assert.assertEquals("top one score"
+//                , String.valueOf(listScore.stream().mapToLong(x -> x).summaryStatistics().getMax())
+//                , JsonPath.read(list.get(0), "$.score").toString());
 
     }
 

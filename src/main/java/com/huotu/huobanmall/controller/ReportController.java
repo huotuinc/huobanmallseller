@@ -83,46 +83,37 @@ public class ReportController implements ReportSystem {
     ) throws Exception {
         //获取当前商家信息
         Merchant merchant = PublicParameterHolder.getParameters().getCurrentUser();
-        //将Map结果分解成两个时间和数量的数组
+        //获取时间段横坐标数组
+        Integer[] hours = DateHelper.getTimeAbscissa();
         //计算今天各个时间段新增的订单数量
 
+        //获取当日订单的map值
         Map<Integer, Integer> map = countService.todayOrder(merchant);
-        Integer[] hoursOrder = new Integer[map.size()];
-        Integer[] orders = new Integer[map.size()];
-        int n = 0;
+
+        Integer[] orders = DateHelper.getValueOrdinate();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursOrder[n] = (entry.getKey());
-            orders[n] = entry.getValue();
-            n++;
+            orders[(entry.getKey()-1)/3]+=entry.getValue();
         }
 
         //计算今天各个时间段新增的会员数量
-        n = 0;
         map = countService.todayMember(merchant);
-        Integer[] hoursMember = new Integer[map.size()];
-        Integer[] members = new Integer[map.size()];
+        Integer[] members=DateHelper.getValueOrdinate();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursMember[n] = (entry.getKey());
-            members[n] = entry.getValue();
-            n++;
+            members[(entry.getKey()-1)/3] += entry.getValue();
         }
         //计算今天各个时间段新增的小伙伴数量
-        n = 0;
         map = countService.todayPartner(merchant);
-        Integer[] hoursPartner = new Integer[map.size()];
-        Integer[] partners = new Integer[map.size()];
+        Integer[] partners = DateHelper.getValueOrdinate();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            hoursPartner[n] = (entry.getKey());
-            partners[n] = entry.getValue();
-            n++;
+            partners[(entry.getKey()-1)/3] += entry.getValue();
         }
 
         //返回订单时间段数组
-        orderHour.outputData(hoursOrder);
+        orderHour.outputData(hours);
         //返回会员时间段数组
-        memberHour.outputData(hoursMember);
+        memberHour.outputData(hours);
         //返回小伙伴时间段数组
-        partnerHour.outputData(hoursPartner);
+        partnerHour.outputData(hours);
         //返回订单时间段值数组
         orderAmount.outputData(orders);
         //返回会员时间段值数组
@@ -133,7 +124,7 @@ public class ReportController implements ReportSystem {
         float countDodaySales = orderService.countSale(merchant);
         todaySales.outputData(countDodaySales);
         //返回总销售额
-        totalSales.outputData(countService.getTotalSales(merchant));
+        totalSales.outputData(countService.getTotalSales(merchant)+countDodaySales);
         //返回今日新增订单数
         todayOrderAmount.outputData(orderService.countOrderQuantity(merchant));
         //返回今日新增会员数
@@ -153,16 +144,26 @@ public class ReportController implements ReportSystem {
         //获取当前公共信息
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
+        //获取时间段横坐标数组
+        Integer[] hours = DateHelper.getTimeAbscissa();
+
         //统计今日订单总数
         Map<Integer, Integer> mapToday = countService.todayOrder(apm.getCurrentUser());
+
+
+
         todayTimes.outputData(mapToday.keySet().toArray(new Integer[mapToday.keySet().size()]));
         todayAmounts.outputData(mapToday.values().toArray(new Integer[mapToday.values().size()]));
+
+
         Long todayCountAmount = mapToday.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
         todayAmount.outputData(todayCountAmount);
 
         //本周订单
         Map<Date, Integer> mapWeek = countService.getWeekOrder(apm.getCurrentUser());
         mapWeek.put(DateHelper.getThisDayBegin(), todayCountAmount.intValue());
+
+
 
 
         weekTimes.outputData(mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]));
@@ -217,11 +218,12 @@ public class ReportController implements ReportSystem {
         mapMonth.put(DateHelper.getThisDayBegin(), todayCountSales);
         //月转周
         mapMonth = MonthToWeek(mapMonth, Float.class);
+
         monthTimes.outputData(mapMonth.keySet().toArray(new Date[mapMonth.keySet().size()]));
         monthAmounts.outputData(mapMonth.values().toArray(new Float[mapMonth.values().size()]));
         monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
 
-        totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser()));
+        totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser())+todayCountSales);
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -383,12 +385,23 @@ public class ReportController implements ReportSystem {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(curMonth);
 
+        //获取当前时间的本周的礼拜天
+        Calendar c=Calendar.getInstance();
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        c.add(Calendar.DAY_OF_YEAR,1);
         //获取当月每个周末
         List<Date> listWeekend = DateHelper.getMonthWeekEnd(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         Map<Date, T> result = new TreeMap<>();
-//        for (Date date : result.keySet()) {
-//            result.put(date,(T)0 );
-//        }
+        listWeekend.forEach(x->{
+            if(x.getTime()<=c.getTime().getTime()){
+                if (Integer.class.equals(cls)) {
+                    result.put(x, (T)(Integer) 0);
+                }
+                if (Float.class.equals(cls)) {
+                    result.put(x, (T)(Float)0.0f);
+                }
+            }
+        });
 
         //统计每个周末数据
         for (Date date : map.keySet()) {
@@ -407,6 +420,9 @@ public class ReportController implements ReportSystem {
                     }
                 }
         }
+
+
+
         return result;
     }
 

@@ -62,7 +62,7 @@ public class GoodsServiceImpl implements GoodsService {
                 }
 
             }
-        },new PageRequest(0, pageSize,new Sort(Sort.Direction.DESC,"id")));
+        },new PageRequest(0, pageSize,new Sort(Sort.Direction.DESC,"dOrder","id")));
     }
 
     @Override

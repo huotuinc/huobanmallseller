@@ -142,4 +142,86 @@ public class DateHelper {
         }
         return list;
     }
+
+    /**
+     *
+     * 获取每日时间段横坐标 比如 3,6,9等 (数组)
+     * @return
+     */
+    public static Integer[] getTimeAbscissa(){
+        int nowHour=Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        Integer[] hours = new Integer[(nowHour+2)/3];
+        for(int i=0;i<hours.length;i++){
+            hours[i]=(i+1)*3;
+        }
+        return hours;
+    }
+
+    /**
+     *
+     * 获取每日时间段横坐标，并把纵坐标初始化为0 比如
+     * (3,0)
+     * (6,0)
+     * (9,0)
+     * (12,0)
+     * @return
+     */
+    public static <T>Map<Integer,T> getTimeAbscissa(Class<T> cls){
+        int nowHour=Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        Map<Integer,T> hours = new TreeMap<>();
+        for(int i=1;i<=(nowHour+2)/3;i++){
+            if (Integer.class.equals(cls)) {
+                hours.put(i*3, (T)(Integer) 0);
+            }
+            if (Float.class.equals(cls)) {
+                hours.put(i*3, (T)(Float)0.0f);
+            }
+        }
+        return hours;
+    }
+
+    /**
+     * 获取每周时间段的横坐标，并把纵坐标初始化为0
+     * @return
+     */
+    public static <T>Map<Date,T> getWeekAbscissa(Class<T> cls){
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MINUTE,0);
+        Date end=calendar.getTime();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date start=calendar.getTime();
+        Map<Date,T> week=new TreeMap<>();
+        while(start.getTime()<=end.getTime()){
+            start=new Date(start.getTime()/1000*1000);
+            if (Integer.class.equals(cls)) {
+                week.put(start, (T)(Integer) 0);
+            }
+            if (Float.class.equals(cls)) {
+                week.put(start, (T)(Float)0.0f);
+            }
+            calendar.add(Calendar.DAY_OF_YEAR,1);
+            start=calendar.getTime();
+        }
+        return week;
+    }
+
+
+    /**
+     * 获取每日值的纵坐标，初始化每个值都为0
+     * @return
+     */
+    public static Integer[] getValueOrdinate(){
+        int nowHour=Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        Integer[] values = new Integer[(nowHour+2)/3];
+        for(int i=0;i<values.length;i++){
+            values[i]=0;
+        }
+        return values;
+
+    }
+
+
+
 }
