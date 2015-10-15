@@ -3,6 +3,7 @@ package com.huotu.huobanmall.service.impl;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.entity.Shop;
+import com.huotu.huobanmall.exception.ShopCloseException;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
@@ -50,10 +51,13 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws Exception {
+    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws ShopCloseException {
 
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
+            if(merchant.getMallStatus()!=1){
+                throw new ShopCloseException("商城已被关闭");
+            }
             if (password.equals(merchant.getPassword())) {
                 Shop shop = shopRepository.findByMerchant(merchant);
 
@@ -85,6 +89,9 @@ public class MerchantServiceImpl implements MerchantService {
                 return appMerchantModel;
             }
         } else {
+            if(merchant.getMallStatus()!=1){
+                throw new ShopCloseException("商城已被关闭");
+            }
             Operator operator = operatorRepository.findByName(username);
             if (operator != null && password.equals(operator.getPassword())) {
                 String token = createToken();

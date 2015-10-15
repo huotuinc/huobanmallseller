@@ -146,14 +146,20 @@ public class ReportController implements ReportSystem {
 
         //获取时间段横坐标数组
         Integer[] hours = DateHelper.getTimeAbscissa();
+        Integer[] values=DateHelper.getValueOrdinate();
 
         //统计今日订单总数
         Map<Integer, Integer> mapToday = countService.todayOrder(apm.getCurrentUser());
 
+        for (Map.Entry<Integer, Integer> entry : mapToday.entrySet()) {
+            values[(entry.getKey()-1)/3]+=entry.getValue();
+        }
 
+        todayTimes.outputData(hours);
+        todayAmounts.outputData(values);
 
-        todayTimes.outputData(mapToday.keySet().toArray(new Integer[mapToday.keySet().size()]));
-        todayAmounts.outputData(mapToday.values().toArray(new Integer[mapToday.values().size()]));
+//        todayTimes.outputData(mapToday.keySet().toArray(new Integer[mapToday.keySet().size()]));
+//        todayAmounts.outputData(mapToday.values().toArray(new Integer[mapToday.values().size()]));
 
 
         Long todayCountAmount = mapToday.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
