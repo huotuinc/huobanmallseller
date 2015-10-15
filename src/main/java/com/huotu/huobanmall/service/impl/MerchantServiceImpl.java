@@ -73,6 +73,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
                 appMerchantModel.setTitle(shop.getTitle());
+                appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
 
                 //设备变更
                 if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
@@ -103,6 +104,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setNoDisturbed(operator.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(operator.getName());
                 appMerchantModel.setTitle(shop.getTitle());
+                appMerchantModel.setIndexUrl(getIndexUrl(operator.getMerchant().getId()));
 
                 //设备变更
                 if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
