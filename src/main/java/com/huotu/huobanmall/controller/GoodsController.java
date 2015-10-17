@@ -152,12 +152,17 @@ public class GoodsController implements GoodsSystem {
                     Product product = productRepository.findOne(orderItems.getProductId());
                     Goods goods = goodsRepository.findOne(orderItems.getGoodsId());
 
-                    appOrderListProductModel.setAmount(orderItems.getAmount());
-                    appOrderListProductModel.setSpec(product.getSpec());
-                    appOrderListProductModel.setTitle(product.getName());
-                    appOrderListProductModel.setMoney(product.getPrice());
-                    appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
-
+                    if(!StringUtils.isEmpty(orderItems)){
+                        appOrderListProductModel.setAmount(orderItems.getAmount());
+                    }
+                    if(!StringUtils.isEmpty(product)){
+                        appOrderListProductModel.setSpec(product.getSpec());
+                        appOrderListProductModel.setTitle(product.getName());
+                        appOrderListProductModel.setMoney(product.getPrice());
+                    }
+                    if(!StringUtils.isEmpty(goods)){
+                        appOrderListProductModel.setPictureUrl(goods.getPictureUrl());
+                    }
                     appOrderListProductModels.add(appOrderListProductModel);
                 }
                 appOrderListModel.setList(appOrderListProductModels);
@@ -437,7 +442,7 @@ public class GoodsController implements GoodsSystem {
             Rebate rebate=(Rebate)objects[0];
             User user=objects[1]==null?null:(User)objects[1];
             appUserScoreModel.setName(userService.getViewUserName(user));
-            appUserScoreModel.setScore(rebate.getScore());
+            appUserScoreModel.setScore(rebate.getFlowScore());
             appUserScoreModel.setPictureUrl(user==null?"":commonConfigService.getResoureServerUrl()+user.getUserFace());
             appUserScoreModel.setTime(rebate.getTime());
             appUserScoreModel.setPid(rebate.getId());

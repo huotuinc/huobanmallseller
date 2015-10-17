@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 返利积分表
+ * 返利积分临时表
  * 说明：对应表 Hot_UserTempIntegral_History 实体UserTempIntegralHistoryModel
  * Created by lgh on 2015/9/7.
  */
@@ -44,6 +44,9 @@ public class Rebate {
     @Column(name = "UTIH_Integral")
     private Integer score;
 
+
+    @Column(name = "UTIH_FlowIntegral")
+    private Integer flowScore;
 
     /**
      * 状态(1:已转正，0:待转正：-1:待转正状态下被作废，-2：已转正状态下被作废)
@@ -173,5 +176,13 @@ public class Rebate {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getFlowScore() {
+        return flowScore;
+    }
+
+    public void setFlowScore(Integer flowScore) {
+        this.flowScore = flowScore;
     }
 }

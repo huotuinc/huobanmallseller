@@ -55,14 +55,12 @@ public class MerchantServiceImpl implements MerchantService {
 
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
-            if(merchant.getMallStatus()!=1){
-                throw new ShopCloseException("商城已被关闭");
-            }
             if (password.equals(merchant.getPassword())) {
+                if(merchant.getMallStatus()!=1){
+                    throw new ShopCloseException("商城已被关闭");
+                }
                 Shop shop = shopRepository.findByMerchant(merchant);
-
                 String token = createToken();
-
                 AppMerchantModel appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(merchant.getName());
                 appMerchantModel.setWelcomeTip("welcome");
@@ -89,11 +87,16 @@ public class MerchantServiceImpl implements MerchantService {
                 return appMerchantModel;
             }
         } else {
-            if(merchant.getMallStatus()!=1){
-                throw new ShopCloseException("商城已被关闭");
-            }
+
             Operator operator = operatorRepository.findByName(username);
+            Merchant merchant1=operator.getMerchant();
+            if(StringUtils.isEmpty(merchant1)){
+                return null;
+            }
             if (operator != null && password.equals(operator.getPassword())) {
+                if(StringUtils.isEmpty(merchant1.getMallStatus())||merchant1.getMallStatus()!=1){
+                    throw new ShopCloseException("商城已被关闭");
+                }
                 String token = createToken();
                 Shop shop = shopRepository.findByMerchant(operator.getMerchant());
 
