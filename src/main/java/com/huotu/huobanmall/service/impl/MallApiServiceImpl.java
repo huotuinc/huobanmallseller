@@ -5,11 +5,9 @@ import com.huotu.common.HttpHelper;
 import com.huotu.huobanmall.model.MallApiResultModel;
 import com.huotu.huobanmall.service.CommonConfigService;
 import com.huotu.huobanmall.service.MallApiService;
-
-
+import com.huotu.huobanplus.sdk.mall.service.MallInfoService;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -17,7 +15,6 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
-
 import java.util.TreeMap;
 
 /**
@@ -32,6 +29,7 @@ public class MallApiServiceImpl implements MallApiService {
 
     @Autowired
     private CommonConfigService commonConfigService;
+    private MallInfoService mallInfoService;
 
     @Override
     public String getMsiteUrl(Integer customerId) throws IOException {
@@ -72,28 +70,6 @@ public class MallApiServiceImpl implements MallApiService {
         }
         return null;
     }
-
-    @Override
-    public String updateShopInfo(Integer customerId, String mallName, String mallIntro) throws IOException{
-
-//        String url = commonConfigService.getMallApiServerUrl() + "mall/updateconfig";
-        String url="http://192.168.1.56:8032/mall/updateconfig";
-        Map<String, String> map = new TreeMap<>();
-        map.put("timestamp", String.valueOf(new Date().getTime()));
-        map.put("appid", appid);
-        map.put("customerid", String.valueOf(customerId));
-        map.put("mallname", mallName);
-        map.put("mallintro", mallIntro);
-        map.put("sign", getSign(map));
-        String response = HttpHelper.postRequest(url, map);
-        MallApiResultModel resultModel = JSON.parseObject(response, MallApiResultModel.class);
-        if (resultModel.getCode() == 200 && !StringUtils.isEmpty(resultModel.getData().toString())) {
-//            return JsonPath.read(resultModel.getData().toString(), "$.imgurl").toString();
-            return resultModel.getData().toString();
-        }
-        return null;
-    }
-
 
     private String getSign(Map<String, String> map) {
         String result = "";

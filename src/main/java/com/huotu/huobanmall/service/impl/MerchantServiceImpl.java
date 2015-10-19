@@ -13,6 +13,7 @@ import com.huotu.huobanmall.service.CommonConfigService;
 import com.huotu.huobanmall.service.DeviceService;
 import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
+import com.huotu.huobanplus.sdk.mall.service.MallInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -45,6 +46,9 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private MallInfoService mallInfoService;
 
     public String createToken() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -255,21 +259,12 @@ public class MerchantServiceImpl implements MerchantService {
 
         switch (profileType) {
             case 0:
-                String result1=mallApiService.updateShopInfo(merchant.getId(),profileData.toString(),shop.getDiscription());
-
-//                shop.setTitle(profileData.toString());
-//                shopRepository.saveAndFlush(shop);
+                mallInfoService.updateNameAndDesc(merchant.getId(), profileData.toString(), shop.getDiscription());
                 break;
             case 1:
-                String result2=mallApiService.updateShopInfo(merchant.getId(),shop.getTitle(),profileData.toString());
-
-//                shop.setDiscription(profileData.toString());
-//                shopRepository.saveAndFlush(shop);
+                mallInfoService.updateNameAndDesc(merchant.getId(), shop.getTitle(), profileData.toString());
                 break;
             case 2:
-
-//                byte[] bytes = StringHelper.toByteArray(profileData);
-//                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
                 String logo = mallApiService.upladPic(merchant.getId(), profileData.toString(), 1);
                 if (StringUtils.isEmpty(logo)) {
 
