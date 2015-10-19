@@ -500,7 +500,7 @@ public class ReportController implements ReportSystem {
             User user = userRepository.findOne(userId);
             double money = (Double) objects[1];
             long amount = (Long) objects[2];
-            appTopConsumeModel.setPictureUrl(user.getUserFace());
+            appTopConsumeModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());
             appTopConsumeModel.setName(userService.getViewUserName(user));
             appTopConsumeModel.setMoney((float) money);
             appTopConsumeModel.setAmount((int) amount);

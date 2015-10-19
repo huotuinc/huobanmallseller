@@ -73,12 +73,34 @@ public class MallApiServiceImpl implements MallApiService {
         return null;
     }
 
+    @Override
+    public String updateShopInfo(Integer customerId, String mallName, String mallIntro) throws IOException{
+
+//        String url = commonConfigService.getMallApiServerUrl() + "mall/updateconfig";
+        String url="http://192.168.1.56:8032/mall/updateconfig";
+        Map<String, String> map = new TreeMap<>();
+        map.put("timestamp", String.valueOf(new Date().getTime()));
+        map.put("appid", appid);
+        map.put("customerid", String.valueOf(customerId));
+        map.put("mallname", mallName);
+        map.put("mallintro", mallIntro);
+        map.put("sign", getSign(map));
+        String response = HttpHelper.postRequest(url, map);
+        MallApiResultModel resultModel = JSON.parseObject(response, MallApiResultModel.class);
+        if (resultModel.getCode() == 200 && !StringUtils.isEmpty(resultModel.getData().toString())) {
+//            return JsonPath.read(resultModel.getData().toString(), "$.imgurl").toString();
+            return resultModel.getData().toString();
+        }
+        return null;
+    }
+
 
     private String getSign(Map<String, String> map) {
         String result = "";
         for (String key : map.keySet()) {
             result += key + "=" + map.get(key).toString() + "&";
         }
+        String before=result.substring(0, result.length() - 1) + appsecret;
         return DigestUtils.md5DigestAsHex((result.substring(0, result.length() - 1) + appsecret).getBytes());
     }
 

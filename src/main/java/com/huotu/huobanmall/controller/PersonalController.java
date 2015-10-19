@@ -1,6 +1,5 @@
 package com.huotu.huobanmall.controller;
 
-import com.huotu.common.HttpHelper;
 import com.huotu.huobanmall.api.PersonalSystem;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
@@ -10,9 +9,7 @@ import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppMessageModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
-import com.huotu.huobanmall.service.FeedbackService;
-import com.huotu.huobanmall.service.MerchantService;
-import com.huotu.huobanmall.service.MessageService;
+import com.huotu.huobanmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +28,9 @@ public class PersonalController implements PersonalSystem {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private MallApiService mallApiService;
 
     /**
      * 更新商家信息
@@ -51,8 +51,8 @@ public class PersonalController implements PersonalSystem {
             throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
-        HttpHelper.postRequest("", null);
-        merchantService.updateMerchantProfile(apm.getCurrentUser(), apm.getCurrentOprator(), apm.getCurrentShop(), profileType, profileData);
+
+      merchantService.updateMerchantProfile(apm.getCurrentUser(), apm.getCurrentOprator(), apm.getCurrentShop(), profileType, profileData);
 
         if (apm.getCurrentOprator() == null) {
             user.outputData(merchantService.getAppMerchantModel(false, apm.getCurrentUser().getId()));

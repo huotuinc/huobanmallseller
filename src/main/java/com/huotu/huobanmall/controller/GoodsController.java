@@ -504,7 +504,7 @@ public class GoodsController implements GoodsSystem {
             Order order = (Order) objects[0];
             User user = objects[1] != null ? (User) objects[1] : null;
             AppConsumeListModel appConsumeListModel = new AppConsumeListModel();
-            appConsumeListModel.setPictureUrl(user == null ? "" : user.getUserFace());
+            appConsumeListModel.setPictureUrl(user == null ? "" :commonConfigService.getResoureServerUrl()+user.getUserFace());
             appConsumeListModel.setName(userService.getViewUserName(user));
             appConsumeListModel.setAmount(1);
             appConsumeListModel.setMoney(order.getPrice());

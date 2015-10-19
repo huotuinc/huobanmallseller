@@ -255,12 +255,16 @@ public class MerchantServiceImpl implements MerchantService {
 
         switch (profileType) {
             case 0:
-                shop.setTitle(profileData.toString());
-                shopRepository.saveAndFlush(shop);
+                String result1=mallApiService.updateShopInfo(merchant.getId(),profileData.toString(),shop.getDiscription());
+
+//                shop.setTitle(profileData.toString());
+//                shopRepository.saveAndFlush(shop);
                 break;
             case 1:
-                shop.setDiscription(profileData.toString());
-                shopRepository.saveAndFlush(shop);
+                String result2=mallApiService.updateShopInfo(merchant.getId(),shop.getTitle(),profileData.toString());
+
+//                shop.setDiscription(profileData.toString());
+//                shopRepository.saveAndFlush(shop);
                 break;
             case 2:
 

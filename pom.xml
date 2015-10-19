@@ -22,6 +22,11 @@
             <name>JiangCai Repository</name>
             <url>http://115.29.228.62:8082/nexus/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>repo-huotu</id>
+            <name>Hot Repository</name>
+            <url>http://repo.51flashmall.com:8081/nexus/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -43,6 +48,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.huotu.huobanplus</groupId>
+            <artifactId>mall-sdk</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

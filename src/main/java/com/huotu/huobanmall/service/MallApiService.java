@@ -26,4 +26,13 @@ public interface MallApiService {
      */
     String upladPic(Integer customerId, String images, Integer type) throws IOException;
 
+    /**
+     * 商城信息修改
+     * @param customerId    商家ID
+     * @param mallName      商城名称
+     * @param mallIntro     商城描述
+     * @return
+     */
+    String updateShopInfo(Integer customerId,String mallName,String mallIntro) throws IOException;
+
 }
