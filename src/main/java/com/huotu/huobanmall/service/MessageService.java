@@ -6,7 +6,7 @@ import com.huotu.huobanmall.model.app.AppMessageModel;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 粉猫消息
+ * 伙伴商城消息
  * Created by Administrator on 2015/6/15.
  */
 public interface MessageService {

@@ -3,6 +3,7 @@ package com.huotu.huobanmall.service.impl;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.entity.Shop;
+import com.huotu.huobanmall.exception.ShopCloseException;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
@@ -12,6 +13,7 @@ import com.huotu.huobanmall.service.CommonConfigService;
 import com.huotu.huobanmall.service.DeviceService;
 import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
+import com.huotu.huobanplus.sdk.mall.service.MallInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -45,20 +47,24 @@ public class MerchantServiceImpl implements MerchantService {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private MallInfoService mallInfoService;
+
     public String createToken() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
     @Override
-    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws Exception {
+    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws ShopCloseException {
 
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
             if (password.equals(merchant.getPassword())) {
+                if(merchant.getMallStatus()!=1){
+                    throw new ShopCloseException("商城已被关闭");
+                }
                 Shop shop = shopRepository.findByMerchant(merchant);
-
                 String token = createToken();
-
                 AppMerchantModel appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(merchant.getName());
                 appMerchantModel.setWelcomeTip("welcome");
@@ -76,7 +82,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
 
                 //设备变更
-                if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
+                if (merchant.getDevice()==null || !merchant.getDevice().equals(appPublicModel.getCurrentDevice())) {
                     deviceService.userChanged(appPublicModel.getCurrentDevice(), merchant,null, appPublicModel.getVersion(), appPublicModel.getIp());
                 }
 
@@ -85,8 +91,16 @@ public class MerchantServiceImpl implements MerchantService {
                 return appMerchantModel;
             }
         } else {
+
             Operator operator = operatorRepository.findByName(username);
+            merchant=operator.getMerchant();
+            if(StringUtils.isEmpty(merchant)){
+                return null;
+            }
             if (operator != null && password.equals(operator.getPassword())) {
+                if(StringUtils.isEmpty(merchant.getMallStatus())||merchant.getMallStatus()!=1){
+                    throw new ShopCloseException("商城已被关闭");
+                }
                 String token = createToken();
                 Shop shop = shopRepository.findByMerchant(operator.getMerchant());
 
@@ -107,7 +121,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setIndexUrl(getIndexUrl(operator.getMerchant().getId()));
 
                 //设备变更
-                if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
+                if (merchant.getDevice()==null || (!merchant.getDevice().equals(appPublicModel.getCurrentDevice()))) {
                     deviceService.userChanged(appPublicModel.getCurrentDevice(), null,operator, appPublicModel.getVersion(), appPublicModel.getIp());
                 }
 
@@ -245,17 +259,12 @@ public class MerchantServiceImpl implements MerchantService {
 
         switch (profileType) {
             case 0:
-                shop.setTitle(profileData.toString());
-                shopRepository.saveAndFlush(shop);
+                mallInfoService.updateNameAndDesc(merchant.getId(), profileData.toString(), shop.getDiscription());
                 break;
             case 1:
-                shop.setDiscription(profileData.toString());
-                shopRepository.saveAndFlush(shop);
+                mallInfoService.updateNameAndDesc(merchant.getId(), shop.getTitle(), profileData.toString());
                 break;
             case 2:
-
-//                byte[] bytes = StringHelper.toByteArray(profileData);
-//                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
                 String logo = mallApiService.upladPic(merchant.getId(), profileData.toString(), 1);
                 if (StringUtils.isEmpty(logo)) {
 

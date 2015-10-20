@@ -17,6 +17,4 @@ import java.util.List;
 public interface GoodsRepository extends JpaRepository<Goods, Integer>, JpaSpecificationExecutor<Goods>,ClassicsRepository<Goods> {
 
     Long countByOwnerAndDisabledAndStatus(Merchant merchant, Integer disable,Integer status);
-
-    List<Goods> findByOwner(Merchant owner);
 }

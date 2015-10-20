@@ -26,4 +26,5 @@ public interface MallApiService {
      */
     String upladPic(Integer customerId, String images, Integer type) throws IOException;
 
+
 }

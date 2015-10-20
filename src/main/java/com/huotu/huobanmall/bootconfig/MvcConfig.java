@@ -1,16 +1,16 @@
 package com.huotu.huobanmall.bootconfig;
 
 import com.huotu.huobanmall.interceptor.ApiResultHandler;
+import com.huotu.huobanmall.interceptor.AppHandlerExceptionResolver;
 import com.huotu.huobanmall.interceptor.CommonInterceptor;
 import com.huotu.huobanmall.interceptor.OutputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -55,6 +55,11 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 //        converters.add(new MappingJackson2HttpMessageConverter());
 //    }
 
+    @Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+        exceptionResolvers.add(new AppHandlerExceptionResolver());
+    }
+
 
     @Bean
     CommonInterceptor commonInterceptor (){
@@ -66,7 +71,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(commonInterceptor).addPathPatterns("/app/*");
+        registry.addInterceptor(commonInterceptor)
+                .addPathPatterns("/app/*")
+                .excludePathPatterns("/app/forgetPassword")
+                .excludePathPatterns("/app/sendSMS");
     }
 
     /**

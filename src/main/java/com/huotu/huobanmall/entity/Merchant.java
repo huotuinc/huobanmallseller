@@ -78,6 +78,12 @@ public class Merchant {
     @JoinColumn(name = "Device")
     private Device device;
 
+    /**
+     * 当商城状态为1的时候是开启
+     */
+    @Column(name = "SC_MallStatus")
+    private Integer mallStatus;
+
 
 
     public Integer getId() {
@@ -161,5 +167,13 @@ public class Merchant {
 
     public void setDevice(Device device) {
         this.device = device;
+    }
+
+    public Integer getMallStatus() {
+        return mallStatus;
+    }
+
+    public void setMallStatus(Integer mallStatus) {
+        this.mallStatus = mallStatus;
     }
 }

@@ -195,7 +195,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List searchExpenditureList(Merchant merchant, String name, Date time, Integer pageSize) {
         StringBuffer hql = new StringBuffer();
-        hql.append("select order,user from Order order left join User user on order.userId=user.id where order.merchant.id=:merchantId");
+        hql.append("select order,user from Order order left join User user on order.userId=user.id where order.merchant.id=:merchantId and order.payStatus=1");
         if (!StringUtils.isEmpty(time)) {
             hql.append(" and order.time<:time");
         }

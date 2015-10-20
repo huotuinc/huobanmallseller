@@ -233,7 +233,13 @@ public interface CommonEnum {
 
         WRONG_PASSWORD(57002, "密码错误"),
 
-        ILLEGAL_USER(57003, "该账号不可用");
+        ILLEGAL_USER(57003, "该账号不可用"),
+        /**
+         * ERROR_USER_SHOPCLOSE(60001,"商城已经关闭")
+         */
+        ERROR_USER_SHOPCLOSE(60001,"商城已经关闭");
+
+
 
 
         private int value;
