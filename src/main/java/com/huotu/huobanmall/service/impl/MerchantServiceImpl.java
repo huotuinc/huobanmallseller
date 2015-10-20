@@ -82,7 +82,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
 
                 //设备变更
-                if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
+                if (merchant.getDevice()==null || !merchant.getDevice().equals(appPublicModel.getCurrentDevice())) {
                     deviceService.userChanged(appPublicModel.getCurrentDevice(), merchant,null, appPublicModel.getVersion(), appPublicModel.getIp());
                 }
 
@@ -93,12 +93,12 @@ public class MerchantServiceImpl implements MerchantService {
         } else {
 
             Operator operator = operatorRepository.findByName(username);
-            Merchant merchant1=operator.getMerchant();
-            if(StringUtils.isEmpty(merchant1)){
+            merchant=operator.getMerchant();
+            if(StringUtils.isEmpty(merchant)){
                 return null;
             }
             if (operator != null && password.equals(operator.getPassword())) {
-                if(StringUtils.isEmpty(merchant1.getMallStatus())||merchant1.getMallStatus()!=1){
+                if(StringUtils.isEmpty(merchant.getMallStatus())||merchant.getMallStatus()!=1){
                     throw new ShopCloseException("商城已被关闭");
                 }
                 String token = createToken();
@@ -121,7 +121,7 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setIndexUrl(getIndexUrl(operator.getMerchant().getId()));
 
                 //设备变更
-                if (merchant.getDevice() != appPublicModel.getCurrentDevice()) {
+                if (merchant.getDevice()==null || (!merchant.getDevice().equals(appPublicModel.getCurrentDevice()))) {
                     deviceService.userChanged(appPublicModel.getCurrentDevice(), null,operator, appPublicModel.getVersion(), appPublicModel.getIp());
                 }
 

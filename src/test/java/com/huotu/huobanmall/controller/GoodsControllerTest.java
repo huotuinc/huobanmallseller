@@ -48,6 +48,7 @@ public class GoodsControllerTest extends SpringAppTest {
     @Autowired
     OrderRepository orderRepository;
     private String mockMerchantName;
+
     private String mockMerchantPassword;
     private Device device;
     private Merchant mockMerchant;
@@ -190,7 +191,11 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testGoodsList() throws Exception {
-//        //准备测试环境
+        //准备测试环境
+
+
+
+
 //
 //        Category category = new Category();
 //        category.setTitle("干果");
