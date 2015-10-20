@@ -19,7 +19,7 @@ public interface VerificationService {
      */
     enum VerificationProject{
         //【粉猫】您的验证码是{1},为了保护您的账户安全,验证短信请勿转发他人。工作人员不会向你索取验证码。
-        fanmore("26807","(粉猫验证码:%s)为了保护您的账户安全，验证短信请勿转发他人。工作人员不会向你索取验证码。");
+        fanmore("26807","(伙伴商城验证码:%s)为了保护您的账户安全，验证短信请勿转发他人。工作人员不会向你索取验证码。");
 
         private final String format;
         private final String templateId;
