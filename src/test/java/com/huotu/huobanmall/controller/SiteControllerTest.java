@@ -7,17 +7,17 @@
  * 2013-2015. All rights reserved.
  */
 
-package com.huotu.huobanmall.concurrency;
+package com.huotu.huobanmall.controller;
 
-import java.text.ParseException;
+import org.junit.Test;
 
 /**
- * Created by lgh on 2015/9/12.
+ * Created by Administrator on 2015/10/21.
  */
-public interface SystemCounting {
-    void count();
+public class SiteControllerTest {
 
-    void countDay();
+    @Test
+    public void testInit() throws Exception {
 
-    void InitHistoryDayAndToday() throws ParseException;
+    }
 }

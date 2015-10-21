@@ -1,3 +1,12 @@
+/*
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2015. All rights reserved.
+ */
+
 package com.huotu.huobanmall.controller;
 
 import com.huotu.huobanmall.repository.MerchantRepository;
@@ -22,30 +31,6 @@ public class OrderController {
     @Autowired
     OrderRepository orderRepository;
 
-//    @RequestMapping("/orderList")
-//    public String orderList(@RequestParam(required = false)Integer orderStatus,
-//                            @RequestParam(required = false) Date lastOrderTime,Integer pageSize,Model model){
-//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-//        Page<Order> pages=orderService.searchOrders(merchant.getId(),lastOrderTime,pageSize,orderStatus);
-//        model.addAttribute("orderList",pages);
-//        return "order";
-//    }
-//
-//    @RequestMapping("/userScoreList")
-//    public String userScoreList(Integer pageSize,Model model){
-//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-//        Page<Rebate> page=orderService.countUserScoreList(merchant,new PageRequest(0,pageSize));
-//        model.addAttribute("userScoreList",page);
-//        return "x";
-//    }
-//
-//    @RequestMapping("/userExpenditureList")
-//    public String userExpenditureList(Integer pageSize,Model model){
-//        Merchant merchant=merchantRepository.findOne(PublicParameterHolder.getParameters().getCurrentUser().getId());
-//        Page<Object[]> page=orderService.countUserExpenditureList(merchant,new PageRequest(0, pageSize));
-//        model.addAttribute("userExpenditureList",page);
-//        return "x";
-//    }
 
 
 }

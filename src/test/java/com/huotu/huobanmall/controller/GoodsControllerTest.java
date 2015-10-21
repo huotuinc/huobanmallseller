@@ -1,3 +1,12 @@
+/*
+ * 版权所有:杭州火图科技有限公司
+ * 地址:浙江省杭州市滨江区西兴街道阡陌路智慧E谷B幢4楼
+ *
+ * (c) Copyright Hangzhou Hot Technology Co., Ltd.
+ * Floor 4,Block B,Wisdom E Valley,Qianmo Road,Binjiang District
+ * 2013-2015. All rights reserved.
+ */
+
 package com.huotu.huobanmall.controller;
 
 import com.huotu.common.StringHelper;
@@ -192,27 +201,50 @@ public class GoodsControllerTest extends SpringAppTest {
     @Test
     public void testGoodsList() throws Exception {
         //准备测试环境
-
-
-
+        Category category = new Category();
+        category.setTitle("干果");
+        category = categoryRepository.saveAndFlush(category);
 
 //
-//        Category category = new Category();
-//        category.setTitle("干果");
-//        category = categoryRepository.save(category);
+        List<Goods> goodsList = new ArrayList<>();
 //
-//        List<Goods> goodsList = new ArrayList<>();
-//
-//        Goods goods;
-//        for (int i = 0; i < 35; i++) {
-//            goods = new Goods();
-//            goods.setOwner(mockMerchant);
-//            goods.setPrice(200);
-//            goods.setStatus(1);
-//            goods.setCategory(category);
-//            goods.setStock(9999);
-//            goods = goodsRepository.saveAndFlush(goods);
-//            goodsList.add(goods);
+        Goods goods;
+        for (int i = 0; i < 35; i++) {
+            goods = new Goods();
+            goods.setOwner(mockMerchant);
+            goods.setPrice(200);
+            goods.setStatus(1);
+            goods.setDisabled(0);
+            goods.setCategory(category);
+            goods.setStock(9999);
+            goods.setdOrder(i);
+            goods.setSmallPic("1");
+            goods.setTitle("slt");
+            goods.setPictureUrl("asf");
+            goods = goodsRepository.saveAndFlush(goods);
+            goodsList.add(goods);
+        }
+        String result = mockMvc.perform(device.getApi("goodsList")
+                .param("type", "1")
+                .build())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        List<Object> reallist = JsonPath.read(result, "$.resultData.list");
+        for (Goods g : goodsList) {
+            System.out.print(g.getdOrder() + " ");
+        }
+        System.out.println();
+        goodsList.sort((o1, o2) -> o1.getdOrder().compareTo(o2.getdOrder()));
+        for (Goods g : goodsList) {
+            System.out.print(g.getdOrder() + " ");
+        }
+        Assert.assertEquals("长度是否正确", 10, reallist.size());
+
+//        for(int i=0;i<10;i++){
+//            System.out.println();
+////           String id=JsonPath.read(reallist.get(i).toString(), "$.goodsId").toString();
+////            Assert.assertEquals("排序后的值位置", goodsList.get(i).getId(), id);
 //        }
 //
 //        //排序，否则是乱的
@@ -792,31 +824,31 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testMainOrderList() throws Exception {
-        Order[][] orders=new Order[10][2];
-        MainOrder[] mainOrders=new MainOrder[15];
-        Date[] dates=new Date[15];
-        String[] strings=new String[15];
-        Map<String,List<Order>>map=new TreeMap<>();
+        Order[][] orders = new Order[10][2];
+        MainOrder[] mainOrders = new MainOrder[15];
+        Date[] dates = new Date[15];
+        String[] strings = new String[15];
+        Map<String, List<Order>> map = new TreeMap<>();
 
         Random random = new Random();
         MainOrder mainOrder;
         Order order;
-        for(int i=0;i<15;i++){
-            mainOrder=new MainOrder();
+        for (int i = 0; i < 15; i++) {
+            mainOrder = new MainOrder();
             mainOrder.setMerchant(mockMerchant);
             mainOrder.setStatus(0);
             mainOrder.setDeliverStatus(0);
-            dates[i]=new Date();
+            dates[i] = new Date();
             mainOrder.setTime(dates[i]);
             mainOrder.setPayStatus(1);
             mainOrder.setUserId(123);
-            strings[i]=createOrderNo(random);
+            strings[i] = createOrderNo(random);
             mainOrder.setId(strings[i]);
-            mainOrders[i]=mainOrderRepository.saveAndFlush(mainOrder);
+            mainOrders[i] = mainOrderRepository.saveAndFlush(mainOrder);
 
-            List<Order> orderList=new ArrayList<>();
-            for(int j=0;j<2;j++){
-                order=new Order();
+            List<Order> orderList = new ArrayList<>();
+            for (int j = 0; j < 2; j++) {
+                order = new Order();
                 order.setStatus(0);
                 order.setPayStatus(1);
                 order.setTitle("测试订单");
@@ -837,25 +869,21 @@ public class GoodsControllerTest extends SpringAppTest {
                 orderRepository.saveAndFlush(order);
                 orderList.add(order);
             }
-            map.put(strings[i],orderList);
+            map.put(strings[i], orderList);
         }
 
 
-
-        Long time=dates[14].getTime();
+        Long time = dates[14].getTime();
         mockMvc.perform(
                 device.getApi("mainOrderList")
                         .param("status", "0")
-                        .param("lastDate",String.valueOf(time))
+                        .param("lastDate", String.valueOf(time))
                         .param("keyword", strings[2])
                         .build())
                 .andDo(print());
 //                .andReturn().getResponse().getContentAsString();
 
 //        List<Order> lists=JSON.parseObject(result, );
-
-
-
 
 
     }
