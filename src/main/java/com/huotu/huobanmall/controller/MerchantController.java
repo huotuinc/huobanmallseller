@@ -210,11 +210,7 @@ public class MerchantController implements MerchantSystem {
     @Override
     @RequestMapping("/forgetPassword")
     public ApiResult forgetPassword(String phone, String password, String authcode) throws Exception {
-        Date date;
-        if (env.acceptsProfiles("test")) {
-            date = new Date(PublicParameterHolder.getParameters().getTimestamp());
-        } else
-            date = new Date();
+        Date date = new Date();
 
         if (!env.acceptsProfiles("test")) {
             if (!verificationService.verifyCode(phone, VerificationService.VerificationProject.fanmore, authcode, date, VerificationType.BIND_LOGINPASSWORD)) {
@@ -222,7 +218,7 @@ public class MerchantController implements MerchantSystem {
             }
         }
 
-        Operator operator = operatorRepository.findByName(phone);
+        Operator operator = operatorRepository.findByNameAndState(phone,0);
         if (operator == null)
             return ApiResult.resultWith(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME);
 
@@ -242,11 +238,7 @@ public class MerchantController implements MerchantSystem {
         VerificationType verificationType = EnumHelper.getEnumType(VerificationType.class, type);
 
 
-        Date date;
-        if (env.acceptsProfiles("test")) {
-            date = new Date(PublicParameterHolder.getParameters().getTimestamp());
-        } else
-            date = new Date();
+        Date date = new Date();
 
 
         // **********************************************************
@@ -257,7 +249,7 @@ public class MerchantController implements MerchantSystem {
 
         // 重置密码的处理
         if (type == VerificationType.BIND_LOGINPASSWORD.getValue()) {
-            Operator operator = operatorRepository.findByName(phone);
+            Operator operator = operatorRepository.findByNameAndState(phone,0);
 
             if (operator == null) {
                 return ApiResult.resultWith(CommonEnum.AppCode.ERROR_NO_EXIST_USERNAME);

@@ -26,7 +26,7 @@ import java.util.Set;
 public interface OperatorRepository extends JpaRepository<Operator, Integer>, JpaSpecificationExecutor<Operator> {
 
     Operator findByToken(String token);
-    Operator findByName(String name);
+    Operator findByNameAndState(String name,Integer state);
 
     /**
      * 按照终端类型获取可推送设备列表

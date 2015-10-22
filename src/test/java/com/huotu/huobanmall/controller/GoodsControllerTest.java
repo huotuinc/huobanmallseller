@@ -199,31 +199,35 @@ public class GoodsControllerTest extends SpringAppTest {
     }
 
     @Test
+//    @Rollback
     public void testGoodsList() throws Exception {
         //准备测试环境
         Category category = new Category();
         category.setTitle("干果");
-        category = categoryRepository.saveAndFlush(category);
+        category = categoryRepository.save(category);
 
+        Random random=new Random();
 //
         List<Goods> goodsList = new ArrayList<>();
 //
         Goods goods;
         for (int i = 0; i < 35; i++) {
             goods = new Goods();
+            goods.setId(i+10);
             goods.setOwner(mockMerchant);
             goods.setPrice(200);
             goods.setStatus(1);
             goods.setDisabled(0);
             goods.setCategory(category);
             goods.setStock(9999);
-            goods.setdOrder(i);
+            goods.setdOrder(i+100);
             goods.setSmallPic("1");
             goods.setTitle("slt");
             goods.setPictureUrl("asf");
-            goods = goodsRepository.saveAndFlush(goods);
+            goods = goodsRepository.save(goods);
             goodsList.add(goods);
         }
+        goodsList.sort((o2, o1) -> o1.getdOrder().compareTo(o2.getdOrder()));
         String result = mockMvc.perform(device.getApi("goodsList")
                 .param("type", "1")
                 .build())
@@ -231,94 +235,64 @@ public class GoodsControllerTest extends SpringAppTest {
                 .getResponse()
                 .getContentAsString();
         List<Object> reallist = JsonPath.read(result, "$.resultData.list");
-        for (Goods g : goodsList) {
-            System.out.print(g.getdOrder() + " ");
-        }
-        System.out.println();
-        goodsList.sort((o1, o2) -> o1.getdOrder().compareTo(o2.getdOrder()));
-        for (Goods g : goodsList) {
-            System.out.print(g.getdOrder() + " ");
-        }
+
         Assert.assertEquals("长度是否正确", 10, reallist.size());
-
-//        for(int i=0;i<10;i++){
-//            System.out.println();
-////           String id=JsonPath.read(reallist.get(i).toString(), "$.goodsId").toString();
-////            Assert.assertEquals("排序后的值位置", goodsList.get(i).getId(), id);
-//        }
-//
-//        //排序，否则是乱的
-////        Collections.sort(goodsList, new Comparator<Goods>() {
-////            @Override
-////            public int compare(Goods o1, Goods o2) {
-////                return o1.getId().compareTo(o2.getId());
-////            }
-////        });
-//
-//        //测试第一页
-//        String result = mockMvc.perform(
-//                device.getApi("goodsList")
-//                        .param("lastProductId", "")
-//                        .build())
-//                .andExpect(jsonPath("$.resultData.list").isArray())
-//                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
-//                .andDo(print()).andReturn().getResponse().getContentAsString();
-//
-//        List<Object> list = JsonPath.read(result, "$.resultData.list");
-//        Assert.assertEquals("返回条数", list.size(), 10);
-//        Assert.assertEquals("第一页第一条数据", JsonPath.read(list.get(0).toString(), "$.goodsId").toString()
-//                , goodsList.get(goodsList.size() - 1).getId().toString());
-//
-//
-//        //测试下一页
-//        result = mockMvc.perform(
-//                device.getApi("goodsList")
-//                        .param("lastProductId", String.valueOf(goodsList.get(goodsList.size() - 10).getId()))
-//                        .build())
-//                .andExpect(jsonPath("$.resultData.list").isArray())
-//                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
-//                .andDo(print()).andReturn().getResponse().getContentAsString();
-//        list = JsonPath.read(result, "$.resultData.list");
-//        Assert.assertEquals("返回条数", list.size(), 10);
-//        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.goodsId").toString()
-//                , goodsList.get(goodsList.size() - 11).getId().toString());
-
+        for(int i=0;i<10;i++){
+            String real=reallist.get(i).toString();
+            Assert.assertEquals("第一页的排序是否相等",goodsList.get(i).getId(),JsonPath.read(real,"$.goodsId"));
+        }
+        result=mockMvc.perform(device.getApi("goodsList")
+                .param("type","1")
+                .param("lastProductId",goodsList.get(9).getId().toString())
+                .build())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        reallist=JsonPath.read(result,"$.resultData.list");
+        Assert.assertEquals("长度是否正确", 10, reallist.size());
+        for(int i=0;i<10;i++){
+            String real=reallist.get(i).toString();
+            Assert.assertEquals("第二页的排序是否相等",goodsList.get(i+10).getId(),JsonPath.read(real,"$.goodsId"));
+        }
     }
 
     @Test
     public void testOperGoods() throws Exception {
 
-//        Category category = new Category();
-//        category.setTitle("干果");
-//        category = categoryRepository.save(category);
-//
-//        String strGoods = "";
-//        List<Goods> goodsList = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            Goods goods = new Goods();
-//            goods.setOwner(mockMerchant);
-//            goods.setPrice(200);
-//            goods.setStatus(1);
-//            goods.setCategory(category);
-//            goods.setStock(9999);
-//            goods = goodsRepository.saveAndFlush(goods);
-//            strGoods += goods.getId() + ",";
-//            goodsList.add(goods);
-//        }
-//
-//        //  操作类型 1 上架商品 2 下架商品 3 删除商品 商品Id以,隔开 如 1,2,4
-//        //下架商品
-//        mockMvc.perform(
-//                device.getApi("operGoods")
-//                        .param("type", "2")
-//                        .param("goods", strGoods)
-//                        .build())
-//                .andDo(print())
-//                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS));
-//
-//
-//        Assert.assertEquals("下架的商品", 5
-//                , goodsRepository.findByOwner(mockMerchant).stream().filter(x -> x.getStatus() == 2).mapToInt(x -> x.getId()).summaryStatistics().getCount());
+        Category category = new Category();
+        category.setTitle("干果");
+        category = categoryRepository.save(category);
+
+        String strGoods = "";
+        List<Goods> goodsList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Goods goods = new Goods();
+            goods.setId(10000+i);
+            goods.setOwner(mockMerchant);
+            goods.setPrice(200);
+            goods.setStatus(1);
+            goods.setCategory(category);
+            goods.setStock(9999);
+            goods = goodsRepository.save(goods);
+            strGoods += goods.getId() + ",";
+            goodsList.add(goods);
+        }
+
+        //  操作类型 1 上架商品 2 下架商品 3 删除商品 商品Id以,隔开 如 1,2,4
+        //下架商品
+        mockMvc.perform(
+                device.getApi("operGoods")
+                        .param("type", "0")
+                        .param("goods", strGoods)
+                        .build())
+                .andDo(print());
+        List<Goods> goodses=new ArrayList<>();
+        for(int i=0;i<5;i++){
+            goodses.add(goodsRepository.findOne(goodsList.get(i).getId()));
+            Assert.assertEquals("下架商品"+i,0,(int)goodses.get(i).getStatus());
+        }
+
+//        Assert.assertEquals("下架的商品", 5, goodsRepository.countByOwnerAndDisabledAndStatus(mockMerchant,0,1).stream().filter(x -> x.getStatus() == 2).mapToInt(x -> x.getId()).summaryStatistics().getCount());
 
 
     }
@@ -326,73 +300,68 @@ public class GoodsControllerTest extends SpringAppTest {
 
     @Test
     public void testOrderList() throws Exception {
-//        Calendar calendar = Calendar.getInstance();
-//        //构建订单数据
-//        Category category = new Category();
-//        category.setTitle("干果");
-//        category = categoryRepository.save(category);
+
+        //测试数据构建
+        //构建订单数据
+        Category category = new Category();
+        category.setTitle("干果");
+        category = categoryRepository.save(category);
+
 //
-//        Goods goods = new Goods();
-//        goods.setOwner(mockMerchant);
-//        goods.setPrice(200);
-//        goods.setStatus(1);
-//        goods.setCategory(category);
-//        goods.setStock(9999);
-//        goodsRepository.saveAndFlush(goods);
+        Calendar calendar = Calendar.getInstance();
+
 //
-//        Product product = new Product();
-//        product.setMerchant(mockMerchant);
-//        product.setGoods(goods);
-//        product.setName("abc");
-//        product.setPrice(100F);
-//        product.setSpec("");
-//        product.setMarketStatus(1);
-//        product.setIsLocalStock(1);
-//        productRepository.saveAndFlush(product);
-//
-//        User user = new User();
-//        user.setUsername(UUID.randomUUID().toString());
-//        user.setPassword("e10adc3949ba59abbe56e057f20f883e");
-//        user.setMerchant(mockMerchant);
-//        user.setRegTime(new Date());
-//        user.setType(0);
-//        userRepository.saveAndFlush(user);
+        Goods goods = new Goods();
+        goods.setId(123);
+        goods.setOwner(mockMerchant);
+        goods.setPrice(200);
+        goods.setStatus(1);
+        goods.setCategory(category);
+        goods.setStock(9999);
+        goodsRepository.save(goods);
+
+        Product product = new Product();
+        product.setId(123);
+        product.setMerchant(mockMerchant);
+        product.setGoods(goods);
+        product.setName("abc");
+        product.setPrice(100F);
+        product.setSpec("");
+        product.setMarketStatus(1);
+        product.setIsLocalStock(1);
+        productRepository.save(product);
+
+        User user = new User();
+        user.setId(123);
+        user.setUsername(UUID.randomUUID().toString());
+        user.setPassword("e10adc3949ba59abbe56e057f20f883e");
+        user.setMerchant(mockMerchant);
+        user.setRegTime(new Date());
+        user.setType(0);
+        userRepository.save(user);
 //
 //        Random random = new Random();
-//        List<Order> orderList = new ArrayList<>();
-//        for (int i = 0; i < 35; i++) {
+//        List<MainOrder> mainOrders = new ArrayList<>();
+//        for (int i = 0; i < 11; i++) {
 //            calendar = Calendar.getInstance();
 //            calendar.set(Calendar.MINUTE, i * 5);
-//            Order order = new Order();
-//            order.setId(createOrderNo(random));
-//            order.setMerchant(mockMerchant);
-//            order.setPayStatus(1);//付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
-//            if (i == 0) order.setPayStatus(0);
-//
-//            order.setTime(calendar.getTime());
-//            order.setPayTime(calendar.getTime());
-//            order.setUserId(user.getId());
-//            order.setPrice(100);
-//            order.setTitle("title");
-//            order.setAmount(50);
-//            order.setUserType(1);
-//            order.setIsTax(1);
-//            order.setIsProtect(1);
-//            order = orderRepository.save(order);
-//            orderList.add(order);
+//            MainOrder mainOrder = new MainOrder();
+//            mainOrder.setId(UUID.randomUUID().toString());
+//            mainOrder.setMerchant(mockMerchant);
+//            mainOrder.setPayStatus(1);//付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
 //
 //            OrderItems orderItems = new OrderItems();
 //            orderItems.setGoodsId(goods.getId());
 //            orderItems.setProductId(product.getId());
 //            orderItems.setAmount(10);
 //            orderItems.setMerchant(mockMerchant);
-//            orderItems.setOrder(order);
+//            orderItems.setOrder();
 //            orderItems.setPrice(100F);
 //            orderItemsRepository.save(orderItems);
 //
 //            Delivery delivery = new Delivery();
-//            delivery.setId(createDeliveryNo(random));
-//            delivery.setOrder(order);
+//            delivery.setId(createDeliveryNo());
+//            delivery.setOrder();
 //            delivery.setAddress("address");
 //            delivery.setStatus("");
 //            delivery.setUser(user);

@@ -97,6 +97,12 @@ public class Operator {
     @JoinColumn(name = "Device")
     private Device device;
 
+    /**
+     * 激活状态 0为激活，1为冻结
+     */
+    @Column(name = "State")
+    private Integer state;
+
     public Integer getId() {
         return id;
     }
@@ -183,5 +189,13 @@ public class Operator {
 
     public void setDevice(Device device) {
         this.device = device;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

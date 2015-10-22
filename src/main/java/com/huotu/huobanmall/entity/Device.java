@@ -28,7 +28,6 @@ public class Device {
     private String imei;
     /**
      * 用于推送的token
-     * @see
      */
     @Column(length = 64)
     private String pushingToken;

@@ -234,13 +234,6 @@ public class GoodsController implements GoodsSystem {
         }else {
             orders=null;
         }
-
-
-
-
-
-
-
         AppMainOrderListModel[] appMainOrderListModels=new AppMainOrderListModel[mainOrderlist.size()];
         int i=0;
         for(MainOrder mainOrder:mainOrderlist){

@@ -101,11 +101,11 @@ public class MerchantServiceImpl implements MerchantService {
             }
         } else {
 
-            Operator operator = operatorRepository.findByName(username);
-            merchant=operator.getMerchant();
-            if(StringUtils.isEmpty(merchant)){
+            Operator operator = operatorRepository.findByNameAndState(username,0);
+            if(StringUtils.isEmpty(operator)){
                 return null;
             }
+            merchant=operator.getMerchant();
             if (operator != null && password.equals(operator.getPassword())) {
                 if(StringUtils.isEmpty(merchant.getMallStatus())||merchant.getMallStatus()!=1){
                     throw new ShopCloseException("商城已被关闭");
