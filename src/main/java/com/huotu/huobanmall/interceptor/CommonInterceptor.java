@@ -15,13 +15,13 @@ import com.huotu.huobanmall.api.common.PublicParameterHolder;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
-import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
 import com.huotu.huobanmall.repository.OperatorRepository;
 import com.huotu.huobanmall.repository.ShopRepository;
 import com.huotu.huobanmall.service.DeviceService;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -40,7 +40,7 @@ import java.util.TreeMap;
  */
 public class CommonInterceptor implements HandlerInterceptor {
 
-    private Logger logger = Logger.getLogger(CommonInterceptor.class);
+    private static final Log log = LogFactory.getLog(CommonInterceptor.class);
 
     private String appSecret = "1165a8d240b29af3f418b8d10599d0da";
     @Autowired
