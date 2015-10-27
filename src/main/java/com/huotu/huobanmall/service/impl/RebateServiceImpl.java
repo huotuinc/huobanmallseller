@@ -96,6 +96,9 @@ public class RebateServiceImpl implements RebateService {
 
     @Override
     public String getScoreStatus(Integer status) {
+        if(StringUtils.isEmpty(status)){
+            return "未知状态";
+        }
         switch (status) {
             case 0:
                 return "待转正";
@@ -106,12 +109,15 @@ public class RebateServiceImpl implements RebateService {
             case -2:
                 return "已转正状态下被作废";
             default:
-                return "无";
+                return "未知状态";
         }
     }
 
     @Override
     public String getScoreUserName(Integer gainer) {
+        if(StringUtils.isEmpty(gainer)){
+            return "未知返利者";
+        }
         switch (gainer){
             case 1:
                 return "购买人返利积分";
@@ -122,7 +128,7 @@ public class RebateServiceImpl implements RebateService {
             case 202:
                 return "上上上线返利积分";
             default:
-                return "无";
+                return "未知返利者";
         }
     }
 

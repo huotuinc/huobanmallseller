@@ -339,54 +339,71 @@ public class GoodsControllerTest extends SpringAppTest {
         user.setRegTime(new Date());
         user.setType(0);
         userRepository.save(user);
-//
-//        Random random = new Random();
-//        List<MainOrder> mainOrders = new ArrayList<>();
-//        for (int i = 0; i < 11; i++) {
-//            calendar = Calendar.getInstance();
-//            calendar.set(Calendar.MINUTE, i * 5);
-//            MainOrder mainOrder = new MainOrder();
-//            mainOrder.setId(UUID.randomUUID().toString());
-//            mainOrder.setMerchant(mockMerchant);
-//            mainOrder.setPayStatus(1);//付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
-//
-//            OrderItems orderItems = new OrderItems();
-//            orderItems.setGoodsId(goods.getId());
-//            orderItems.setProductId(product.getId());
-//            orderItems.setAmount(10);
-//            orderItems.setMerchant(mockMerchant);
-//            orderItems.setOrder();
-//            orderItems.setPrice(100F);
-//            orderItemsRepository.save(orderItems);
-//
-//            Delivery delivery = new Delivery();
-//            delivery.setId(createDeliveryNo());
-//            delivery.setOrder();
-//            delivery.setAddress("address");
-//            delivery.setStatus("");
-//            delivery.setUser(user);
-//            delivery.setNo("111212112122121");
-//            delivery.setMoney(10F);
-//            deliveryRepository.saveAndFlush(delivery);
-//        }
-//
-//
-//        //测试第一页
-//        String result = mockMvc.perform(
-//                device.getApi("orderList")
-//                        .param("status", "0")
-//                        .param("lastDate", "")
-//                        .param("keyword", "")
-//                        .build())
-////                .andExpect(jsonPath("$.resultData.list").isArray())
-//                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
-//                .andDo(print()).andReturn().getResponse().getContentAsString();
-//
-//        List<Object> list = JsonPath.read(result, "$.resultData.list");
-//        Assert.assertEquals("返回条数", list.size(), 10);
-//        Assert.assertEquals("第一页第一条数据", JsonPath.read(list.get(0).toString(), "$.orderNo").toString()
-//                , orderList.get(orderList.size() - 1).getId());
-//
+
+
+
+        Order order;
+        Delivery delivery;
+        Random random = new Random();
+        List<MainOrder> mainOrders = new ArrayList<>();
+        for (int i = 0; i < 11; i++) {
+            calendar = Calendar.getInstance();
+            calendar.set(Calendar.MINUTE, i * 5);
+            MainOrder mainOrder = new MainOrder();
+            mainOrder.setId(UUID.randomUUID().toString());
+            mainOrder.setMerchant(mockMerchant);
+            mainOrder.setPayStatus(1);//付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
+
+            mainOrder= mainOrderRepository.save(mainOrder);
+
+            order=new Order();
+            order.setId(new Date().toString());
+            order.setIsProtect(0);
+            order.setStatus(1);
+            order.setTitle("dingdan");
+            order.setUserType(1);
+            order.setMainOrderNo(mainOrder.getId());
+            order.setAmount(10);
+            order.setMerchant(mockMerchant);
+            order=orderRepository.save(order);
+
+            OrderItems orderItems = new OrderItems();
+            orderItems.setGoodsId(goods.getId());
+            orderItems.setProductId(product.getId());
+            orderItems.setAmount(10);
+            orderItems.setMerchant(mockMerchant);
+            orderItems.setOrder(order);
+            orderItems.setPrice(100F);
+            orderItemsRepository.save(orderItems);
+
+            delivery = new Delivery();
+            delivery.setId("111111"+i);
+            delivery.setOrder(order);
+            delivery.setAddress("address");
+            delivery.setStatus("");
+            delivery.setUser(user);
+            delivery.setNo("111212112122121");
+            delivery.setMoney(10F);
+            deliveryRepository.save(delivery);
+        }
+
+
+        //测试第一页
+        String result = mockMvc.perform(
+                device.getApi("orderList")
+                        .param("status", "1")
+                        .param("lastDate", "")
+                        .param("keyword", "")
+                        .build())
+//                .andExpect(jsonPath("$.resultData.list").isArray())
+                .andExpect(huobanmallStatus(CommonEnum.AppCode.SUCCESS))
+                .andDo(print()).andReturn().getResponse().getContentAsString();
+
+        List<Object> list = JsonPath.read(result, "$.resultData.list");
+        Assert.assertEquals("返回条数", list.size(), 10);
+        Assert.assertEquals("第一页第一条数据", JsonPath.read(list.get(0).toString(), "$.orderNo").toString()
+                , list.get(list.size() - 1).toString());
+
 //
 //        //测试下一页
 //        result = mockMvc.perform(
@@ -418,7 +435,7 @@ public class GoodsControllerTest extends SpringAppTest {
 //        list = JsonPath.read(result, "$.resultData.list");
 //        Assert.assertEquals("返回条数", list.size(), 1);
 //        Assert.assertEquals("第一页第一条待付款数据", JsonPath.read(list.get(0).toString(), "$.orderNo").toString()
-//                , orderList.stream().filter(x -> x.getPayStatus().intValue() == 0).findFirst().get().getId());
+//                , list.stream().filter(x -> x.getPayStatus().intValue() == 0).findFirst().get().getId());
 //
 //
 //        //订单详情

@@ -53,7 +53,7 @@ public class Operator {
      * 权限，控制app端的内容显示 以,隔开 如 11,33,55
      * todo new
      */
-    @Column(length = 2000, name = "AppAuthority")
+    @Column(length = 2000, name = "AppMenuAuthorize")
     private String authority;
 
 

@@ -249,8 +249,10 @@ public class OrderServiceImpl implements OrderService {
                 return "部分退款";
             case 5:
                 return "全额退款";
+            case 6:
+                return "售后退款中";
             default:
-                return "无";
+                return "";
         }
     }
 
@@ -269,7 +271,7 @@ public class OrderServiceImpl implements OrderService {
             case 4:
                 return "已退货";
             default:
-                return "无";
+                return "";
         }
     }
 
@@ -284,7 +286,7 @@ public class OrderServiceImpl implements OrderService {
             case 2:
                 return "已完成";
             default:
-                return "无";
+                return "";
         }
     }
 }

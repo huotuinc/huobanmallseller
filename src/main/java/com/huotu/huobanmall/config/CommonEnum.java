@@ -246,7 +246,12 @@ public interface CommonEnum {
         /**
          * ERROR_USER_SHOPCLOSE(60001,"商城已经关闭")
          */
-        ERROR_USER_SHOPCLOSE(60001,"商城已经关闭");
+        ERROR_USER_SHOPCLOSE(60001,"商城已经关闭"),
+
+        /**
+         * ERROR_USER_SHOPEXPIRED(60002,"商城已经关闭")
+         */
+        ERROR_USER_SHOPEXPIRED(60002,"商城已经关闭");
 
 
 

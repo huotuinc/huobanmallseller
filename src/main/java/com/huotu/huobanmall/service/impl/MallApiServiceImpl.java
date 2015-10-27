@@ -42,7 +42,7 @@ public class MallApiServiceImpl implements MallApiService {
 
     @Override
     public String getMsiteUrl(Integer customerId) throws IOException {
-        String url = commonConfigService.getMallApiServerUrl() + "activity/getmsiteurl";
+        String url = commonConfigService.getMallApiServerUrl() + "/activity/getmsiteurl";
 
         Map<String, String> map = new TreeMap<>();
         map.put("timestamp", String.valueOf(new Date().getTime()));
@@ -61,12 +61,12 @@ public class MallApiServiceImpl implements MallApiService {
 
     @Override
     public String upladPic(Integer customerId, String images, Integer type) throws IOException {
-        String url = commonConfigService.getMallApiServerUrl() + "gallery/upladpic";
+        String url = commonConfigService.getMallApiServerUrl() + "/gallery/upladpic";
 
         Map<String, String> map = new TreeMap<>();
         map.put("timestamp", String.valueOf(new Date().getTime()));
         map.put("appid", appid);
-        map.put("storeId", String.valueOf(customerId));
+        map.put("storeid", String.valueOf(customerId));
         map.put("image", images);
         map.put("type", String.valueOf(type));
         map.put("sign", getSign(map));

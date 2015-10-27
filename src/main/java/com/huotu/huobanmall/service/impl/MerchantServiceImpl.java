@@ -13,6 +13,7 @@ import com.huotu.huobanmall.entity.Merchant;
 import com.huotu.huobanmall.entity.Operator;
 import com.huotu.huobanmall.entity.Shop;
 import com.huotu.huobanmall.exception.ShopCloseException;
+import com.huotu.huobanmall.exception.ShopExpiredException;
 import com.huotu.huobanmall.model.app.AppMerchantModel;
 import com.huotu.huobanmall.model.app.AppPublicModel;
 import com.huotu.huobanmall.repository.MerchantRepository;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -64,13 +66,18 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws ShopCloseException {
+    public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws Exception {
 
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
             if (password.equals(merchant.getPassword())) {
                 if(merchant.getMallStatus()!=1){
                     throw new ShopCloseException("商城已被关闭");
+                }
+                long date=merchant.getMallExpireDate()==null?0:merchant.getMallExpireDate().getTime();
+                if(new Date().getTime()>date){
+                    throw new ShopExpiredException("商城已经过期");
+
                 }
                 Shop shop = shopRepository.findByMerchant(merchant);
                 String token = createToken();
@@ -109,6 +116,11 @@ public class MerchantServiceImpl implements MerchantService {
             if (operator != null && password.equals(operator.getPassword())) {
                 if(StringUtils.isEmpty(merchant.getMallStatus())||merchant.getMallStatus()!=1){
                     throw new ShopCloseException("商城已被关闭");
+                }
+                long date=merchant.getMallExpireDate()==null?0:merchant.getMallExpireDate().getTime();
+                if(new Date().getTime()>date){
+                    throw new ShopExpiredException("商城已经过期");
+
                 }
                 String token = createToken();
                 Shop shop = shopRepository.findByMerchant(operator.getMerchant());

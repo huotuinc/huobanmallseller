@@ -27,12 +27,12 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getResoureServerUrl() {
-        return env.getProperty("huobanmall.resources.url", "http://res.51flashmall.com/");
+        return env.getProperty("huobanmall.resources.url", "http://res.51flashmall.com");
     }
 
     @Override
     public String getMallApiServerUrl() {
-        return env.getProperty("huobanmall.mapapi.url", "http://mallapi.51flashmall.com/");
+        return env.getProperty("huobanmall.mapapi.url", "http://mallapi.huobanj.cn");
     }
 
     @Override

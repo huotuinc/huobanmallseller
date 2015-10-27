@@ -11,6 +11,7 @@ package com.huotu.huobanmall.interceptor;
 
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.exception.ShopCloseException;
+import com.huotu.huobanmall.exception.ShopExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,8 +36,10 @@ public class AppHandlerExceptionResolver implements HandlerExceptionResolver {
             } catch (ShopCloseException e) {
                 result.setSystemResultCode(CommonEnum.AppCode.ERROR_USER_SHOPCLOSE.getValue());
                 result.setSystemResultDescription("商城已经关闭");
-            }
-            catch (Exception e) {
+            }catch (ShopExpiredException e){
+                result.setSystemResultCode(CommonEnum.AppCode.ERROR_USER_SHOPEXPIRED.getValue());
+                result.setSystemResultDescription("商城已经过期");
+            } catch (Exception e) {
                 result.setSystemResultCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             }
 

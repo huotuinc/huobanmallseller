@@ -11,6 +11,7 @@ package com.huotu.huobanmall.entity;
 
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 商家 todo 字段长度类型等需要最后跟数据库一致
@@ -92,6 +93,13 @@ public class Merchant {
      */
     @Column(name = "SC_MallStatus")
     private Integer mallStatus;
+
+    /**
+     * 商城到期时间
+     */
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "SC_MallExpireDate")
+    private Date mallExpireDate;
 
 
 
@@ -184,5 +192,13 @@ public class Merchant {
 
     public void setMallStatus(Integer mallStatus) {
         this.mallStatus = mallStatus;
+    }
+
+    public Date getMallExpireDate() {
+        return mallExpireDate;
+    }
+
+    public void setMallExpireDate(Date mallExpireDate) {
+        this.mallExpireDate = mallExpireDate;
     }
 }

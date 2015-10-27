@@ -73,7 +73,7 @@ public class Order {
     private Integer status;
 
     /**
-     * 付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
+     * 付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款|6：售后退款中
      */
     @Column(name = "Pay_Status")
     private Integer payStatus;
@@ -142,6 +142,12 @@ public class Order {
      */
     @Column(name = "Rel_receiveStatus")
     private Integer receivestatus;
+
+    /**
+     * 收货地址
+     */
+    @Column(name = "ship_addr")
+    private String shipAddr;
 
     public String getId() {
         return id;
@@ -285,5 +291,13 @@ public class Order {
 
     public void setReceivestatus(Integer receivestatus) {
         this.receivestatus = receivestatus;
+    }
+
+    public String getShipAddr() {
+        return shipAddr;
+    }
+
+    public void setShipAddr(String shipAddr) {
+        this.shipAddr = shipAddr;
     }
 }
