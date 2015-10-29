@@ -37,7 +37,7 @@ public class CommonConfigServiceImpl implements CommonConfigService {
 
     @Override
     public String getWebUrl() {
-        return env.getProperty("huobanmall.web.url", "http://apitest.51flashmall.com:8080/huobanmall/");
+        return env.getProperty("huobanmall.web.url", "http://apitest.51flashmall.com:8080/huobanmall");
     }
 
     @Override
