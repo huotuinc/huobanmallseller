@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
@@ -33,30 +34,23 @@ import java.util.TreeMap;
 @Service
 public class MallApiServiceImpl implements MallApiService {
 
-    private String appsecret = "9389e8a5c32eefa3134340640fb4ceaa";
-    private String appid = "73d29a4c9a6d389a0b7288ec27b4c4c4";
-
     @Autowired
     private CommonConfigService commonConfigService;
+    @Autowired
     private MallInfoService mallInfoService;
+    private String appsecret;
+    private String appid;
+
+    @PostConstruct
+    public void init(){
+        appsecret =commonConfigService.getAppsecret();
+        appid = commonConfigService.getAppId();
+    }
+
 
     @Override
     public String getMsiteUrl(Integer customerId) throws IOException {
-        String url = commonConfigService.getMallApiServerUrl() + "/activity/getmsiteurl";
-
-        Map<String, String> map = new TreeMap<>();
-        map.put("timestamp", String.valueOf(new Date().getTime()));
-        map.put("appid", appid);
-        map.put("customerid", String.valueOf(customerId));
-        map.put("sign", getSign(map));
-
-        String strUrl = getSignUrl(map);
-        String response = HttpHelper.getRequest(url + strUrl);
-        MallApiResultModel resultModel = JSON.parseObject(response, MallApiResultModel.class);
-        if (resultModel.getCode() == 200 && !StringUtils.isEmpty(resultModel.getData().toString())) {
-            return JsonPath.read(resultModel.getData().toString(), "$.msiteUrl").toString();
-        }
-        return null;
+        return mallInfoService.customerURL(customerId);
     }
 
     @Override

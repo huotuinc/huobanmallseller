@@ -39,4 +39,14 @@ public interface CommonConfigService {
      */
     String getWebCustomerServicePhone();
 
+    /**
+     * appid
+     */
+    String getAppId();
+
+    /**
+     * appsecret
+     */
+    String getAppsecret();
+
 }

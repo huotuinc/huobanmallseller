@@ -388,10 +388,12 @@ public class GoodsController implements GoodsSystem {
         } else {
             delivery = new Delivery();
         }
-        String appId = "73d29a4c9a6d389a0b7288ec27b4c4c4";
-        String encryption = "9389e8a5c32eefa3134340640fb4ceaa";
+//        String appId = "73d29a4c9a6d389a0b7288ec27b4c4c4";
+//        String encryption = "9389e8a5c32eefa3134340640fb4ceaa";
+        String appId=commonConfigService.getAppId();
+        String encryption=commonConfigService.getAppsecret();
         String sign = DigestUtils.md5DigestAsHex(("appid=" + appId + "&number=" + delivery.getNo() + encryption).getBytes());
-        String url = "http://express.51flashmall.com/express/logisty";
+        String url = commonConfigService.getMallApiServerUrl()+ "/express/logisty";
 
 
 
