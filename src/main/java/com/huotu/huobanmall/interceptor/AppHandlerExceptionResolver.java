@@ -12,6 +12,8 @@ package com.huotu.huobanmall.interceptor;
 import com.huotu.huobanmall.config.CommonEnum;
 import com.huotu.huobanmall.exception.ShopCloseException;
 import com.huotu.huobanmall.exception.ShopExpiredException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by Administrator on 2015/10/15.
  */
 public class AppHandlerExceptionResolver implements HandlerExceptionResolver {
+    private static Log log = LogFactory.getLog(AppHandlerExceptionResolver.class);
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         String requestURI = request.getRequestURI().substring(request.getContextPath().length());
@@ -40,6 +43,7 @@ public class AppHandlerExceptionResolver implements HandlerExceptionResolver {
                 result.setSystemResultCode(CommonEnum.AppCode.ERROR_USER_SHOPEXPIRED.getValue());
                 result.setSystemResultDescription("商城已经过期");
             } catch (Exception e) {
+                log.error("unExcepted error ",e);
                 result.setSystemResultCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             }
 

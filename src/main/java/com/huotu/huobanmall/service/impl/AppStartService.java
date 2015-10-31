@@ -101,18 +101,18 @@ public class AppStartService implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
-            if (merchantRepository.count() == 0) {
-                Random random = new Random();
-                generateData("lgh", "18368893860", "lgh",random);
-                generateData("lc", "13675847670", "lc",random);
-                generateData("wlf", "18767152078", "wlf",random);
-                generateData("wl", "15088718256", "wl",random);
-                generateData("jxd", "13757193476", "jxd",random);
-                generateData("jc", "18606509616", "jc",random);
-                generateData("lhb", "13857560740", "lhb",random);
-                generateData("htxx", "18368893861", "htxx",random);
-                generateData("htxx2", "18368893862", "htxx2",random);
-            }
+//            if (merchantRepository.count() == 0) {
+//                Random random = new Random();
+//                generateData("lgh", "18368893860", "lgh",random);
+//                generateData("lc", "13675847670", "lc",random);
+//                generateData("wlf", "18767152078", "wlf",random);
+//                generateData("wl", "15088718256", "wl",random);
+//                generateData("jxd", "13757193476", "jxd",random);
+//                generateData("jc", "18606509616", "jc",random);
+//                generateData("lhb", "13857560740", "lhb",random);
+//                generateData("htxx", "18368893861", "htxx",random);
+//                generateData("htxx2", "18368893862", "htxx2",random);
+//            }
 
             if (configAppVersionRepository.count() == 0) {
                 ConfigAppVersion configAppVersion = new ConfigAppVersion();

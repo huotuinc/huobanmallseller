@@ -24,6 +24,8 @@ import com.huotu.huobanmall.service.DeviceService;
 import com.huotu.huobanmall.service.MallApiService;
 import com.huotu.huobanmall.service.MerchantService;
 import com.huotu.huobanplus.sdk.mall.service.MallInfoService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -39,6 +41,8 @@ import java.util.UUID;
 
 @Service
 public class MerchantServiceImpl implements MerchantService {
+
+    private static Log log= LogFactory.getLog(MerchantServiceImpl.class);
 
     @Autowired
     private MerchantRepository merchantRepository;
@@ -68,6 +72,7 @@ public class MerchantServiceImpl implements MerchantService {
     @Override
     public AppMerchantModel login(String username, String password, AppPublicModel appPublicModel) throws Exception {
 
+
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
             if (password.equals(merchant.getPassword())) {
@@ -79,7 +84,9 @@ public class MerchantServiceImpl implements MerchantService {
                     throw new ShopExpiredException("商城已经过期");
 
                 }
+                log.debug(" login step 1");
                 Shop shop = shopRepository.findByMerchant(merchant);
+                log.debug(" login step 2");
                 String token = createToken();
                 AppMerchantModel appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(merchant.getName());
@@ -90,18 +97,20 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
+                log.debug(" login step 3");
                 appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
+                log.debug(" login step 4");
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
                 appMerchantModel.setTitle(shop.getTitle());
                 appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
-
+                log.debug(" login step 5");
                 //设备变更
                 if (merchant.getDevice()==null || !merchant.getDevice().equals(appPublicModel.getCurrentDevice())) {
                     deviceService.userChanged(appPublicModel.getCurrentDevice(), merchant,null, appPublicModel.getVersion(), appPublicModel.getIp());
                 }
-
+                log.debug(" login step 6");
                 merchant.setToken(token);
                 merchantRepository.save(merchant);
                 return appMerchantModel;
@@ -209,11 +218,11 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public AppMerchantModel getAppMerchantModel(Operator operator, Merchant merchant) throws Exception {
-        AppMerchantModel appMerchantModel = null;
+        AppMerchantModel appMerchantModel;
         if (operator == null) {
             if (merchant != null) {
                 Shop shop = shopRepository.findByMerchant(merchant);
-
+                log.debug("step 7");
                 appMerchantModel = new AppMerchantModel();
                 appMerchantModel.setName(merchant.getName());
                 appMerchantModel.setWelcomeTip("welcome");
@@ -223,12 +232,15 @@ public class MerchantServiceImpl implements MerchantService {
                 appMerchantModel.setEnableBillNotice(merchant.isEnableBillNotice() ? 1 : 0);
                 appMerchantModel.setEnablePartnerNotice(merchant.isEnablePartnerNotice() ? 1 : 0);
                 appMerchantModel.setOperatored(false);
+                log.debug("step 8");
                 appMerchantModel.setLogo(commonConfigService.getResoureServerUrl() + shop.getLogo());
                 appMerchantModel.setNickName(merchant.getNickName());
                 appMerchantModel.setNoDisturbed(merchant.isNoDisturbed() ? 1 : 0);
                 appMerchantModel.setMobile(merchant.getMobile());
                 appMerchantModel.setTitle(shop.getTitle());
+                log.debug("step 9");
                 appMerchantModel.setIndexUrl(getIndexUrl(merchant.getId()));
+                log.debug("step 10");
                 return appMerchantModel;
             }
         } else {

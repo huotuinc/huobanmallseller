@@ -12,6 +12,7 @@ package com.huotu.huobanmall.bootconfig;
 import com.huotu.huobanmall.model.app.AppGlobalModel;
 import com.huotu.huobanplus.sdk.mall.MallSDKConfig;
 import org.luffy.lib.libspring.data.ClassicsRepositoryFactoryBean;
+import org.luffy.lib.libspring.logging.LoggingConfig;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -25,7 +26,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories(value = {"com.huotu.huobanmall.repository"}, repositoryFactoryBeanClass = ClassicsRepositoryFactoryBean.class)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableScheduling
-@Import(MallSDKConfig.class)
+@Import(
+        {
+                MallSDKConfig.class,
+                LoggingConfig.class
+        })
 public class RootConfig {
 
     @Bean
