@@ -37,6 +37,7 @@ public class CountTodaySales {
     /**
      * 销售额
      */
+    @Column(columnDefinition="decimal(18,2)")
     private float money;
 
     public CountTodaySales(Integer merchantId, Integer hour, float money) {

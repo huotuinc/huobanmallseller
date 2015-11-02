@@ -39,6 +39,7 @@ public class CountDaySales {
     /**
      * 销售额
      */
+    @Column(columnDefinition="decimal(18,2)")
     private float money;
 
     public CountDaySales(Integer merchantId, Date date, float money) {
