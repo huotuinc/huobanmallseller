@@ -9,8 +9,6 @@
 
 package com.huotu.huobanmall.model.app;
 
-import java.util.Date;
-
 /**
  * Created by lgh on 2015/9/11.
  */
@@ -24,7 +22,7 @@ public class AppTopSalesModel {
     /**
      * 付款金额
      */
-    private Float money;
+    private Double money;
 
     /**
      * 订单图片
@@ -42,11 +40,11 @@ public class AppTopSalesModel {
         this.orderNo = orderNo;
     }
 
-    public Float getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(Float money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

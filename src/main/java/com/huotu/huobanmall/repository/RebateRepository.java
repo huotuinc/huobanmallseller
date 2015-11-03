@@ -34,7 +34,7 @@ public interface RebateRepository extends JpaRepository<Rebate, Integer>, JpaSpe
     Page<Object[]> findTopScore(Integer merchantId,Integer status,Pageable pageable);
 
 //    Page<Rebate> findByMerchantAndStatusLessThanOrderByTimeDesc(Merchant merchant, Integer status, Date time, Pageable pageable);
-    List<Rebate> findByMerchantAndOrder(Merchant merchant,Order order);
+    List<Rebate> findByMerchantAndOrderAndPositiveFlag(Merchant merchant,Order order,Integer flag);
 
 
 

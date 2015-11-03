@@ -25,7 +25,7 @@ public class AppSalesListModel {
     /**
      * 付款金额
      */
-    private Float money;
+    private Double money;
 
     /**
      * 下单时间
@@ -45,11 +45,11 @@ public class AppSalesListModel {
         this.orderNo = orderNo;
     }
 
-    public Float getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(Float money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

@@ -97,7 +97,7 @@ public interface CountService {
      * @param merchant
      * @return
      */
-    Map<Integer, Float> getDaySales(Merchant merchant);
+    Map<Integer, Double> getDaySales(Merchant merchant);
 
 
     /**
@@ -106,7 +106,7 @@ public interface CountService {
      * @param merchant
      * @return
      */
-    Map<Date, Float> getWeekSales(Merchant merchant);
+    Map<Date, Double> getWeekSales(Merchant merchant);
 
     /**
      * 本月销售额
@@ -114,14 +114,14 @@ public interface CountService {
      * @param merchant
      * @return
      */
-    Map<Date, Float> getMonthSales(Merchant merchant);
+    Map<Date, Double> getMonthSales(Merchant merchant);
 
     /**
      * 计算总销售额
      * @param merchant
      * @return
      */
-    Float getTotalSales(Merchant merchant);
+    Double getTotalSales(Merchant merchant);
 
     /**
      * 计算总订单量

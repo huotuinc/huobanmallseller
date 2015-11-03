@@ -97,6 +97,12 @@ public class Rebate {
     @Column(name = "UTIH_Type")
     private Integer type;
 
+    /**
+     * 可转正判断字段
+     */
+    @Column(name="UTIH_PositiveFlag")
+    private Integer positiveFlag;
+
     public Integer getId() {
         return id;
     }
@@ -193,5 +199,13 @@ public class Rebate {
 
     public void setFlowScore(Integer flowScore) {
         this.flowScore = flowScore;
+    }
+
+    public Integer getPositiveFlag() {
+        return positiveFlag;
+    }
+
+    public void setPositiveFlag(Integer positiveFlag) {
+        this.positiveFlag = positiveFlag;
     }
 }

@@ -40,9 +40,9 @@ public class CountDaySales {
      * 销售额
      */
     @Column(columnDefinition="decimal(18,2)")
-    private float money;
+    private double money;
 
-    public CountDaySales(Integer merchantId, Date date, float money) {
+    public CountDaySales(Integer merchantId, Date date, double money) {
         this.merchantId = merchantId;
         this.date = date;
         this.money = money;
@@ -68,11 +68,11 @@ public class CountDaySales {
         this.date = date;
     }
 
-    public float getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 }

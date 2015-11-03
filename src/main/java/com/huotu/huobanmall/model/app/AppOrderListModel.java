@@ -49,7 +49,7 @@ public class AppOrderListModel {
     /**
      * 实付金额
      */
-    private float paid;
+    private double paid;
 
 
     /**
@@ -94,11 +94,11 @@ public class AppOrderListModel {
         this.amount = amount;
     }
 
-    public float getPaid() {
+    public double getPaid() {
         return paid;
     }
 
-    public void setPaid(float paid) {
+    public void setPaid(double paid) {
         this.paid = paid;
     }
 

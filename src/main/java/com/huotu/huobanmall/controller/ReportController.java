@@ -10,6 +10,7 @@
 package com.huotu.huobanmall.controller;
 
 import com.huotu.common.DateHelper;
+import com.huotu.common.MathHelper;
 import com.huotu.huobanmall.api.ReportSystem;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
@@ -77,8 +78,8 @@ public class ReportController implements ReportSystem {
 
     @Override
     @RequestMapping("/newToday")
-    public ApiResult newToday(Output<Float> totalSales,
-                              Output<Float> todaySales,
+    public ApiResult newToday(Output<Double> totalSales,
+                              Output<Double> todaySales,
                               Output<Integer[]> orderHour,
                               Output<Integer[]> orderAmount,
                               Output<Integer[]> memberHour,
@@ -130,10 +131,10 @@ public class ReportController implements ReportSystem {
         //返回小伙伴时间段值数组
         partnerAmount.outputData(partners);
         //返回今日销售额
-        float countDodaySales = orderService.countSale(merchant);
-        todaySales.outputData(countDodaySales);
+        double countDodaySales = orderService.countSale(merchant);
+        todaySales.outputData(MathHelper.retainDecimal(countDodaySales,2));
         //返回总销售额
-        totalSales.outputData(countService.getTotalSales(merchant)+countDodaySales);
+        totalSales.outputData(MathHelper.retainDecimal(countService.getTotalSales(merchant)+countDodaySales,2));
         //返回今日新增订单数
         todayOrderAmount.outputData(orderService.countOrderQuantity(merchant));
         //返回今日新增会员数
@@ -204,41 +205,41 @@ public class ReportController implements ReportSystem {
     @Override
     @RequestMapping("/salesReport")
     public ApiResult salesReport(
-            Output<Float> totalAmount, Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
-            , Output<Integer[]> todayTimes, Output<Float[]> todayAmounts
-            , Output<Date[]> weekTimes, Output<Float[]> weekAmounts
-            , Output<Date[]> monthTimes, Output<Float[]> monthAmounts
+            Output<Double> totalAmount, Output<Double> todayAmount, Output<Double> weekAmount, Output<Double> monthAmount
+            , Output<Integer[]> todayTimes, Output<Double[]> todayAmounts
+            , Output<Date[]> weekTimes, Output<Double[]> weekAmounts
+            , Output<Date[]> monthTimes, Output<Double[]> monthAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
 
         //今日销售数据
-        Map<Integer, Float> mapToday = countService.getDaySales(apm.getCurrentUser());
+        Map<Integer, Double> mapToday = countService.getDaySales(apm.getCurrentUser());
 
         todayTimes.outputData(mapToday.keySet().toArray(new Integer[mapToday.keySet().size()]));
-        todayAmounts.outputData(mapToday.values().toArray(new Float[mapToday.values().size()]));
-        float todayCountSales = ((Double) mapToday.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue();
-        todayAmount.outputData(todayCountSales);
+        todayAmounts.outputData(mapToday.values().toArray(new Double[mapToday.values().size()]));
+        double todayCountSales = mapToday.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum();
+        todayAmount.outputData(MathHelper.retainDecimal(todayCountSales,2));
 
 
         //周销售数据
-        Map<Date, Float> mapWeek = countService.getWeekSales(apm.getCurrentUser());
+        Map<Date, Double> mapWeek = countService.getWeekSales(apm.getCurrentUser());
         mapWeek.put(DateHelper.getThisDayBegin(), todayCountSales);
         weekTimes.outputData(mapWeek.keySet().toArray(new Date[mapWeek.keySet().size()]));
-        weekAmounts.outputData(mapWeek.values().toArray(new Float[mapWeek.values().size()]));
-        weekAmount.outputData(((Double) mapWeek.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+        weekAmounts.outputData(mapWeek.values().toArray(new Double[mapWeek.values().size()]));
+        weekAmount.outputData(MathHelper.retainDecimal(mapWeek.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum(),2));
 
 
         //月销售数据
-        Map<Date, Float> mapMonth = countService.getMonthSales(apm.getCurrentUser());
+        Map<Date, Double> mapMonth = countService.getMonthSales(apm.getCurrentUser());
         mapMonth.put(DateHelper.getThisDayBegin(), todayCountSales);
         //月转周
-        mapMonth = MonthToWeek(mapMonth, Float.class);
+        mapMonth = MonthToWeek(mapMonth, Double.class);
 
         monthTimes.outputData(mapMonth.keySet().toArray(new Date[mapMonth.keySet().size()]));
-        monthAmounts.outputData(mapMonth.values().toArray(new Float[mapMonth.values().size()]));
-        monthAmount.outputData(((Double) mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum()).floatValue());
+        monthAmounts.outputData(mapMonth.values().toArray(new Double[mapMonth.values().size()]));
+        monthAmount.outputData(MathHelper.retainDecimal(mapMonth.values().stream().mapToDouble((x) -> x).summaryStatistics().getSum(),2));
 
-        totalAmount.outputData(countService.getTotalSales(apm.getCurrentUser())+todayCountSales);
+        totalAmount.outputData(MathHelper.retainDecimal(countService.getTotalSales(apm.getCurrentUser())+todayCountSales,2));
 
         return ApiResult.resultWith(CommonEnum.AppCode.SUCCESS);
     }
@@ -415,6 +416,10 @@ public class ReportController implements ReportSystem {
                 if (Float.class.equals(cls)) {
                     result.put(x, (T)(Float)0.0f);
                 }
+                if (Double.class.equals(cls)) {
+                    result.put(x, (T)(Double)0.0);
+                }
+
             }
         });
 
@@ -430,6 +435,11 @@ public class ReportController implements ReportSystem {
                     }
                     if (Float.class.equals(cls)) {
                         Float t = (result.get(weekend) == null ? 0 : (Float) result.get(weekend)) + (Float) value;
+                        result.put(weekend, (T) t);
+                        break;
+                    }
+                    if (Double.class.equals(cls)) {
+                        Double t = (result.get(weekend) == null ? 0 : (Double) result.get(weekend)) + (Double) value;
                         result.put(weekend, (T) t);
                         break;
                     }
@@ -511,7 +521,7 @@ public class ReportController implements ReportSystem {
             long amount = (Long) objects[2];
             appTopConsumeModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());
             appTopConsumeModel.setName(userService.getViewUserName(user));
-            appTopConsumeModel.setMoney((float) money);
+            appTopConsumeModel.setMoney(money);
             appTopConsumeModel.setAmount((int) amount);
             appTopConsumeModels[i] = appTopConsumeModel;
         }

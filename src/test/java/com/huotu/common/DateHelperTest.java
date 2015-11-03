@@ -35,8 +35,8 @@ public class DateHelperTest {
 
 
 
-        Map<Integer,Float> map=DateHelper.getTimeAbscissa(Float.class);
-        for (Map.Entry<Integer, Float> entry : map.entrySet()) {
+        Map<Integer,Double> map=DateHelper.getTimeAbscissa(Double.class);
+        for (Map.Entry<Integer, Double> entry : map.entrySet()) {
             System.out.println(entry.getKey()+" "+entry.getValue());
 //            partners[(entry.getKey()-1)/3] += entry.getValue();
         }

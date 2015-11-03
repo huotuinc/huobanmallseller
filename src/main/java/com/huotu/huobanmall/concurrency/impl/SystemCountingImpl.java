@@ -384,9 +384,9 @@ public class SystemCountingImpl implements SystemCounting {
         List<CountDaySales> list = new ArrayList<>();
 
         StringBuilder hql = new StringBuilder();
-        hql.append("select order.merchant.id,FUNC('year',order.time) as year,FUNC('month',order.time) as month,FUNC('day',order.time) as day" +
+        hql.append("select order.merchant.id,FUNC('year',order.payTime) as year,FUNC('month',order.payTime) as month,FUNC('day',order.payTime) as day" +
                 " ,sum(order.price) as amount from Order order " +
-                " where order.time<:startTime and order.payStatus=1 and order.status<>-1 " +
+                " where order.payTime<:startTime and order.payStatus=1 and order.status<>-1 " +
                 " group by order.merchant.id,year,month,day");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("startTime", startTime);
@@ -397,7 +397,7 @@ public class SystemCountingImpl implements SystemCounting {
             Object[] objects = (Object[]) data;
             list.add(new CountDaySales(Integer.parseInt(objects[0].toString())
                     , DateHelper.getThisDayBegin(Integer.parseInt(objects[1].toString()), Integer.parseInt(objects[2].toString()), Integer.parseInt(objects[3].toString()))
-                    , Float.parseFloat(objects[4].toString())));
+                    , Double.parseDouble(objects[4].toString())));
         }
         countDaySalesRepository.save(Arrays.asList(list.toArray(new CountDaySales[list.size()])));
     }
@@ -475,8 +475,8 @@ public class SystemCountingImpl implements SystemCounting {
         List<CountTodaySales> list = new ArrayList<>();
 
         StringBuilder hql = new StringBuilder();
-        hql.append("select order.merchant.id,FUNC('dbo.hour',order.time) d,sum(order.price) as amount from Order order " +
-                " where order.time>=:beginTime and order.time<:endTime  and order.payStatus=1 and order.status<>-1 " +
+        hql.append("select order.merchant.id,FUNC('dbo.hour',order.payTime) d,sum(order.price) as amount from Order order " +
+                " where order.payTime>=:beginTime and order.payTime<:endTime  and order.payStatus=1 and order.status<>-1 " +
                 " group by order.merchant.id,d");
         List listQuery = orderRepository.queryHql(hql.toString(), query -> {
             query.setParameter("beginTime", beginTime);

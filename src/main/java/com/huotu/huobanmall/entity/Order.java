@@ -101,7 +101,7 @@ public class Order {
      * 订单总金额
      */
     @Column(name = "Final_Amount")
-    private float price;
+    private double price;
 
 
     /**
@@ -229,11 +229,11 @@ public class Order {
         this.amount = amount;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

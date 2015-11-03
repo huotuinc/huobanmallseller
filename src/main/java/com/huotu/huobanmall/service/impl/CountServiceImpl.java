@@ -153,8 +153,8 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
-    public Map<Integer, Float> getDaySales(Merchant merchant) {
-        Map<Integer, Float> result = DateHelper.getTimeAbscissa(Float.class);
+    public Map<Integer, Double> getDaySales(Merchant merchant) {
+        Map<Integer, Double> result = DateHelper.getTimeAbscissa(Double.class);
         Calendar calendar = Calendar.getInstance();
         Integer curHour = calendar.get(Calendar.HOUR_OF_DAY);
         List<CountTodaySales> list = countTodaySalesRepository.findAllByMerchantIdOrderByHour(merchant.getId());
@@ -179,8 +179,8 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
-    public Map<Date, Float> getWeekSales(Merchant merchant) {
-        Map<Date, Float> result = DateHelper.getWeekAbscissa(Float.class);
+    public Map<Date, Double> getWeekSales(Merchant merchant) {
+        Map<Date, Double> result = DateHelper.getWeekAbscissa(Double.class);
         Date date = DateHelper.getThisWeekBegin();
         List<CountDaySales> list = countDaySalesRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDaySales countDaySales : list) {
@@ -190,8 +190,8 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
-    public Map<Date, Float> getMonthSales(Merchant merchant) {
-        Map<Date, Float> result = new TreeMap<>();
+    public Map<Date, Double> getMonthSales(Merchant merchant) {
+        Map<Date, Double> result = new TreeMap<>();
         Date date = DateHelper.getThisMonthBegin();
         List<CountDaySales> list = countDaySalesRepository.findByMerchantIdAndDateGreaterThanEqualOrderByDate(merchant.getId(), date);
         for (CountDaySales countDaySales : list) {
@@ -201,9 +201,9 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
-    public Float getTotalSales(Merchant merchant) {
+    public Double getTotalSales(Merchant merchant) {
         List<CountDaySales> countDaySales=countDaySalesRepository.findByMerchantId(merchant.getId());
-       return ((Number)  countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum()).floatValue();
+       return countDaySales.stream().mapToDouble((x)->x.getMoney()).summaryStatistics().getSum();
 
 //        StringBuffer hql = new StringBuffer();
 //        hql.append("SELECT SUM(o.price) FROM Order o where o.status<>-1 and o.payStatus=1 and o.merchant.id=:merchantId");

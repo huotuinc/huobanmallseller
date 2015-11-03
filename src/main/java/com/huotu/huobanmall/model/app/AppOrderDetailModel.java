@@ -60,7 +60,7 @@ public class AppOrderDetailModel {
     /**
      * 实付金额
      */
-    private float paid;
+    private double paid;
 
     public String getBuyer() {
         return buyer;
@@ -118,11 +118,11 @@ public class AppOrderDetailModel {
         this.amount = amount;
     }
 
-    public float getPaid() {
+    public double getPaid() {
         return paid;
     }
 
-    public void setPaid(float paid) {
+    public void setPaid(double paid) {
         this.paid = paid;
     }
 

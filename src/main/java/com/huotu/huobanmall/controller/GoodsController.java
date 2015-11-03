@@ -314,7 +314,7 @@ public class GoodsController implements GoodsSystem {
         Order order = orderRepository.findOne(orderNo);
         User user = userRepository.findOne(order.getUserId());
 //        List<Delivery> deliveries = deliveryRepository.findByOrder(order);
-        List<Rebate> rebates = rebateRepository.findByMerchantAndOrder(merchant, order);
+        List<Rebate> rebates = rebateRepository.findByMerchantAndOrderAndPositiveFlag(merchant, order,1);
 
 
         //获取该订单的顶单项

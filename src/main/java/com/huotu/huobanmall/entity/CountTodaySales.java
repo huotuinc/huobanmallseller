@@ -38,9 +38,9 @@ public class CountTodaySales {
      * 销售额
      */
     @Column(columnDefinition="decimal(18,2)")
-    private float money;
+    private double money;
 
-    public CountTodaySales(Integer merchantId, Integer hour, float money) {
+    public CountTodaySales(Integer merchantId, Integer hour, double money) {
         this.merchantId = merchantId;
         this.hour = hour;
         this.money = money;
@@ -58,11 +58,11 @@ public class CountTodaySales {
         this.hour = hour;
     }
 
-    public float getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 

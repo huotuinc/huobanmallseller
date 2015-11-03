@@ -9,6 +9,7 @@
 
 package com.huotu.huobanmall.test;
 
+import com.huotu.common.DateHelper;
 import org.junit.Test;
 
 import java.util.Map;
@@ -29,6 +30,19 @@ public class WebTest {
         for (Map.Entry<Integer, String> entry : map.entrySet()) {
             System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
         }
+
+    }
+
+    @Test
+    public void test2(){
+//        BigDecimal bg = new BigDecimal(1.300);
+//        double countDodaySales = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+//        System.out.print(countDodaySales);
+
+
+        System.out.println(DateHelper.getThisDayBegin());
+
+
 
     }
 

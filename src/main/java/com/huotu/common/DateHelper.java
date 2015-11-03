@@ -185,6 +185,9 @@ public class DateHelper {
             if (Float.class.equals(cls)) {
                 hours.put(i*3, (T)(Float)0.0f);
             }
+            if(Double.class.equals(cls)){
+                hours.put(i*3,(T)(Double)0.0);
+            }
         }
         return hours;
     }
@@ -209,6 +212,9 @@ public class DateHelper {
             }
             if (Float.class.equals(cls)) {
                 week.put(start, (T)(Float)0.0f);
+            }
+            if(Double.class.equals(cls)){
+                week.put(start,(T)(Double)0.0);
             }
             calendar.add(Calendar.DAY_OF_YEAR,1);
             start=calendar.getTime();

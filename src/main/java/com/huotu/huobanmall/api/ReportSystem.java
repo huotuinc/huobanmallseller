@@ -40,7 +40,7 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult newToday(Output<Float> totalSales, Output<Float> todaySales
+    ApiResult newToday(Output<Double> totalSales, Output<Double> todaySales
             , Output<Integer[]> orderHour, Output<Integer[]> orderAmount
             , Output<Integer[]> memberHour, Output<Integer[]> memberAmount
             , Output<Integer[]> partnerHour, Output<Integer[]> partnerAmount
@@ -128,10 +128,10 @@ public interface ReportSystem {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    ApiResult salesReport(Output<Float> totalAmount, Output<Float> todayAmount, Output<Float> weekAmount, Output<Float> monthAmount
-            , Output<Integer[]> todayTimes, Output<Float[]> todayAmounts
-            , Output<Date[]> weekTimes, Output<Float[]> weekAmounts
-            , Output<Date[]> monthTimes, Output<Float[]> monthAmounts) throws Exception;
+    ApiResult salesReport(Output<Double> totalAmount, Output<Double> todayAmount, Output<Double> weekAmount, Output<Double> monthAmount
+            , Output<Integer[]> todayTimes, Output<Double[]> todayAmounts
+            , Output<Date[]> weekTimes, Output<Double[]> weekAmounts
+            , Output<Date[]> monthTimes, Output<Double[]> monthAmounts) throws Exception;
 
 
     /**

@@ -36,7 +36,7 @@ public class AppConsumeListModel {
     /**
      * 消费额
      */
-    private float money;
+    private double money;
 
 
     /**
@@ -65,11 +65,11 @@ public class AppConsumeListModel {
         this.name = name;
     }
 
-    public float getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
