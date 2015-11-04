@@ -149,6 +149,12 @@ public class Order {
     @Column(name = "ship_addr")
     private String shipAddr;
 
+    /**
+     * 收货人电话
+     */
+    @Column(name = "Ship_Mobile")
+    private String shipMobile;
+
     public String getId() {
         return id;
     }
@@ -299,5 +305,13 @@ public class Order {
 
     public void setShipAddr(String shipAddr) {
         this.shipAddr = shipAddr;
+    }
+
+    public String getShipMobile() {
+        return shipMobile;
+    }
+
+    public void setShipMobile(String shipMobile) {
+        this.shipMobile = shipMobile;
     }
 }

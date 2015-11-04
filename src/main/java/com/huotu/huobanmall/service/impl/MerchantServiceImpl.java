@@ -76,7 +76,7 @@ public class MerchantServiceImpl implements MerchantService {
         Merchant merchant = merchantRepository.findByName(username);
         if (merchant != null) {
             if (password.equals(merchant.getPassword())) {
-                if(merchant.getMallStatus()!=1){
+                if(merchant.getMallStatus()!=null&&merchant.getMallStatus()!=1){
                     throw new ShopCloseException("商城已被关闭");
                 }
                 long date=merchant.getMallExpireDate()==null?0:merchant.getMallExpireDate().getTime();
@@ -122,8 +122,8 @@ public class MerchantServiceImpl implements MerchantService {
                 return null;
             }
             merchant=operator.getMerchant();
-            if (operator != null && password.equals(operator.getPassword())) {
-                if(StringUtils.isEmpty(merchant.getMallStatus())||merchant.getMallStatus()!=1){
+            if (password.equals(operator.getPassword())) {
+                if(merchant.getMallStatus()!=null&&merchant.getMallStatus()!=1){
                     throw new ShopCloseException("商城已被关闭");
                 }
                 long date=merchant.getMallExpireDate()==null?0:merchant.getMallExpireDate().getTime();

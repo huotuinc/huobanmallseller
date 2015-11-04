@@ -351,9 +351,9 @@ public class GoodsController implements GoodsSystem {
         appOrderDetailModel.setAmount(order.getAmount());
         appOrderDetailModel.setBuyer(userService.getViewUserName(user));
         appOrderDetailModel.setReceiver(order.getReceiver());
-        appOrderDetailModel.setContact(user.getMobile()==null?"暂无联系电话":user.getMobile());
+        appOrderDetailModel.setContact(StringUtils.isEmpty(order.getShipMobile())?"暂无联系电话":order.getShipMobile());
         appOrderDetailModel.setOrderNo(order.getId());
-        appOrderDetailModel.setAddress( order.getShipAddr()==null?"暂无地址":order.getShipAddr());
+        appOrderDetailModel.setAddress( StringUtils.isEmpty(order.getShipAddr())?"暂无地址":order.getShipAddr());
         appOrderDetailModel.setPaid(order.getPrice());
         appOrderDetailModel.setScoreList(appUserRebateModels);
         data.outputData(appOrderDetailModel);
