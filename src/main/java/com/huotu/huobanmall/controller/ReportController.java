@@ -263,37 +263,49 @@ public class ReportController implements ReportSystem {
         Long todayCountMemberAmount = mapTodayMember.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
         todayMemberAmount.outputData(todayCountMemberAmount);
 
+        Integer[] members=DateHelper.getValueOrdinate();
+        for (Map.Entry<Integer, Integer> entry : mapTodayMember.entrySet()) {
+            members[(entry.getKey()-1)/3] += entry.getValue();
+        }
+        todayMemberAmounts.outputData(members);
+
         //今日分销商
         Map<Integer, Integer> mapTodayPartner = countService.todayPartner(apm.getCurrentUser());
         Long todayCountPartnerAmount = mapTodayPartner.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
         todayPartnerAmount.outputData(todayCountPartnerAmount);
 
-        //合并今日会员和分销商
-        List<Integer> listTodayTimes = new ArrayList<>();
-        for (Integer hour : mapTodayMember.keySet()) {
-            if (!listTodayTimes.contains(hour)) listTodayTimes.add(hour);
+        Integer[] partners=DateHelper.getValueOrdinate();
+        for (Map.Entry<Integer, Integer> entry : mapTodayPartner.entrySet()) {
+            partners[(entry.getKey()-1)/3] += entry.getValue();
         }
-        for (Integer hour : mapTodayPartner.keySet()) {
-            if (!listTodayTimes.contains(hour)) listTodayTimes.add(hour);
-        }
-        Collections.sort(listTodayTimes);
-        todayTimes.outputData(listTodayTimes.toArray(new Integer[listTodayTimes.size()]));
+        todayPartnerAmounts.outputData(partners);
 
-        List<Integer> listTodayMemberAmounts = new ArrayList<>();
-        List<Integer> listTodayPartnerAmounts = new ArrayList<>();
-        for (Integer hour : listTodayTimes) {
-            if (mapTodayMember.get(hour) == null)
-                listTodayMemberAmounts.add(0);
-            else
-                listTodayMemberAmounts.add(mapTodayMember.get(hour));
+//        //合并今日会员和分销商
+//        List<Integer> listTodayTimes = new ArrayList<>();
+//        for (Integer hour : mapTodayMember.keySet()) {
+//            if (!listTodayTimes.contains(hour)) listTodayTimes.add(hour);
+//        }
+//        for (Integer hour : mapTodayPartner.keySet()) {
+//            if (!listTodayTimes.contains(hour)) listTodayTimes.add(hour);
+//        }
+//        Collections.sort(listTodayTimes);
+//        todayTimes.outputData(listTodayTimes.toArray(new Integer[listTodayTimes.size()]));
+//
+//        List<Integer> listTodayMemberAmounts = new ArrayList<>();
+//        List<Integer> listTodayPartnerAmounts = new ArrayList<>();
+//        for (Integer hour : listTodayTimes) {
+//            if (mapTodayMember.get(hour) == null)
+//                listTodayMemberAmounts.add(0);
+//            else
+//                listTodayMemberAmounts.add(mapTodayMember.get(hour));
+//
+//            if (mapTodayPartner.get(hour) == null)
+//                listTodayPartnerAmounts.add(0);
+//            else
+//                listTodayPartnerAmounts.add(mapTodayPartner.get(hour));
+//        }
 
-            if (mapTodayPartner.get(hour) == null)
-                listTodayPartnerAmounts.add(0);
-            else
-                listTodayPartnerAmounts.add(mapTodayPartner.get(hour));
-        }
-        todayMemberAmounts.outputData(listTodayMemberAmounts.toArray(new Integer[listTodayMemberAmounts.size()]));
-        todayPartnerAmounts.outputData(listTodayPartnerAmounts.toArray(new Integer[listTodayPartnerAmounts.size()]));
+
 
 
         //周会员量
