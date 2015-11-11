@@ -72,7 +72,7 @@ public class SystemCountingImpl implements SystemCounting {
      * 凌晨计算完后，需要计算每天量
      */
     @Override
-    @Scheduled(cron = "0 10 0/1 * * ?")
+    @Scheduled(cron = "0 11 0/1 * * ?")
     @Transactional
     public void count() {
         try {
