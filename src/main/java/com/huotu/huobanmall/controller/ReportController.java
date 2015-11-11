@@ -258,6 +258,8 @@ public class ReportController implements ReportSystem {
             , Output<Integer[]> monthPartnerAmounts
     ) throws Exception {
         AppPublicModel apm = PublicParameterHolder.getParameters();
+        //获取时间段横坐标数组
+        Integer[] hours = DateHelper.getTimeAbscissa();
         //今日会员
         Map<Integer, Integer> mapTodayMember = countService.todayMember(apm.getCurrentUser());
         Long todayCountMemberAmount = mapTodayMember.values().stream().mapToInt(x -> x).summaryStatistics().getSum();
@@ -279,6 +281,7 @@ public class ReportController implements ReportSystem {
             partners[(entry.getKey()-1)/3] += entry.getValue();
         }
         todayPartnerAmounts.outputData(partners);
+        todayTimes.outputData(hours);
 
 //        //合并今日会员和分销商
 //        List<Integer> listTodayTimes = new ArrayList<>();
