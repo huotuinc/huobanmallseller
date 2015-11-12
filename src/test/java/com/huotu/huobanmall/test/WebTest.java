@@ -12,6 +12,7 @@ package com.huotu.huobanmall.test;
 import com.huotu.common.DateHelper;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,7 +43,9 @@ public class WebTest {
 
         System.out.println(DateHelper.getThisDayBegin());
 
-
+        Date date = DateHelper.getThisDayBegin();
+        date.setHours(-24);
+        System.out.println(date);
 
     }
 
