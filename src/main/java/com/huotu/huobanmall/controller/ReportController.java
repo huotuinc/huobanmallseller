@@ -536,7 +536,7 @@ public class ReportController implements ReportSystem {
             long amount = (Long) objects[2];
             appTopConsumeModel.setPictureUrl(commonConfigService.getResoureServerUrl()+user.getUserFace());
             appTopConsumeModel.setName(userService.getViewUserName(user));
-            appTopConsumeModel.setMoney(money);
+            appTopConsumeModel.setMoney(MathHelper.retainDecimal(money,2));
             appTopConsumeModel.setAmount((int) amount);
             appTopConsumeModels[i] = appTopConsumeModel;
         }

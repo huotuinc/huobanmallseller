@@ -26,7 +26,7 @@ public class AppOrderListProductModel {
     /**
      * 付款金额
      */
-    private Float money;
+    private Double money;
     /**
      * 商品数量
      */
@@ -46,11 +46,11 @@ public class AppOrderListProductModel {
         this.title = title;
     }
 
-    public Float getMoney() {
+    public Double getMoney() {
         return money;
     }
 
-    public void setMoney(Float money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

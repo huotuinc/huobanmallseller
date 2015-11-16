@@ -11,6 +11,7 @@ package com.huotu.huobanmall.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.huotu.common.HttpHelper;
+import com.huotu.common.MathHelper;
 import com.huotu.huobanmall.api.GoodsSystem;
 import com.huotu.huobanmall.api.common.ApiResult;
 import com.huotu.huobanmall.api.common.Output;
@@ -167,7 +168,7 @@ public class GoodsController implements GoodsSystem {
                     if(!StringUtils.isEmpty(product)){
                         appOrderListProductModel.setSpec(product.getSpec());
                         appOrderListProductModel.setTitle(product.getName());
-                        appOrderListProductModel.setMoney(product.getPrice());
+                        appOrderListProductModel.setMoney(MathHelper.retainDecimal(product.getPrice(),2));
                     }
                     if(!StringUtils.isEmpty(goods)){
                         appOrderListProductModel.setPictureUrl(commonConfigService.getResoureServerUrl()+goods.getSmallPic());
@@ -326,7 +327,7 @@ public class GoodsController implements GoodsSystem {
             Goods goods = goodsRepository.findOne(orderItems.getGoodsId());
             AppOrderListProductModel appOrderListProductModel = new AppOrderListProductModel();
             appOrderListProductModel.setPictureUrl(commonConfigService.getResoureServerUrl()+goods.getSmallPic());
-            appOrderListProductModel.setMoney(product.getPrice());
+            appOrderListProductModel.setMoney(MathHelper.retainDecimal(product.getPrice(),2));
             appOrderListProductModel.setAmount(orderItems.getAmount());
             appOrderListProductModel.setTitle(product.getName());
             appOrderListProductModel.setSpec(product.getSpec());
@@ -374,7 +375,7 @@ public class GoodsController implements GoodsSystem {
             Goods goods = goodsRepository.findOne(orderItems.getGoodsId());
             AppOrderListProductModel appOrderListProductModel = new AppOrderListProductModel();
             appOrderListProductModel.setPictureUrl(commonConfigService.getResoureServerUrl()+goods.getSmallPic());
-            appOrderListProductModel.setMoney(product.getPrice());
+            appOrderListProductModel.setMoney(MathHelper.retainDecimal(product.getPrice(),2));
             appOrderListProductModel.setAmount(orderItems.getAmount());
             appOrderListProductModel.setTitle(product.getName());
             appOrderListProductModel.setSpec(product.getSpec());

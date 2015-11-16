@@ -9,10 +9,9 @@
 
 package com.huotu.huobanmall.test;
 
-import com.huotu.common.DateHelper;
+import com.huotu.common.MathHelper;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,13 +38,15 @@ public class WebTest {
 //        BigDecimal bg = new BigDecimal(1.300);
 //        double countDodaySales = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 //        System.out.print(countDodaySales);
+        Double n=200.0+0.23;
+        System.out.print(MathHelper.retainDecimal(n,2));
 
 
-        System.out.println(DateHelper.getThisDayBegin());
-
-        Date date = DateHelper.getThisDayBegin();
-        date.setHours(-24);
-        System.out.println(date);
+//        System.out.println(DateHelper.getThisDayBegin());
+//
+//        Date date = DateHelper.getThisDayBegin();
+//        date.setHours(-24);
+//        System.out.println(date);
 
     }
 
