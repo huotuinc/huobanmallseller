@@ -80,6 +80,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        AbstractMethodError abstractMethodError;
         registry.addInterceptor(commonInterceptor)
                 .addPathPatterns("/app/*")
                 .excludePathPatterns("/app/forgetPassword")

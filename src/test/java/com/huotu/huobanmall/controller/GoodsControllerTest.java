@@ -238,7 +238,7 @@ public class GoodsControllerTest extends SpringAppTest {
 
         Assert.assertEquals("长度是否正确", 10, reallist.size());
         for(int i=0;i<10;i++){
-            String real=reallist.get(i).toString();
+            Object real=reallist.get(i);
             Assert.assertEquals("第一页的排序是否相等",goodsList.get(i).getId(),JsonPath.read(real,"$.goodsId"));
         }
         result=mockMvc.perform(device.getApi("goodsList")
@@ -251,7 +251,7 @@ public class GoodsControllerTest extends SpringAppTest {
         reallist=JsonPath.read(result,"$.resultData.list");
         Assert.assertEquals("长度是否正确", 10, reallist.size());
         for(int i=0;i<10;i++){
-            String real=reallist.get(i).toString();
+            Object real=reallist.get(i);
             Assert.assertEquals("第二页的排序是否相等",goodsList.get(i+10).getId(),JsonPath.read(real,"$.goodsId"));
         }
     }
@@ -350,14 +350,14 @@ public class GoodsControllerTest extends SpringAppTest {
             calendar = Calendar.getInstance();
             calendar.set(Calendar.MINUTE, i * 5);
             MainOrder mainOrder = new MainOrder();
-            mainOrder.setId(UUID.randomUUID().toString());
+            mainOrder.setId(createOrderNo(random));
             mainOrder.setMerchant(mockMerchant);
             mainOrder.setPayStatus(1);//付款状态  0：未支付|1：已支付|2：已支付至担保方|3：部分付款|4：部分退款|5：全额退款
 
             mainOrder= mainOrderRepository.save(mainOrder);
 
             order=new Order();
-            order.setId(new Date().toString());
+            order.setId(createOrderNo(random));
             order.setIsProtect(0);
             order.setStatus(1);
             order.setTitle("dingdan");
@@ -365,6 +365,7 @@ public class GoodsControllerTest extends SpringAppTest {
             order.setMainOrderNo(mainOrder.getId());
             order.setAmount(10);
             order.setMerchant(mockMerchant);
+            order.setIsTax(1);
             order=orderRepository.save(order);
 
             OrderItems orderItems = new OrderItems();
@@ -401,7 +402,7 @@ public class GoodsControllerTest extends SpringAppTest {
 
         List<Object> list = JsonPath.read(result, "$.resultData.list");
         Assert.assertEquals("返回条数", list.size(), 10);
-        Assert.assertEquals("第一页第一条数据", JsonPath.read(list.get(0).toString(), "$.orderNo").toString()
+        Assert.assertEquals("第一页第一条数据", JsonPath.read(list.get(0), "$.orderNo").toString()
                 , list.get(list.size() - 1).toString());
 
 //
@@ -522,7 +523,9 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andDo(print()).andReturn().getResponse().getContentAsString();
         list = JsonPath.read(result, "$.resultData.list");
         Assert.assertEquals("返回条数", list.size(), 10);
-        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.pid").toString()
+
+
+        Assert.assertEquals("第二页第一条",JsonPath.read(list.get(0), "$.pid").toString()
                 , rebateList.get(rebateList.size() - 11).getId().toString());
 
 
@@ -614,7 +617,7 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andDo(print()).andReturn().getResponse().getContentAsString();
         list = JsonPath.read(result, "$.resultData.list");
         Assert.assertEquals("返回条数", 10, list.size());
-        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.time").toString()
+        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0), "$.time").toString()
                 , String.valueOf(orderList.get(orderList.size() - 11).getTime().getTime()));
 
 
@@ -713,7 +716,7 @@ public class GoodsControllerTest extends SpringAppTest {
                 .andDo(print()).andReturn().getResponse().getContentAsString();
         list = JsonPath.read(result, "$.resultData.list");
         Assert.assertEquals("返回条数", 10, list.size());
-        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0).toString(), "$.time").toString()
+        Assert.assertEquals("第二页第一条", JsonPath.read(list.get(0), "$.time").toString()
                 , String.valueOf(orderList.get(orderList.size() - 11).getTime().getTime()));
 
 
