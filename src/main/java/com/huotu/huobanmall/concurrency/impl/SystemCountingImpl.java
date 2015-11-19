@@ -334,6 +334,7 @@ public class SystemCountingImpl implements SystemCounting {
         InitDayPartner(startTime);
 
 
+        //以上计算的是截止今日之前的每天的所有数据
         Date beginHour = DateHelper.getThisDayBegin();
 
         Date endHour = DateHelper.getThisDayBegin();
