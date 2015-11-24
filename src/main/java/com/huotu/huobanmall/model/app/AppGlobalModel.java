@@ -12,6 +12,7 @@ package com.huotu.huobanmall.model.app;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.huotu.huobanmall.service.CommonConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ import javax.annotation.PostConstruct;
  * <p>在服务器实例中 它应当是唯一 并且是可维护的</p>
  * Created by lgh on 2015/8/24.
  */
+
 public class AppGlobalModel {
     /**
      * 服务地址
