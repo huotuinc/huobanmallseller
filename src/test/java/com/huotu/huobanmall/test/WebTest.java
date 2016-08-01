@@ -9,9 +9,13 @@
 
 package com.huotu.huobanmall.test;
 
-import com.huotu.common.MathHelper;
+import com.huotu.huobanmall.entity.Merchant;
+import com.notnoop.apns.APNS;
+import com.notnoop.apns.ApnsService;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -35,19 +39,49 @@ public class WebTest {
 
     @Test
     public void test2(){
-//        BigDecimal bg = new BigDecimal(1.300);
-//        double countDodaySales = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-//        System.out.print(countDodaySales);
-        Double n=200.0+0.23;
-        System.out.print(MathHelper.retainDecimal(n,2));
+        Merchant merchant=new Merchant();
+        merchant.setName("123");
+        merchant.setMobile("1234156789");
+        List<Merchant> merchants=new ArrayList<>();
+        merchants.add(merchant);
+        System.out.print(merchants.toString());
 
 
-//        System.out.println(DateHelper.getThisDayBegin());
-//
-//        Date date = DateHelper.getThisDayBegin();
-//        date.setHours(-24);
-//        System.out.println(date);
+
 
     }
+
+    @Test
+    public void test3(){
+
+        //p12文件路径
+        String keyPath = "C:\\Users\\Administrator\\IdeaProjects\\huobanmall\\target\\classes\\com\\huotu\\huobanmall\\service\\Push.Development.p12";
+        //p12文件密匙
+        String password = "123456";
+        //创建一个APNS service
+        ApnsService service = APNS.newService()
+                .withCert(keyPath, password)	//使用指定的p12文件以及密匙
+                .withSandboxDestination()	//使用apple的测试服务器
+                .build();
+
+        //token由客户端获取
+        String token = "45124a4cf9f5e272d395f6392456e5ab7185d2ae6e98ba2f8426fe09f60e785b";
+        //发送消息到iOS设备
+        service.push(token, pushStr());
+
+//        InputStream input = MessageService.class.getResourceAsStream("Push.Development.p12");
+//        ApnsServiceBuilder builder = APNS.newService().withCert(input, "123456");
+    }
+
+    private String pushStr(){
+        String payload = APNS.newPayload()
+                .alertBody("hello world!")	//推送通知显示的文字
+                .sound("default")	//推送时附带的声音提示
+                .badge(1)	//应用程序图标右上角显示的数字
+                .build();
+
+        return payload;
+    }
+
 
 }

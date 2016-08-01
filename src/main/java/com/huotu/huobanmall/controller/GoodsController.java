@@ -21,6 +21,8 @@ import com.huotu.huobanmall.entity.*;
 import com.huotu.huobanmall.model.app.*;
 import com.huotu.huobanmall.repository.*;
 import com.huotu.huobanmall.service.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
@@ -37,6 +39,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/app")
 public class GoodsController implements GoodsSystem {
+    private static Log log = LogFactory.getLog(GoodsController.class);
+
     public static final int PAGE_SIZE = 10;
     @Autowired
     GoodsService goodsService;
@@ -76,6 +80,8 @@ public class GoodsController implements GoodsSystem {
     RebateService rebateService;
     @Autowired
     CommonConfigService commonConfigService;
+
+
 
 
     @Override
@@ -416,7 +422,7 @@ public class GoodsController implements GoodsSystem {
             //调用post方法获得物流信息字符串
 
             String   Data = HttpHelper.postRequest(url, map);
-
+            log.debug("获取物流之后返回的数据:"+Data);
 
             AppLogisticsModel result = JSON.parseObject(Data, AppLogisticsModel.class);
             //获取物流信息集合

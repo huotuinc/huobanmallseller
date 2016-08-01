@@ -28,7 +28,6 @@ import com.notnoop.apns.ApnsServiceBuilder;
 import com.notnoop.exceptions.NetworkIOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.persistence.annotations.TenantTableDiscriminator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
@@ -85,7 +84,7 @@ public class MessageServiceImpl implements MessageService, AutoCloseable {
             input = MessageService.class.getResourceAsStream("Push.Production.p12");
         }
 
-        ApnsServiceBuilder builder = APNS.newService().withCert(input, "Iamhuotu");
+        ApnsServiceBuilder builder = APNS.newService().withCert(input, "123456");
         if (env.acceptsProfiles("test")) {
             builder = builder.withSandboxDestination();
         } else {
@@ -171,6 +170,7 @@ public class MessageServiceImpl implements MessageService, AutoCloseable {
     @Transactional
     public boolean pushMessage(PushingMessage message) {
 
+        //推送到ios
         if (message.getOs() == AppOS.iOS) {
             String payload = APNS.newPayload()
                     .sound("default")
@@ -201,6 +201,8 @@ public class MessageServiceImpl implements MessageService, AutoCloseable {
             }
             return false;
         }
+
+        //推送到安卓
         HashMap<String, String> extras = new HashMap<>();
         extras.put("type", "" + message.getType().getValue());
         if (message.getData() != null)
